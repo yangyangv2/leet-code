@@ -1,4 +1,4 @@
-package prob002.addtwonumbers;
+package prob002.add.two.numbers;
 
 /**
  * Created by yanya04 on 7/22/2017.

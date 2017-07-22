@@ -1,4 +1,4 @@
-package prob001.twosum;
+package prob001.two.sum;
 
 import java.util.Arrays;
 import java.util.HashMap;

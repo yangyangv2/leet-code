@@ -1,6 +1,4 @@
-package prob002.addtwonumbers;
-
-import java.util.List;
+package prob002.add.two.numbers;
 
 /**
  * Created by yanya04 on 7/22/2017.
