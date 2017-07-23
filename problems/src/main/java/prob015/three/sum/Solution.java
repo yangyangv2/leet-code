@@ -23,19 +23,7 @@ public class Solution {
             if(i > 0 && nums[i -1] == target) continue; // skip duplicates
             twosum(nums, i, result);
         }
-
-        List<List<Integer>> resultUnique = new LinkedList<>();
-        Set<String> set = new HashSet<>();
-        for(List<Integer> list: result){
-            Collections.sort(list);
-            String key = String.valueOf(list);
-            if(!set.contains(key)){
-                resultUnique.add(list);
-                set.add(key);
-            }
-        }
-
-        return resultUnique;
+        return result;
     }
     //  two sum on sorted arrays
     private void twosum(int[] nums, int targetIndex, List<List<Integer>> result){
@@ -48,9 +36,7 @@ public class Solution {
 
             int s = target + nums[l] + nums[r];
             if(s == 0){
-                List<Integer> list = new ArrayList<>(3);
-                list.add(target); list.add(nums[l]); list.add(nums[r]);
-                result.add(list);
+                result.add( Arrays.asList(target, nums[l], nums[r]));
                 while(l < nums.length - 1 && nums[l] == nums[l + 1]) l ++;
                 while(r > 0 && nums[r] == nums[r - 1]) r --;
                 l ++; r--;
