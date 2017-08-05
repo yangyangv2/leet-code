@@ -11,22 +11,16 @@ public class Solution {
         ListNode p = dummy;
         while(p != null){
             ListNode node1 = p.next;
-            ListNode node2 = null;
             if(node1 != null){
-                node2 = node1.next;
-                if(node2 == null) {
-                    // reach the last node (odd number)
-                    break;
-                }
+                ListNode node2 = node1.next;
+                if(node2 == null) break; // reach the last node (odd number)
                 p.next = node2;
                 ListNode follow = node2.next;
                 node2.next = node1;
                 node1.next = follow;
+                // move cursor
                 p = node1;
-            } else {
-                // reach the last node (even number)
-                break;
-            }
+            } else break;               // reach the last node (even number)
         }
         return dummy.next;
     }
