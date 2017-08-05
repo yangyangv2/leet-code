@@ -1,5 +1,7 @@
 package prob024.swap.nodes.in.pairs;
 
+import utils.list.ListNode;
+
 /**
  * Created by yanya04 on 7/23/2017.
  */

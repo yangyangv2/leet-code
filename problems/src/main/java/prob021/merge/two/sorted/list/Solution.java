@@ -1,5 +1,7 @@
 package prob021.merge.two.sorted.list;
 
+import utils.list.ListNode;
+
 /**
  * Created by yanya04 on 7/23/2017.
  */

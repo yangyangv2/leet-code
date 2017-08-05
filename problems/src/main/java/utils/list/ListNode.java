@@ -1,15 +1,12 @@
-package prob002.add.two.numbers;
+package utils.list;
 
 /**
- * Created by yanya04 on 7/22/2017.
+ * Created by yanya04 on 8/5/2017.
  */
 public class ListNode {
-    int val;
-    ListNode next;
-
-    ListNode(int x) {
-        val = x;
-    }
+    public int val;
+    public ListNode next;
+    public ListNode(int x){val = x;}
 
     public static void print(ListNode node){
         if(node != null){

@@ -1,5 +1,7 @@
 package prob023.merge.k.sorted.lists;
 
+import utils.list.ListNode;
+
 import java.util.Comparator;
 import java.util.PriorityQueue;
 

@@ -1,6 +1,8 @@
 package prob083.remote.duplicates.from.sorted.list;
 
 
+import utils.list.ListNode;
+
 /**
  * Definition for singly-linked list.
  * public class ListNode {
@@ -11,12 +13,6 @@ package prob083.remote.duplicates.from.sorted.list;
  */
 
 public class Solution {
-
-    public static class ListNode {
-        int val;
-        ListNode next;
-        ListNode(int x){val = x;}
-    }
 
     public ListNode deleteDuplicates(ListNode head) {
         if(head == null) return head;
