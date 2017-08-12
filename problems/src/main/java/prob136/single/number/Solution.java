@@ -6,9 +6,9 @@ package prob136.single.number;
 public class Solution {
 
 /*
-    Solution 1: use a map, O(n), O(n)
+    Solution1 1: use a map, O(n), O(n)
 
-    Solution 2: use XOR
+    Solution1 2: use XOR
 
                 A XOR 0 = A
                 A XOR A = 0

@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class Solution {
 
     /*
-  Solution:
+  Solution1:
   1. sort to avoid duplicated math
   2. track mins
   3. skip unnecessary values

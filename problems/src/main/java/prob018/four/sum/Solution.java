@@ -17,7 +17,7 @@ public class Solution {
     }
 
     /*
-    Solution:
+    Solution1:
 
     1. sort                 (O(n*log(n)))
     2. divide and conquer   (O(n^3))

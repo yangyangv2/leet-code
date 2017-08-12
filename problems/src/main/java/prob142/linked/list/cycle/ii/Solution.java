@@ -18,7 +18,7 @@ fast    0     1     2     3
                     4
 slow    0  1  2  3  4
 
-    Solution 1, use Set
+    Solution1 1, use Set
 
         Set<ListNode> set = new HashSet<>();
 
@@ -34,7 +34,7 @@ slow    0  1  2  3  4
         return null;
 
 
-    Solution 2, not use Set
+    Solution1 2, not use Set
 
           |-------(N - 1)------|        (entry)             (meet)      (entry)
           |-------A"-----------|-----C----|---------B--------||----C------|

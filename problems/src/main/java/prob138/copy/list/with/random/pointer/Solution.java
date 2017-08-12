@@ -15,7 +15,7 @@ public class Solution {
            |     |
            +-----+
 
-        Solution 1:
+        Solution1 1:
 
         two pass, with map?
 
@@ -26,7 +26,7 @@ public class Solution {
         space O(n), complexity O(n2)
 
 
-        Solution 2:
+        Solution1 2:
 
         Original
 

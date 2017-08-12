@@ -44,7 +44,7 @@ public class Solution {
     }
 
     /*
-        Solution:
+        Solution1:
 
         1. two pointers to cut sublists
         2. reverse sublist

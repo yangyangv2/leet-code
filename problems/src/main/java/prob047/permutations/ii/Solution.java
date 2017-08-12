@@ -21,7 +21,7 @@ public class Solution {
     }
 
     /*
-        Solution:
+        Solution1:
 
         1. sort
         2. skip duplicate

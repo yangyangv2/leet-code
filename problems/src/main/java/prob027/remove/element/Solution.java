@@ -13,7 +13,7 @@ public class Solution {
     }
 
         /*
-    Solution:
+    Solution1:
         1. count deletion
         2. move (compact) array elements
     */

@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class Solution {
 
-    /* Solution:
+    /* Solution1:
 
         1. sort 4 arrays
         2. add two arrays up and put result into cache

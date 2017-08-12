@@ -12,7 +12,7 @@ public class Solution {
         assert solution.threeSumSmaller(new int[]{-2, 0, 1, 3}, 2) == 2;
     }
     /*
-        Solution:
+        Solution1:
 
         1. sort array
         2. pick a number and do two sum ()
