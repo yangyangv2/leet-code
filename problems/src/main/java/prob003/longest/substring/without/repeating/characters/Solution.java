@@ -1,5 +1,6 @@
 package prob003.longest.substring.without.repeating.characters;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,31 +15,34 @@ public class Solution {
         assert solution.lengthOfLongestSubstring("abcabcbb") == 3;
         assert solution.lengthOfLongestSubstring("b") == 1;
         assert solution.lengthOfLongestSubstring("pwwkew") == 3;
-
     }
 
+    /*
+        solution:
+
+        1. map
+        2. slide window
+    */
+
     public int lengthOfLongestSubstring(String s) {
+        int[] map = new int[128];
+        Arrays.fill(map, 0);
+        int i = 0, j = 0, max = Integer.MIN_VALUE;
+        while(j < s.length()){
+            if(map[s.charAt(j)]++ == 0){
+                // no duplicate
+                max = Math.max(max, j + 1 - i);
 
-        if(s == null || s.length() == 0) return 0;
-
-        Set<Character> set = new HashSet<>();
-        int max = -1;
-        // i = start, j = end, check characters between [i, j] are unique
-        for(int i = 0, j = 0; j < s.length(); j ++){
-            if(set.contains(s.charAt(j))){
-                // if char found in from the history
-                // clean up chars up to the duplicated char
-                while(i < j && s.charAt(i) != s.charAt(j) ){
-                    set.remove(s.charAt(i));
-                    i ++;
-                }
-                i ++;
-            } else {
-                // if no duplicate from history, add to set
-                set.add(s.charAt(j));
-                max = Math.max(max, set.size());
             }
+            // with duplicate
+            while(map[s.charAt(j)] > 1){
+                map[s.charAt(i++)] --;
+            }
+            j ++;
         }
+        max = Math.max(max, j - i);
+
         return max;
+
     }
 }
