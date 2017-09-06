@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class Solution {
 
 /*
-    Solution 1, a heap
+    MovingAverage 1, a heap
 
 
 
@@ -48,7 +48,7 @@ public class Solution {
 */
 
 /*
-    Solution 2
+    MovingAverage 2
 
   */
 

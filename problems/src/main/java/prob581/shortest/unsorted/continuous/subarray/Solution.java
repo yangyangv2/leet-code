@@ -9,7 +9,7 @@ class Solution {
 
         /*
 
-        Naive Solution
+        Naive MovingAverage
 
         O(nlog(n)), O(n)
 

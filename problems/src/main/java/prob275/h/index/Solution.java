@@ -7,7 +7,7 @@ import java.util.Arrays;
  */
 public class Solution {
     /*
-    Solution:
+    MovingAverage:
        +---------k---------+
        |                   |
 a    0 1   2   3   4   5   6
