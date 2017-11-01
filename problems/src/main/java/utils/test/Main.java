@@ -1,7 +1,8 @@
 package utils.test;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
 
@@ -10,5 +11,12 @@ public class Main {
 
         ArrayList<ArrayList<Integer>> array = new ArrayList<>();
 
+        Map<String, Object> map = new HashMap<>();
+
+        System.out.println(map.putIfAbsent("A", "A"));
+        System.out.println(map.putIfAbsent("A", "B"));
+
+        System.out.println(map.computeIfAbsent("C", k -> "C"));
+        System.out.println(map.computeIfAbsent("C", k -> "D"));
     }
 }
