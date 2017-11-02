@@ -18,5 +18,7 @@ public class Main {
 
         System.out.println(map.computeIfAbsent("C", k -> "C"));
         System.out.println(map.computeIfAbsent("C", k -> "D"));
+
+        Integer i = 14 + 4;
     }
 }
