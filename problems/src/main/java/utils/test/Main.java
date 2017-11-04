@@ -20,5 +20,7 @@ public class Main {
         System.out.println(map.computeIfAbsent("C", k -> "D"));
 
         Integer i = 14 + 4;
+
+        System.out.println("A".compareTo("B"));
     }
 }
