@@ -11,13 +11,18 @@ public class Solution {
 
         int[][] ms = new int[m][n];
 
-        for(int c = 0; c < n; c ++)
+        int max = matrix[0][0] - '0';
+
+        for(int c = 0; c < n; c ++){
             ms[0][c] = matrix[0][c] - '0';
+            max = max(max, ms[0][c]);
+        }
 
-        for(int r = 0; r < m; r ++)
+        for(int r = 0; r < m; r ++){
             ms[r][0] = matrix[r][0] - '0';
+            max = max(max, ms[r][0]);
+        }
 
-        int max = 0;
         for(int r = 1; r < m; r ++)
             for(int c = 1; c < n; c ++){
                 if(matrix[r][c] == '1'){
