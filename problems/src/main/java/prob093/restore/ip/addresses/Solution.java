@@ -15,7 +15,6 @@ public class Solution {
             return result;
 
         backtrack(result, new ArrayList<String>(), s, 0);
-
         return result;
     }
 
