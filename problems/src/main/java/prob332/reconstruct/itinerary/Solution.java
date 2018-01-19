@@ -5,7 +5,7 @@ import java.util.*;
 public class Solution {
 
     /*
-    Solution:
+    WordDictionary:
 
     DFS traverse
     backward print

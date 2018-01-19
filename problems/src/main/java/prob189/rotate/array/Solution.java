@@ -7,7 +7,7 @@ public class Solution {
     public void rotate(int[] nums, int k) {
         int len = nums.length;
 
-        /* Solution 1, with extra space
+        /* WordDictionary 1, with extra space
 
         int[] temp = Arrays.copyOf(nums, len);
 
@@ -15,7 +15,7 @@ public class Solution {
             nums[(i + k) % len] = temp[i];
         }*/
 
-        /* Solution 2, in place 3-reverses */
+        /* WordDictionary 2, in place 3-reverses */
 
         k = k % len;
 

@@ -8,7 +8,7 @@ import java.util.*;
 public class Solution {
 
     /*
-        Solution, DFS
+        WordDictionary, DFS
     */
 
     public List<Integer> killProcess(List<Integer> pid, List<Integer> ppid, int kill) {

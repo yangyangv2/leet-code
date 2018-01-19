@@ -8,7 +8,7 @@ public class Solution {
     public int[] findOrder(int numCourses, int[][] prerequisites) {
 
         /*
-            Solution
+            WordDictionary
 
             prepare graph, indegree, process queue
             BFS, record process sequence

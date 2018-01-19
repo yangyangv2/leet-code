@@ -47,7 +47,7 @@ public class Solution {
 }
 
 /**
- * Your Solution object will be instantiated and called as such:
- * Solution obj = new Solution(head);
+ * Your WordDictionary object will be instantiated and called as such:
+ * WordDictionary obj = new WordDictionary(head);
  * int param_1 = obj.getRandom();
  */
