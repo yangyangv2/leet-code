@@ -12,46 +12,61 @@ import java.util.Stack;
  */
 public class Solution {
     public List<Integer> postorderTraversal(TreeNode root) {
-        return iterative(root);
+        //return rec(root);
+        return iter(root);
     }
+
     /*
-                     5
-                3        8
-              2    4    6   9
-
-        post-order:2 4 3 6 9 8 5
-        reversed:  5 8 9 6 3 4 2
-
+        post-order LRT
     */
-    private List<Integer> iterative(TreeNode root){
-        List<Integer> result = new ArrayList<>();
-        if(root == null) return result;
-        Stack<TreeNode> stack = new Stack<>();
-        stack.push(root);
+    private List<Integer> rec(TreeNode node){
+        List<Integer> res = new ArrayList<>();
+        helper(node, res);
+        return res;
+    }
+
+    private void helper(TreeNode node, List<Integer> list){
+        if(node == null) return ;
+        helper(node.left, list);
+        helper(node.right, list);
+        list.add(node.val);
+    }
+
+    /*
+        post order -> LRT
+        push to stack is TRL
+    */
+    private List<Integer> iter(TreeNode root){
+        List<Integer> res = new ArrayList<>();
+        if(root == null) return res;
+        Stack<Node> stack = new Stack<>();
+
+        stack.push(new Node(root, 1));
+        stack.push(new Node(root.right, 0));
+        stack.push(new Node(root.left, 0));
 
         while(!stack.isEmpty()){
-            TreeNode node  = stack.pop();
-            result.add(node.val);
-            if(node.left != null) stack.push(node.left);
-            if(node.right != null) stack.push(node.right);
+            Node node = stack.pop();
+            int op = node.op;
+            TreeNode tn = node.node;
+            if(op == 1){ // tn is not null
+                res.add(tn.val);
+            } else if (tn != null){
+                stack.push(new Node(tn, 1));
+                stack.push(new Node(tn.right, 0));
+                stack.push(new Node(tn.left, 0));
+            }
         }
-        Collections.reverse(result);
-        return result;
+
+        return res;
     }
 
-
-    private List<Integer> recursive(TreeNode root){
-        List<Integer> result = new ArrayList<>();
-        if(root == null) return result;
-        postorder(result, root);
-        return result;
-    }
-
-    /*  LRT
-    */
-    private void postorder(List<Integer> result, TreeNode node){
-        if(node.left != null) postorder(result, node.left);
-        if(node.right != null) postorder(result, node.right);
-        result.add(node.val);
+    private static class Node{
+        TreeNode node;
+        int op;
+        Node(TreeNode node, int op){
+            this.node = node;
+            this.op = op;
+        }
     }
 }

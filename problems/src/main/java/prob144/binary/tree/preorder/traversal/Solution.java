@@ -11,36 +11,68 @@ import java.util.Stack;
  */
 public class Solution {
     public List<Integer> preorderTraversal(TreeNode root) {
-        //return recursive(root);
+        // return recursive(root);
         return iterative(root);
     }
 
-    private List<Integer> iterative(TreeNode root){
-        List<Integer> list = new ArrayList<>();
-        if(root == null)
-            return list;
-        Stack<TreeNode> stack = new Stack<>();
-        stack.push(root);
-        while(!stack.isEmpty()){
-            TreeNode node = stack.pop();
-            list.add(node.val);
-            if(node.right != null) stack.push(node.right);
-            if(node.left != null) stack.push(node.left);
-        }
-        return list;
-    }
-
     private List<Integer> recursive(TreeNode root){
-        List<Integer> list = new ArrayList<>();
-        preorder(list, root);
-        return list;
+        List<Integer> result = new ArrayList<>();
+        helper(root, result);
+        return result;
     }
 
-    private void preorder(List<Integer> list, TreeNode node){
-        if(node == null)
-            return;
-        list.add(node.val);
-        preorder(list, node.left);
-        preorder(list, node.right);
+    /*
+        pre-order: TLR
+    */
+    private void helper(TreeNode root, List<Integer> list){
+        if(root == null) return;
+        list.add(root.val);
+        helper(root.left, list);
+        helper(root.right, list);
+    }
+
+    /*
+        Node class is used to persist the operation state
+        of each processed TreeNode
+    */
+    private static class Node{
+        TreeNode node;
+        int op;
+        Node(TreeNode node, int op){
+            this.node = node;
+            this.op = op;       // 1 insert, 0 nothing
+        }
+    }
+    /*
+        using stack to iterative preorder traverse
+        the preorder sequence is TLR
+        so the stack push order is RLT
+    */
+    private List<Integer> iterative(TreeNode root){
+        List<Integer> res = new ArrayList<>();
+        if(root == null) return res;
+
+        Stack<Node> stack = new Stack<>();
+
+        stack.push(new Node(root.right, 0));
+        stack.push(new Node(root.left, 0));
+        stack.push(new Node(root, 1));
+
+        while(!stack.isEmpty()){
+
+            Node node = stack.pop();
+            int op = node.op;
+            TreeNode tn = node.node;
+
+            if(op == 1){ // insert and tn must not be null
+                res.add(tn.val);
+            } else if(tn != null){ // another RLT
+                stack.push(new Node(tn.right, 0));
+                stack.push(new Node(tn.left, 0));
+                stack.push(new Node(tn, 1));
+            }
+        }
+
+        return res;
     }
 }
