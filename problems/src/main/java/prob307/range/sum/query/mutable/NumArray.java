@@ -9,75 +9,72 @@ package prob307.range.sum.query.mutable;
  */
 public class NumArray {
 
-
-    private int[] arr;
-
-    private int[] nums;
-    public NumArray(int[] nums) {
-        arr = construct(nums);
-        this.nums = nums;
-        //print();
+    private static interface Sum {
+        public void update(int i, int val);
+        public int getSumRange(int i , int j);
     }
 
-    private void print(){
-        for(int i = 1; i < arr.length; i ++)
-            System.out.print(arr[i] + " ");
-        System.out.println();
-    }
+    private static class BinaryIndexTree implements Sum{
+        private int[] nums;
+        private int[] bit;
 
-    public void update(int i, int val) {
-
-        //System.out.print("update(" + i + "," + val +"): ");
-
-        int idx = i + nums.length;
-        arr[idx] = val;
-        nums[i] = val;
-        while(idx > 1){
-            idx = idx >> 1;
-            arr[idx] = arr[2 * idx] + arr[2 * idx + 1];
+        public BinaryIndexTree(int[] nums){
+            this.nums = nums;
+            init();
         }
 
-        //print();
+        private void init(){
+            bit = new int[nums.length + 1];
+            for(int i = 0; i < nums.length; i ++){
+                add(i, nums[i]);
+            }
+        }
+
+        private void add(int i, int val){
+            int idx = i + 1;
+            while(idx < bit.length){
+                bit[idx] += val;
+                idx += (idx & - idx);
+            }
+        }
+
+        public void update(int i, int val){
+            int diff = val - nums[i];
+            nums[i] = val;
+            add(i, diff);
+        }
+
+        private int getSum(int i ){
+            int idx = i + 1;
+            int sum = 0;
+            while(idx > 0){
+                sum += bit[idx];
+                idx -= (idx & - idx);
+            }
+            return sum;
+        }
+
+        public int getSumRange(int i , int j){
+            return getSum(j) - getSum(i - 1);
+        }
+    }
+
+
+    private Sum sum;
+
+    public NumArray(int[] nums) {
+        sum = new BinaryIndexTree(nums);
+    }
+
+
+
+    public void update(int i, int val) {
+        sum.update(i, val);
     }
 
     public int sumRange(int i, int j) {
-
-        //System.out.print("sum(" + i + "," + j +"): ");
-
-        i += nums.length;
-        j += nums.length;
-        int sum = 0;
-        while(i <= j){
-
-            if(i % 2 == 1){ // odd number
-                sum += arr[i++];
-            }
-            if(j % 2 == 0){
-                sum += arr[j--];
-            }
-
-            i = i >> 1; j = j >> 1;
-
-        }
-
-        //print();
-
-        return sum;
+        return sum.getSumRange(i, j);
     }
-
-    // construct segmentation tree
-    private int[] construct(int[] nums){
-        int n = nums.length;
-        int[] arr = new int[n * 2];
-        for(int i = 0; i < n; i ++){
-            arr[i + n] = nums[i];
-        }
-        for(int i = n - 1; i > 0; i --){
-            arr[i] = arr[2 * i] + arr[2 * i + 1];
-        }
-        return arr;
-    }
-
 }
 
 /**
