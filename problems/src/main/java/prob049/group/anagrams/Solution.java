@@ -7,19 +7,65 @@ import java.util.*;
  */
 public class Solution {
     public List<List<String>> groupAnagrams(String[] strs) {
-        Map<String, List<String>> dict = new HashMap<>();
+        // return sort(strs);
+        return countSort(strs);
+    }
+
+
+    //  count sort, O(m * n), space O(m * n)
+    private List<List<String>> countSort(String[] strs){
+        List<List<String>> res = new ArrayList<>();
+        if(strs == null) return res;
+        Map<String, List<String>> map = new HashMap<>();
         for(String str: strs){
-            char[] array = str.toCharArray();
-            Arrays.sort(array);
-            String key = new String(array);
-            List<String> list = dict.get(key);
+            if(str == null) continue;
+            int[] counts = new int[26];
+            for(char c: str.toCharArray()){
+                counts[c - 'a']++;
+            }
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0; i < counts.length; i ++){
+                int count = counts[i];
+                if(count == 0) continue;
+                sb.append((char) (i + 'a')).append(count);
+            }
+            String key = sb.toString();
+
+            List<String> list = map.get(key);
             if(list == null){
-                dict.put(key, new ArrayList<String>());
-                list = dict.get(key);
+                list = new ArrayList<String>();
+                map.put(key, list);
+                res.add(list);
             }
             list.add(str);
         }
+        return res;
+    }
 
-        return new ArrayList<>(dict.values());
+
+    //  time: O(m * n * log(n)), space O(m * n)
+    private List<List<String>> sort(String[] strs){
+        List<List<String>> res = new ArrayList<>();
+        if(strs == null || strs.length == 0)
+            return res;
+
+        Map<String, List<String>> map = new HashMap<>();
+        for(String str: strs){
+
+            if(str == null) continue;
+
+            // n*log(n)
+            char[] chars = str.toCharArray();
+            Arrays.sort(chars);
+            String key = new String(chars);
+            List<String> list = map.get(key);
+            if(list == null){
+                list = new ArrayList<String>();
+                map.put(key, list);
+                res.add(list);
+            }
+            list.add(str);
+        }
+        return res;
     }
 }

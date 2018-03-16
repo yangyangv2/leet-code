@@ -2,11 +2,18 @@ package prob138.copy.list.with.random.pointer;
 
 import utils.list.RandomListNode;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by yanya04 on 8/7/2017.
  */
 public class Solution {
     public RandomListNode copyRandomList(RandomListNode head) {
+
+        return solution2(head);
+    }
+
 
 /*
         list:
@@ -25,32 +32,61 @@ public class Solution {
 
         space O(n), complexity O(n2)
 
+*/
 
-        Solution1 2:
+    private RandomListNode solution1(RandomListNode head) {
+        if(head == null) return null;
 
-        Original
+        Map<RandomListNode, RandomListNode> map = new HashMap<>();
+        RandomListNode cur = head;
 
-        1->2->3->4->5->6
-           |     |
-           +-----+
+        while(cur != null){
+            map.put(cur, new RandomListNode(cur.label));
+            cur = cur.next;
+        }
+        cur = head;
 
-        1. make a copy of the list
+        while(cur != null){
+            if(cur.next != null){
+                map.get(cur).next = map.get(cur.next);
+            }
+            if(cur.random != null){
+                map.get(cur).random = map.get(cur.random);
+            }
+            cur = cur.next;
+        }
 
-        1->(1)->2->(2)->3->(3)->4->(4)->5->(5)->6->(6)
-                |               |
-                +---------------+
+        return map.get(head);
+    }
 
-        2. make a copy of the random
 
-        1->(1)->2->(2)->3->(3)->4->(4)->5->(5)->6->(6)
-                |   |            |  |
-                +---------------+   |
+
+    /*
+            Solution1 2:
+
+            Original
+
+            1->2->3->4->5->6
+               |     |
+               +-----+
+
+            1. make a copy of the list
+
+            1->(1)->2->(2)->3->(3)->4->(4)->5->(5)->6->(6)
                     |               |
                     +---------------+
 
-        3. restore the list
-*/
+            2. make a copy of the random
 
+            1->(1)->2->(2)->3->(3)->4->(4)->5->(5)->6->(6)
+                    |   |            |  |
+                    +---------------+   |
+                        |               |
+                        +---------------+
+
+            3. restore the list
+    */
+    private RandomListNode solution2(RandomListNode head){
         if(head == null) return null;
 
 

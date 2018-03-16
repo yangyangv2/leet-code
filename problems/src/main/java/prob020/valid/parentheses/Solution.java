@@ -4,45 +4,35 @@ import java.util.Stack;
 
 /**
  * Created by yanya04 on 9/3/2017.
+ * Modified by yanya04 on 3/14/2017
  */
 public class Solution {
 
-    /*
-        use stack
-    */
     public boolean isValid(String s) {
-        Stack<Character> stack = new Stack<>();
-        for(int i = 0; i < s.length(); i ++){
-            char c = s.charAt(i);
-            if(isStarting(c)){
-                stack.push(c);
-            } else if (isClosing(c)){
+        Stack<Character> stack = new Stack();
+        for(char c: s.toCharArray()){
+            char exp = '0';
+            switch(c){
+                case '}':
+                    exp = '{';
+                    break;
+                case ']':
+                    exp = '[';
+                    break;
+                case ')':
+                    exp = '(';
+                    break;
+                default:
+                    stack.push(c);
+            }
+
+            if(exp != '0'){
                 if(stack.isEmpty()) return false;
-                switch(c){
-                    case ']':
-                        if(stack.peek() == '[') stack.pop();
-                        else stack.push(c); break;
-                    case '}':
-                        if(stack.peek() == '{') stack.pop();
-                        else stack.push(c); break;
-                    case ')':
-                        if(stack.peek() == '(') stack.pop();
-                        else stack.push(c); break;
-                    default:
-                        break;
-                }
+                char start = stack.pop();
+                if(start != exp) return false;
             }
         }
         return stack.isEmpty();
-    }
-
-
-    public boolean isStarting(char c){
-        return "([{".indexOf(c) > -1;
-    }
-
-    public boolean isClosing(char c){
-        return "])}".indexOf(c) > -1;
     }
 
 

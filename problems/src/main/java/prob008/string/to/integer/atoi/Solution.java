@@ -10,38 +10,38 @@ public class Solution {
     */
     public int myAtoi(String str) {
 
-        int index = 0, sign = 1;
-        long value = 0;
-
-        boolean start = false;
-
-        // remove starting/closing spaces
+        if(str == null) return 0;
         str = str.trim();
-
         if(str.length() == 0) return 0;
 
         int startIndex = 0;
-        // handle sign as the first character
-        if(str.charAt(0) == '-') {sign = -1; startIndex = 1;}
-        else if(str.charAt(0) == '+') {sign = 1; startIndex = 1; }
-        else if(!Character.isDigit(str.charAt(0))) return 0;
 
-        // starting from here, take the next valid digits
-        for(int i = startIndex; i < str.length(); i ++){
-            char c = str.charAt(i);
+        int sign = 1;
+        if(str.charAt(startIndex) == '+'){
+            startIndex ++;
+        } else if(str.charAt(startIndex) == '-'){
+            sign = -1;
+            startIndex ++;
+        }
+
+        long value = 0L;
+        while(startIndex < str.length()){
+            char c = str.charAt(startIndex);
             if(Character.isDigit(c)){
                 value = value * 10 + (c - '0');
-                if(value > 1L + Integer.MAX_VALUE) break;
+                if(value > Integer.MAX_VALUE + 1L) break;
             } else {
                 break;
             }
+            startIndex ++;
         }
 
-        value = sign * value;
+        value = value * sign;
 
-        // check overflow
-        if(value >= Integer.MAX_VALUE) return Integer.MAX_VALUE;
-        else if(value <= Integer.MIN_VALUE) return Integer.MIN_VALUE;
-        return (int)value;
+        value = value > Integer.MAX_VALUE? Integer.MAX_VALUE: value;
+
+        value = value < Integer.MIN_VALUE? Integer.MIN_VALUE: value;
+
+        return (int) value;
     }
 }
