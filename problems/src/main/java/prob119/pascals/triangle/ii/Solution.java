@@ -3,41 +3,38 @@ package prob119.pascals.triangle.ii;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Solution {
-
-
+/**
+ *
+ */
+public class Solution
+{
     /*
+    0    1
+    1    1 1
+    2    1 2 1
+    3    1 3 3 1
 
-        row[0]  1
-        row[1]  1 1
-        row[2]  1 2 1
-        row[3]  1 3 3 1
-        row[4]  1 4 6 4 1
-        row[5]  1 5 10 5 1
-        row[6]  0 1 6 15 15 6 1
+    4"   1 3 3 1 1
+    4    1 4 6 4 1
 
+        1 3 3 1
+        1 4 6 4 1
 
+        1 3 6 4 1
+
+        d[i][j] = d[i - 1][j - 1] + d[i - 1][j]
     */
-
-    public List<Integer> getRow(int rowIndex) {
-
-        int[][] arr = new int[2][rowIndex + 2];
-
-        arr[0][1] = 1;
-
-        for(int i = 1; i <= rowIndex; i ++){
-            for(int j = 1; j <= i + 1; j ++){
-                arr[i % 2][j] = arr[(i + 1) % 2][j] + arr[(i + 1) % 2][j - 1];
+    public List<Integer> getRow(int rowIndex)
+    {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i <= rowIndex; i++)
+        {
+            list.add(1);
+            for (int j = i - 1; j > 0; j--)
+            {
+                list.set(j, list.get(j - 1) + list.get(j));
             }
         }
-
-        List<Integer> result = new ArrayList<>();
-
-        for(int i = 1; i <= rowIndex + 1; i ++){
-            result.add(arr[rowIndex % 2][i]);
-        }
-
-        return result;
-
+        return list;
     }
 }

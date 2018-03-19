@@ -4,49 +4,42 @@ import java.util.Stack;
 
 /**
  * Created by yanya04 on 9/3/2017.
+ * Modified by yanya04 on 3/17/2018
  */
 public class MinStack {
 
-//
-    //using 2n Stack to track minimum element
-    /** initialize your data structure here. */
-
-    private Stack<Integer> minStack;
     private Stack<Integer> stack;
+    private int min;
 
+    /** initialize your data structure here. */
     public MinStack() {
-        minStack = new Stack<>();
-        stack = new Stack<>();
+        this.stack = new Stack<Integer>();
+        this.min = Integer.MAX_VALUE;
     }
-    /*
-        stack [2,3,1]
 
-        minStack [2,2,1]
-    */
     public void push(int x) {
-        if(! minStack.isEmpty() && minStack.peek() < x){
-            minStack.push(minStack.peek());
-        } else {
-            minStack.push(x);
+        if(x <= min){
+            stack.push(min);      // push old min
+            min = x;
         }
-        stack.push(x);
+        stack.push(x);            // push value
     }
 
     public void pop() {
-        if(!stack.isEmpty()){
-            stack.pop();
-            minStack.pop();
+        if(stack.pop() == min){
+            min = stack.pop();
         }
     }
 
     public int top() {
-        return stack.isEmpty() ? Integer.MIN_VALUE : stack.peek();
+        return stack.peek();
     }
 
     public int getMin() {
-        return minStack.isEmpty() ? Integer.MIN_VALUE : minStack.peek();
+        return min;
     }
 }
+
 
 /**
  * Your MinStack object will be instantiated and called as such:
