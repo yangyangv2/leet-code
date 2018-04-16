@@ -4,47 +4,62 @@ package prob033.search.in.rotated.sorted.array;
  * Created by yanya04 on 8/13/2017.
  */
 public class Solution {
-
-/*
-    solution:
-
-    find offset
-    use binary search with offset
-
-*/
-
     public int search(int[] nums, int target) {
 
-        if (nums == null || nums.length == 0) return -1;
+        int n = nums.length;
+        if(n == 0) return -1;
 
-        int lo = 0, hi = nums.length - 1;
+        int offset = findRotateOffset(nums);
+
+        int lo = 0 + offset, hi = nums.length + offset, mid = 0, idx = 0;
+        while(lo <= hi){
+            mid = lo + (hi - lo) / 2;
+            idx = mid % n;
+            if(nums[idx] < target){
+                lo = mid + 1;
+            } else if(nums[idx] > target){
+                hi = mid - 1;
+            } else {
+                return idx;
+            }
+        }
+        return -1;
+
+    }
+
+    /*
+        return the roate offset
+
+        O(n) -> O(n*log(n))
+
+    idx 0 1 2 3 4 5 6
+        4 5 6 7 0 1 2
+        7 0 1 2 4 5 6
+    */
+    private int findRotateOffset(int[] nums){
+        int n = nums.length;
+        int lo = 0, hi = n - 1, mid = 0;
 
         while(lo < hi){
-            int mid = lo + (hi - lo) / 2;
+            mid = lo + (hi - lo) / 2;
             if(nums[mid] > nums[hi]){
                 lo = mid + 1;
             } else {
                 hi = mid;
             }
         }
-        int rotate = lo;
 
-        // it's much easier to add rotate offset here
-        lo = 0 + rotate;
-        hi = nums.length - 1 + rotate;
+        return lo;
 
-        while(lo <= hi){
-            int mid = lo + (hi - lo) /2;
-            int midValue = nums[mid % nums.length];
-            if( midValue == target) return mid % nums.length;
-            else if(midValue < target){
-                lo = mid + 1;
-            } else {
-                hi = mid - 1;
+        /* O(n)
+        int n = nums.length;
+        for(int i = 1; i < n; i ++){
+            if(nums[i - 1] > nums[i]){
+                return i;
             }
         }
-
-        return -1;
-
+        return 0;
+        */
     }
+
 }

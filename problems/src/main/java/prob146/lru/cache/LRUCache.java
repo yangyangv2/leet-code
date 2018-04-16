@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Created by yanya04 on 1/14/2018.
  */
-public class Solution {
+public class LRUCache {
     /*
         O(1) operation, then HashMap + DoubledLinkedList
     */
@@ -26,7 +26,7 @@ public class Solution {
     private Node tail;
     private int capacity;
 
-    public Solution(int capacity){
+    public LRUCache(int capacity){
         this.capacity = capacity;
         map = new HashMap<Integer, Node>();
     }
