@@ -6,32 +6,18 @@ package prob209.minimum.size.subarray.sum;
 public class Solution {
     /*
     consecutive:
-
 */
     public int minSubArrayLen(int s, int[] nums) {
 
-        if(nums == null || nums.length == 0) return 0;
-        if(nums.length == 1) {
-            if(nums[0] < s){
-                return nums[0];
-            } else {
-                return 0;
+        int left = 0, right = 0, sum = 0, dist = Integer.MAX_VALUE;
+        while(right < nums.length){
+            sum += nums[right ++];
+            while(sum >= s){
+                dist = Math.min(dist, right - left);
+                sum -= nums[left ++];
             }
-        }
 
-        int a = 0, b = 0;
-
-        int cur_sum = 0;
-        int min_len = Integer.MAX_VALUE;
-        while(b < nums.length){
-            cur_sum += nums[b];
-            while(cur_sum >= s){
-                min_len = Math.min(min_len, b - a + 1);
-                cur_sum -= nums[a];
-                a ++;
-            }
-            b ++;
         }
-        return min_len == Integer.MAX_VALUE ? 0 : min_len;
+        return dist == Integer.MAX_VALUE ? 0: dist;
     }
 }

@@ -5,30 +5,23 @@ import utils.tree.TreeNode;
 /**
  * Created by yanya04 on 8/19/2017.
  */
-public class Solution {
-    private int closestValue = -1;
-
+class Solution {
     public int closestValue(TreeNode root, double target) {
-        closestValue = root.val;
-        findCloset(root, target);
-        return closestValue;
-    }
-
-
-    private void findCloset(TreeNode root, double target){
-        if(root == null){
-            return;
+        TreeNode upper = root, lower = root, cur = root;
+        while(cur != null){
+            if(target < cur.val){
+                upper = cur;
+                cur = cur.left;
+            } else if(target > cur.val){
+                lower = cur;
+                cur = cur.right;
+            } else {
+                // not possible i suppose
+                return cur.val;
+            }
         }
-
-        if(target < root.val){
-            findCloset(root.left, target);
-        } else {
-            findCloset(root.right, target);
-        }
-
-        if(Math.abs(root.val - target) < Math.abs(closestValue - target)){
-            closestValue = root.val;
-        }
+        int upperVal = upper.val, lowerVal = lower.val;
+        return Math.abs(upperVal - target) < Math.abs(lowerVal - target) ? upperVal : lowerVal;
 
     }
 }

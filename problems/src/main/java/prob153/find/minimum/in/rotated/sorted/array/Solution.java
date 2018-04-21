@@ -7,30 +7,16 @@ public class Solution {
     public int findMin(int[] nums) {
 
         if(nums == null || nums.length == 0) return -1;
-        if(nums.length == 1) return nums[0];
 
-        return nums[findPivot(nums)];
-    }
-
-    private int findPivot(int[] nums){
-        int lo = 0, hi = nums.length - 1;
-        while(lo < hi){
-            if(nums[lo] < nums[hi]){
-                break;
-            } else if(nums[lo] == nums[hi]){
-                lo ++;
+        int lo = 0, hi = nums.length - 1, mid = 0;
+        while(lo < hi) {
+            mid = lo + (hi - lo) / 2;
+            if(nums[mid] > nums[hi]){
+                lo = mid + 1;
             } else {
-                // since no duplicates allows, therefore
-                // case 1  3 4 5 6 7 1 2
-                // case 2  6 7 1 2 3 4 5
-                int mid = lo + (hi - lo) / 2;
-                if(nums[lo] <= nums[mid]){
-                    lo = mid + 1;
-                } else { // nums[lo] > nums[mid]
-                    hi = mid;
-                }
+                hi = mid;
             }
         }
-        return lo;
+        return nums[lo];
     }
 }

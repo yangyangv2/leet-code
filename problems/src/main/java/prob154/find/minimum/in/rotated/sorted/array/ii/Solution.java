@@ -4,33 +4,32 @@ package prob154.find.minimum.in.rotated.sorted.array.ii;
  * Created by yanya04 on 8/17/2017.
  */
 public class Solution {
+
     public int findMin(int[] nums) {
 
-        if(nums == null || nums.length == 0) return -1;
-        if(nums.length == 1) return nums[0];
-
-        return nums[findPivot(nums)];
-    }
-
-    private int findPivot(int[] nums){
-        int lo = 0, hi = nums.length - 1;
+        int lo = 0, hi = nums.length - 1, mid = 0;
         while(lo < hi){
-            if(nums[lo] < nums[hi]){
-                break;
-            } else if(nums[lo] == nums[hi]){
-                lo ++;
+
+            mid = lo + (hi - lo) / 2;
+            if(nums[mid] > nums[hi]){
+                lo = mid + 1;
+            } else if(nums[mid] < nums[hi]){
+                hi = mid;
             } else {
-                // since no duplicates allows, therefore
-                // case 1  3 4 5 6 7 1 2
-                // case 2  6 7 1 2 3 4 5
-                int mid = lo + (hi - lo) / 2;
-                if(nums[lo] <= nums[mid]){
-                    lo = mid + 1;
-                } else { // nums[lo] > nums[mid]
+
+                // nums[mid] == nums[hi]
+
+                // if lo is already at the pivot?   0 1 1 1 1       pivot = 0
+                // if lo equals mid as well?        1 1 1 0 1       pivot = 3
+                // if lo is the largest number      2 1 1 1 1       pivot = 1;
+
+                if(nums[lo] == nums[mid]){
+                    lo ++;
+                } else{
                     hi = mid;
                 }
             }
         }
-        return lo;
+        return nums[lo];
     }
 }
