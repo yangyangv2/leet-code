@@ -5,28 +5,21 @@ package prob278.first.bad.version;
  */
 public class Solution {
     public int firstBadVersion(int n) {
-        return binarysearch(1, n);
+        int lo = 1, hi = n, mid = 0;
+
+        while(lo <= hi){
+
+            mid = lo + (hi - lo) / 2;
+            if(isBadVersion(mid)){
+                hi = mid - 1;
+            } else {
+                lo = mid + 1;
+            }
+        }
+        return lo;
     }
 
     private boolean isBadVersion(int version){
         return true;
-    }
-
-    private int binarysearch(int start, int end){
-        if(start > end){
-            return isBadVersion(start) ? start: Integer.MAX_VALUE;
-        }
-
-        int mid = start + (end - start) / 2;
-
-        int badVersion = Integer.MAX_VALUE;
-        if(isBadVersion(mid)){
-            badVersion = Math.min(binarysearch(start, mid - 1), mid);
-        } else {
-            badVersion = binarysearch(mid + 1, end);
-        }
-
-        return badVersion;
-
     }
 }

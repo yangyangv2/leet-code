@@ -2,6 +2,8 @@ package prob173.binary.search.tree.iterator;
 
 import utils.tree.TreeNode;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Stack;
 
 /**
@@ -9,36 +11,33 @@ import java.util.Stack;
  */
 public class BSTIterator {
 
-    private TreeNode root;
-    private TreeNode next;
-    private Stack<TreeNode> stack;
-
+    private Deque<TreeNode> stack;
 
     public BSTIterator(TreeNode root) {
-        stack = new Stack<TreeNode>();
-        next = root;
+        stack = new ArrayDeque<TreeNode>();
+        move(root);
+    }
+
+    private void move(TreeNode node){
+        while(node != null){
+            stack.push(node);
+            node = node.left;
+        }
     }
 
     /** @return whether we have a next smallest number */
     public boolean hasNext() {
-        return next != null || !stack.isEmpty();
+        return !stack.isEmpty();
     }
 
     /** @return the next smallest number */
     public int next() {
-
-        while(next != null){
-            stack.push(next);
-            next = next.left;
-        }
-
-        next = stack.pop();
-        int res = next.val;
-        next = next.right;
-        return res;
+        if(!hasNext()) return -1;
+        TreeNode node = stack.pop();
+        move(node.right);
+        return node.val;
     }
 }
-
 /**
  * Your BSTIterator will be called like this:
  * BSTIterator i = new BSTIterator(root);
