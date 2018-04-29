@@ -1,25 +1,60 @@
 package prob045.jump.game.ii;
 
+import java.util.Arrays;
+
+/**
+*   Modified by yanya04 on 4/26/2018.
+ */
 public class Solution {
+
     /*
-    i           0 1 2 3 4
-    num         2 0 1 0 4
-    max       0 2 2 3 3
-    count     0 1 1 2 3
-    end       0 2 2 3 3
+                [2,3,1,1,4]
+   min steps    [0,1,1,2,2]
+
+                [2,9,1,1,1,1,1]
+    max          2,9,9,9,9,9,9
+    count        0 1,2,2,2,2,2
+
+                [2,3,1,1,4]
+    max          2,4,4,4,4
+    count      0,1,2,2,2
+
 
     */
-    public int jump(int[] nums) {
 
-        int n = nums.length;
-        int end = 0, max = 0, count = 0;
+    public int jump(int[] nums) {
+        //return dp(nums);
+        return greedy(nums);
+    }
+
+    private int greedy(int[] nums){
+        int n = nums.length, max = 0, border = 0, count = 0;
         for(int i = 0; i < n - 1; i ++){
             max = Math.max(max, i + nums[i]);
-            if(i == end){
+            if(border == i){
                 count ++;
-                end = max;
+                border = max;
             }
         }
         return count;
+    }
+
+
+    private int dp(int[] nums){
+        int n = nums.length;
+        if(n < 2) return 0;
+
+        int[] ms = new int[n];
+        Arrays.fill(ms, Integer.MAX_VALUE);
+
+        ms[0] = 0;
+        for(int end = 1; end < n; end ++){
+            for(int start = 0; start < end; start ++){
+                if(start + nums[start] >= end){
+                    ms[end] = Math.min(ms[start] + 1, ms[end]);
+                }
+            }
+        }
+        return ms[n - 1];
     }
 }

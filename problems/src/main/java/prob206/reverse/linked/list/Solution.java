@@ -4,31 +4,19 @@ import utils.list.ListNode;
 
 /**
  * Created by yanya04 on 8/7/2017.
+ * Modified by yanya04 on 4/28/2017
  */
 public class Solution {
     public ListNode reverseList(ListNode head) {
-        ListNode s = new ListNode(0);
-        s.next = head;
+        ListNode cur = head, pre = null, temp = null;
 
-        if(head == null || head.next == null) return head;
-/*
-        x->1->2->3->Null
-        s
-           p
-              c
-        insert c between s and s.next;
-*/
-        ListNode p = s.next;
-        ListNode c = s.next.next;
-
-        while(c != null){
-            ListNode next = c.next;
-            c.next = s.next;
-            s.next = c;
-            p.next = next;
-            c = next;
+        while(cur != null){
+            temp = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = temp;
         }
+        return pre;
 
-        return s.next;
     }
 }
