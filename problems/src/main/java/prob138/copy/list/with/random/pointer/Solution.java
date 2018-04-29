@@ -7,123 +7,47 @@ import java.util.Map;
 
 /**
  * Created by yanya04 on 8/7/2017.
+ * Modified by yanya04 on 4/29/2017
  */
 public class Solution {
-    public RandomListNode copyRandomList(RandomListNode head) {
-
-        return solution2(head);
-    }
-
-
-/*
-        list:
-
-        1->2->3->4->5->6
-           |     |
-           +-----+
-
-        Solution1 1:
-
-        two pass, with map?
-
-        0. build random hashmap, array, reference to location
-        1. copy without random
-        2. use location id to retrive node
-
-        space O(n), complexity O(n2)
-
-*/
-
-    private RandomListNode solution1(RandomListNode head) {
-        if(head == null) return null;
-
-        Map<RandomListNode, RandomListNode> map = new HashMap<>();
-        RandomListNode cur = head;
-
-        while(cur != null){
-            map.put(cur, new RandomListNode(cur.label));
-            cur = cur.next;
-        }
-        cur = head;
-
-        while(cur != null){
-            if(cur.next != null){
-                map.get(cur).next = map.get(cur.next);
-            }
-            if(cur.random != null){
-                map.get(cur).random = map.get(cur.random);
-            }
-            cur = cur.next;
-        }
-
-        return map.get(head);
-    }
-
-
 
     /*
-            Solution1 2:
+        1--->2--->3--->4--->nil
+             |         |
+             +---------+
 
-            Original
+        2 passes,
 
-            1->2->3->4->5->6
-               |     |
-               +-----+
-
-            1. make a copy of the list
-
-            1->(1)->2->(2)->3->(3)->4->(4)->5->(5)->6->(6)
-                    |               |
-                    +---------------+
-
-            2. make a copy of the random
-
-            1->(1)->2->(2)->3->(3)->4->(4)->5->(5)->6->(6)
-                    |   |            |  |
-                    +---------------+   |
-                        |               |
-                        +---------------+
-
-            3. restore the list
     */
-    private RandomListNode solution2(RandomListNode head){
-        if(head == null) return null;
+    public RandomListNode copyRandomList(RandomListNode head) {
 
-
-
-        RandomListNode iter = head;
-
-        // copy list
-        while(iter != null){
-            RandomListNode copy = new RandomListNode(iter.label);
-            RandomListNode next = iter.next;
-            iter.next = copy;
-            copy.next = next;
-            iter = iter.next.next;
+        // 1st pass
+        RandomListNode cur = head, temp = null;
+        while(cur != null){
+            temp = cur.next;
+            cur.next = new RandomListNode(cur.label);
+            cur.next.next = temp;
+            cur = temp;
         }
 
-        // copy random
-        iter = head;
-        while(iter != null){
-            if(iter.random != null){
-                iter.next.random = iter.random.next;
-            }
-
-            iter = iter.next.next;
+        // 2nd pass
+        cur = head;
+        while(cur != null){
+            if(cur.random != null)
+                cur.next.random = cur.random.next;
+            cur = cur.next.next;
         }
 
-        //restore the list;
-
-        iter = head;
-        RandomListNode dummy = new RandomListNode(0);
-        RandomListNode iter2 = dummy;
-        while(iter != null){
-            iter2.next = iter.next;
-            RandomListNode next = iter.next.next;
-            iter.next = next;
-            iter = next;
-            iter2 = iter2.next;
+        // 3nd pass split
+        cur = head;
+        RandomListNode res = new RandomListNode(0), last = res;
+        while(cur != null){
+            last.next = cur.next;
+            last = last.next;
+            cur.next = cur.next.next;
+            cur = cur.next;
         }
-        return dummy.next;
+        return res.next;
+
     }
 }
