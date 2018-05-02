@@ -3,28 +3,44 @@ package prob309.best.time.to.buy.and.sell.stock.with.cooldown;
 import static java.lang.Math.*;
 
 public class Solution {
+
+    /*
+        state machine:
+
+               (  )
+               hold
+              /    \
+          (sell)   (buy)
+           /          \
+      sold -- (rest) -- rest
+                         (  )
+
+      hold[i] = max(hold[i - 1], rest[i - 1] - price[i]
+      sold[i] = hold[i - 1] + price[i]
+      rest[i] = max(rest[i - 1], sold[i - 1])
+      optimization to space O(1)
+    */
+
     public int maxProfit(int[] prices) {
 
-        if(prices == null || prices.length < 2)
-            return 0;
-
-
         int n = prices.length;
-        int[] buy = new int[n];
-        int[] sell = new int[n];
+        if(n < 2) return 0;
 
-        buy[0] = -prices[0];
-        buy[1] = max(-prices[0], -prices[1]);
-        sell[0] = 0;
-        sell[1] = max(buy[0] + prices[1], sell[0]);
+        int[] hold = new int[n];
+        int[] sold = new int[n];
+        int[] rest = new int[n];
 
+        hold[0] = 0 - prices[0];
+        sold[0] = 0;
+        rest[0] = 0;
 
-        for(int i = 2; i < n; i ++){
-            buy[i] = max(buy[i - 1], sell[i - 2] - prices[i]);
-            sell[i] = max(buy[i - 1] + prices[i], sell[i - 1]);
+        for(int i = 1; i < n; i ++){
+            hold[i] = Math.max(hold[i - 1], rest[i - 1] - prices[i]);
+            rest[i] = Math.max(rest[i - 1], sold[i - 1]);
+            sold[i] = hold[i - 1] + prices[i];
         }
 
-        return sell[n - 1];
+        return Math.max(rest[n - 1], sold[n - 1]);
 
     }
 }

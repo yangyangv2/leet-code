@@ -4,47 +4,48 @@ import java.util.*;
 
 /**
  * Created by yanya04 on 7/22/2017.
+ * Modified by yanya04 on 5/1/2018.
  */
 public class Solution {
 
+    /*
+        O(n^2)
 
-    public static void main(String[] args) {
-        int[] input = new int[]{0, 0};
-        Solution solution = new Solution();
-        System.out.println(solution.threeSum(input));
-    }
-
+        sum = a + b + c = 0
+        no duplicates
+    */
     public List<List<Integer>> threeSum(int[] nums) {
-        // n*log(n)
+        List<List<Integer>> res = new ArrayList<>();
+        if(nums == null || nums.length == 0) return res;
+
         Arrays.sort(nums);
-        List<List<Integer>> result = new LinkedList<>();
-        for(int i = 0; i < nums.length; i ++){
-            int target = nums[i];
-            if(i > 0 && nums[i -1] == target) continue; // skip duplicates
-            twosum(nums, i, result);
-        }
-        return result;
-    }
-    //  two sum on sorted arrays
-    private void twosum(int[] nums, int targetIndex, List<List<Integer>> result){
+        int n = nums.length, lo = 0, hi = 0, sum = 0;
+        // loop1: iterate 'a'
+        for(int i = 0; i < n; i ++){
 
-        int target = nums[targetIndex];
-        int l = targetIndex + 1, r = nums.length - 1;
-        while(l < r){
-            if(l == targetIndex) {l ++; continue; }
-            if(r == targetIndex) {r --; continue; }
+            // remove duplicates
+            if(i > 0 && nums[i] == nums[i - 1]) continue;
 
-            int s = target + nums[l] + nums[r];
-            if(s == 0){
-                result.add( Arrays.asList(target, nums[l], nums[r]));
-                while(l < nums.length - 1 && nums[l] == nums[l + 1]) l ++;
-                while(r > 0 && nums[r] == nums[r - 1]) r --;
-                l ++; r--;
-            } else if ( s > 0 ){
-                r --;
-            } else { // s < 0
-                l ++;
+            // b & c
+            lo = i + 1;
+            hi = n - 1;
+            while(lo < hi){
+
+                if(lo > i + 1 && nums[lo] == nums[lo - 1]) { lo ++; continue; }
+                if(hi < n - 1 && nums[hi] == nums[hi + 1]) { hi --; continue; }
+
+                sum = nums[i] + nums[lo] + nums[hi];
+                if(sum == 0){
+                    res.add(Arrays.asList(new Integer[]{nums[i], nums[lo], nums[hi]}));
+                    lo ++; hi --;
+                } else if (sum < 0){
+                    lo ++;
+                } else {
+                    hi --;
+                }
             }
         }
+
+        return res;
     }
 }

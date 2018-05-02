@@ -4,26 +4,47 @@ import java.util.Arrays;
 
 /**
  * Created by yanya04 on 8/5/2017.
+ * Modified by yanya04 on 5/1/2018.
  */
 public class Solution {
+
+/*
+    Input:  [2,0,2,1,1,0]
+             L         H
+             i
+
+            [0,0,2,1,1,2]
+             L       H
+             i
+
+            [0,0,2,1,1,2]
+               L     H
+               i
+
+    Output: [0,0,1,1,2,2]
+*/
+
+
     public void sortColors(int[] nums) {
 
-        if(nums == null || nums.length == 0) return;
-
-        int[] counts = new int[3];
-        Arrays.fill(counts, 0);
-
-        for(int i = 0; i < nums.length; i ++){
-            counts[nums[i]] += 1;
-        }
-
-        int index = 0;
-        for(int i = 0; i < counts.length; i++){
-            for(int j = 0; j < counts[i]; j ++){
-                nums[index] = i;
-                index ++;
+        int lo = 0, hi = nums.length - 1, i = 0;
+        while(lo < hi && i <= hi){
+            if(nums[i] == 0){
+                swap(nums, i, lo);
+                lo ++;
+            } else if(nums[i] == 2){
+                swap(nums, i, hi);
+                hi --; i --;
             }
+            i ++;
         }
+    }
 
+
+    private void swap(int[] nums, int i, int j){
+        if(i == j) return;
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
     }
 }
