@@ -1,64 +1,70 @@
 package prob004.median.of.two.sorted.arrays;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by yanya04 on 7/22/2017.
+ * Modified by yanya04 on 5/2/2018.
  */
 public class Solution {
-    /*  index       0   1   2   3   4   5   6   7   8
-        m           1   3   4   6   8 i 9   10  11  13
-        n           2   5   6 j 7   9   15
 
-        total #     9 + 6 = 15
+    public static void main(String[] args) {
 
-        m[i] < n[j + 1]
-        n[j] < m[i + 1]
-                                    (edge i/j == 0)      (edge i = m/j = n)
-        total # is even =>  avg(max(m[i], n[j]), min(n[j + 1], m[i + 1]))
-              # is odd  =>  max(m[i], n[k])
-        edge cases:
-                i = 0
+        int[] nums1 = new int[]{2,5,8,10,12};
+        int[] nums2 = new int[]{1,3,4,6,8,9,14};
 
-    */
+        Solution solution = new Solution();
+        System.out.println(solution.findMedianSortedArrays(nums1, nums2));
+    }
+
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int len = nums1.length + nums2.length;
+        if(len % 2 == 1) return (double) findKth(nums1, 0, nums2, 0, len / 2 + 1);
+        else return (findKth(nums1, 0, nums2, 0, len / 2) +
+                findKth(nums1, 0, nums2, 0, len / 2 + 1)) / 2.0;
+    }
 
-        int[] lg, sm;
-        if(nums1.length > nums2.length){
-            lg = nums1;
-            sm = nums2;
+
+    private int findKth(int[] nums1, int start1, int[] nums2, int start2, int k){
+
+        debug(nums1, start1, nums2, start2, k);
+
+        if(start1 >= nums1.length) return nums2[start2 + k - 1];
+        if(start2 >= nums2.length) return nums1[start1 + k - 1];
+
+        if(k == 1) return Math.min(nums1[start1], nums2[start2]);
+
+        int mid1 = start1 + k / 2 - 1 < nums1.length ? nums1[start1 + k / 2 - 1]: Integer.MAX_VALUE;
+        int mid2 = start2 + k / 2 - 1 < nums2.length ? nums2[start2 + k / 2 - 1]: Integer.MAX_VALUE;
+
+        if(mid1 < mid2){
+            return findKth(nums1, start1 + k / 2, nums2, start2, k - k / 2);
         } else {
-            lg = nums2;
-            sm = nums1;
+            return findKth(nums1, start1, nums2, start2 + k / 2, k - k / 2);
+        }
+    }
+
+
+    private void debug(int[] nums1, int start1, int[] nums2, int start2, int k){
+        System.out.print("start=" + start1 + ", start2=" + start2 + ", k=" + k + " \t\t");
+        List<String> elements = new ArrayList<>();
+        for(int i = 0; i < nums1.length; i ++){
+            if(i == start1) elements.add("|");
+            elements.add(String.valueOf(nums1[i]));
         }
 
-        int m = sm.length, n = lg.length;
-        // partitions on small array
-        int l = 0, r = m;
-        int k = (m + n + 1) / 2;
+        if(start1 >= nums1.length) elements.add("|");
 
-        while(l <= r){
-
-            int p1 = (l + r) >>>1;
-            int p2 = k - p1;
-
-            int lmax1 = (p1 == 0) ? Integer.MIN_VALUE: sm[p1 - 1];
-            int rmin1 = (p1 == m) ? Integer.MAX_VALUE: sm[p1];
-
-            int lmax2 = (p2 == 0) ? Integer.MIN_VALUE: lg[p2 - 1];
-            int rmin2 = (p2 == n) ? Integer.MAX_VALUE: lg[p2];
-
-
-            if(lmax1 <= rmin2 && lmax2 <= rmin1){
-                if( (m + n) % 2 == 0 ) return (Math.max(lmax1, lmax2) + Math.min(rmin2, rmin1)) / 2.0;
-                else return Math.max(lmax1, lmax2);
-            } else if(lmax1 > rmin2){
-                r = p1 - 1;
-            } else {
-                l = p1 + 1;
-            }
+        elements.add("||");
+        for(int i = 0; i < nums2.length; i ++){
+            if(i == start2) elements.add("|");
+            elements.add(String.valueOf(nums2[i]));
         }
 
-        throw new IllegalArgumentException();
+        if(start2 >= nums2.length) elements.add("|");
+
+        System.out.println(String.join(" ", elements));
     }
 }

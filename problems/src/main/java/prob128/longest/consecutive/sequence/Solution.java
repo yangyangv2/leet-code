@@ -1,32 +1,37 @@
 package prob128.longest.consecutive.sequence;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * Created by yanya04 on 1/10/2018.
+ * Modified by yanya04 on 5/2/2018.
  */
 public class Solution {
     public int longestConsecutive(int[] nums) {
-        Set<Integer> set = new HashSet<>();
-        for(int i = 0;i < nums.length; i ++)
-            set.add(nums[i]);
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int num: nums){
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        }
 
-        int max = 0;
-        for(int i = 0;i < nums.length; i ++){
+        int down = 0, up = 0, max = 0;
+        for(int i = 0; i < nums.length; i ++){
 
-            int down = nums[i] - 1;
-            while(set.contains(down)){
-                set.remove(down);
+            if(! map.containsKey(nums[i])) continue;
+            down = nums[i];
+            up = nums[i];
+            map.remove(nums[i]);
+            while(map.containsKey(down - 1)){
+                map.remove(down - 1);
                 down --;
             }
-            int up = nums[i] + 1;
-            while(set.contains(up)){
-                set.remove(up);
+            while(map.containsKey(up + 1)){
+                map.remove(up + 1);
                 up ++;
             }
-
-            max = Math.max(up - down - 1, max);
+            max = Math.max(max, up - down + 1);
         }
 
         return max;
