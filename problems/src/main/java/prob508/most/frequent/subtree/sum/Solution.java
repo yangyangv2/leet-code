@@ -12,42 +12,47 @@ import java.util.Map;
  */
 public class Solution {
 
-    private int max;
-    // <sum, vals[]>
-    private Map<Integer, Integer> freq;
-
+    /*  O(n)
+    */
     public int[] findFrequentTreeSum(TreeNode root) {
+        // sum / count
+        Map<Integer, Integer> countMap = new HashMap<>();
 
-        max = Integer.MIN_VALUE;
-        freq = new HashMap<>();
-        sum(root);
+        getTreeSum(root, countMap);
+
+        int freq = 0;
+        for(Map.Entry<Integer, Integer> entry: countMap.entrySet()){
+            if(freq <= entry.getValue()){
+                freq = entry.getValue();
+            }
+        }
 
         List<Integer> list = new ArrayList<>();
-        for(Map.Entry<Integer, Integer> entry: freq.entrySet()){
-            if(entry.getValue() == max){
+        for(Map.Entry<Integer, Integer> entry: countMap.entrySet()){
+            if(entry.getValue() == freq){
                 list.add(entry.getKey());
             }
         }
+
         int[] res = new int[list.size()];
-        for(int i = 0; i < list.size(); i ++)
+        for(int i = 0; i < list.size(); i ++){
             res[i] = list.get(i);
+        }
 
         return res;
     }
 
-    // post order LRT
-    private int sum(TreeNode root){
-        if(root == null){
+    /*  O(n)
+    */
+    private int getTreeSum(TreeNode node, Map<Integer, Integer> countMap){
+        if(node == null)
             return 0;
-        }
-        int left = sum(root.left);
-        int right = sum(root.right);
-        int sum = left + right + root.val;
+        int left = getTreeSum(node.left, countMap);
+        int right = getTreeSum(node.right, countMap);
+        int sum = left + right + node.val;
 
-        int count = freq.getOrDefault(sum, 0);
-        if(max < count + 1)
-            max = Math.max(max, count + 1);
-        freq.put(sum, count + 1);
+        countMap.put(sum, countMap.getOrDefault(sum, 0) + 1);
         return sum;
+
     }
 }

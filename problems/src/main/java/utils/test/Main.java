@@ -6,21 +6,21 @@ import java.util.PriorityQueue;
 public class Main {
 
     public static void main(String[] args) {
-        /*
+
         PriorityQueue<Integer> small = new PriorityQueue<>((a, b) -> a - b);
         small.offer(1);
         small.offer(2);
-        System.out.println(small.peek());
+        System.out.println("(a, b) -> a - b: " + small.peek());
 
         PriorityQueue<Integer> large = new PriorityQueue<>((a, b) -> b - a);
         large.offer(1);
         large.offer(2);
-        System.out.println(large.peek());
+        System.out.println("(a, b) -> b - a: " + large.peek());
 
         for(int i = 0; i < 128; i ++){
             System.out.println( i + ": " + (i & -i) + " " + Integer.toBinaryString(i));
         }
-*/
+
         int[] res = sort(new int[]{2, 1, 1 , 2, 3, 1, 1, 1});
 
         for(int num: res)

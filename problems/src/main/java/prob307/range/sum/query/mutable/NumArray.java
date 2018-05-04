@@ -9,71 +9,69 @@ package prob307.range.sum.query.mutable;
  */
 public class NumArray {
 
-    private static interface Sum {
-        public void update(int i, int val);
-        public int getSumRange(int i , int j);
-    }
-
-    private static class BinaryIndexTree implements Sum{
-        private int[] nums;
-        private int[] bit;
-
-        public BinaryIndexTree(int[] nums){
-            this.nums = nums;
-            init();
-        }
-
-        private void init(){
-            bit = new int[nums.length + 1];
-            for(int i = 0; i < nums.length; i ++){
-                add(i, nums[i]);
-            }
-        }
-
-        private void add(int i, int val){
-            int idx = i + 1;
-            while(idx < bit.length){
-                bit[idx] += val;
-                idx += (idx & - idx);
-            }
-        }
-
-        public void update(int i, int val){
-            int diff = val - nums[i];
-            nums[i] = val;
-            add(i, diff);
-        }
-
-        private int getSum(int i ){
-            int idx = i + 1;
-            int sum = 0;
-            while(idx > 0){
-                sum += bit[idx];
-                idx -= (idx & - idx);
-            }
-            return sum;
-        }
-
-        public int getSumRange(int i , int j){
-            return getSum(j) - getSum(i - 1);
-        }
-    }
-
-
-    private Sum sum;
+    private SegmentTree st;
 
     public NumArray(int[] nums) {
-        sum = new BinaryIndexTree(nums);
+        st = new SegmentTree(nums);
     }
 
-
-
     public void update(int i, int val) {
-        sum.update(i, val);
+        st.update(i, val);
     }
 
     public int sumRange(int i, int j) {
-        return sum.getSumRange(i, j);
+        return st.sum(i, j);
+    }
+
+
+    private static class SegmentTree{
+
+        private int n;
+        private int[] data;
+
+        SegmentTree(int[] nums){
+            // init
+            buildTree(nums);
+        }
+
+
+        void buildTree(int[] nums){
+            this.n = nums.length;
+            this.data = new int[n * 2];
+            System.arraycopy(nums, 0, data, n, n);
+            for(int i = n - 1; i >= 0; i --){
+                data[i] = data[i * 2] + data[i * 2 + 1];
+            }
+        }
+
+        void update(int index, int value){
+            index = index + n;
+            data[index] = value;
+            while(index > 1){
+                index >>= 1;
+                data[index] = data[2 * index] + data[2 * index + 1];
+            }
+        }
+
+        int sum(int left, int right){
+            left += n; right += n;
+            int sum = 0;
+            while(left <= right){
+
+                if(left % 2 != 0){
+                    sum += data[left];
+                    left ++;
+                }
+
+                if(right % 2 != 1){
+                    sum += data[right];
+                    right --;
+                }
+                left >>= 1;
+                right >>= 1;
+            }
+            return sum;
+        }
     }
 }
 
