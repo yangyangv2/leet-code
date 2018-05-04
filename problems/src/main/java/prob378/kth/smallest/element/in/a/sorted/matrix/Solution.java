@@ -5,47 +5,37 @@ import java.util.PriorityQueue;
 /**
  * Created by yanya04 on 8/26/2017.
  * Modified by yanya04 on 5/2/2018.
+ * Modified by yanya04 on 5/4/2018.
  */
-class Solution {
-    private class Record{
+public class Solution {
+
+    class Tuple {
         int val, x, y;
-        Record(int val, int x, int y){
+        Tuple(int val, int x, int y){
+            this.val = val;
             this.x = x;
             this.y = y;
-            this.val = val;
         }
-    }
-
-    private Record getNext(int x, int y, int[][] matrix, boolean[][] visited){
-        int m = matrix.length, n = matrix[0].length;
-        if(x == m || y == n || visited[x][y]) return null;
-        return new Record(matrix[x][y], x, y);
     }
 
     public int kthSmallest(int[][] matrix, int k) {
-
-        if(matrix == null || matrix.length == 0 || matrix[0].length == 0) return -1;
-
-        PriorityQueue<Record> pq = new PriorityQueue<>((a, b) -> a.val - b.val);
-        pq.offer(new Record(matrix[0][0], 0, 0));
+        if(matrix == null || matrix.length == 0 || matrix[0].length == 0)
+            return -1;
         int m = matrix.length, n = matrix[0].length;
-        boolean[][] visited = new boolean[m][n];
-        visited[0][0] = true;
-        Record next = null, right = null, down = null;
-        for(int i = 1; i < k; i ++){
-            next = pq.poll();
-            visited[next.x][next.y] = true;
-            right = getNext(next.x, next.y + 1, matrix, visited);
-            if(right != null) {
-                pq.offer(right);
-                visited[right.x][right.y] = true;
-            }
-            down = getNext(next.x + 1, next.y, matrix, visited);
-            if(down != null) {
-                pq.offer(down);
-                visited[down.x][down.y] = true;
+        PriorityQueue<Tuple> pq = new PriorityQueue<>((a, b) -> a.val - b.val);
+        for(int i = 0; i < n; i ++){
+            pq.offer(new Tuple(matrix[0][i], 0, i));
+        }
+
+        Tuple tuple = null;
+
+        for(int i = 1; i < Math.min(k, m * n); i ++){
+            tuple = pq.poll();
+            if(tuple.x < m - 1){
+                pq.offer(new Tuple(matrix[tuple.x + 1][tuple.y], tuple.x + 1, tuple.y));
             }
         }
+
         return pq.peek().val;
     }
 }
