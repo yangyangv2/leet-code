@@ -5,48 +5,26 @@ import java.util.Map;
 
 /**
  * Created by yanya04 on 9/10/2017.
+ * Modified by yanya04 on 5/2/2018.
  */
 public class Solution {
-
-/*
-    (j >= i)
-    sum[i, j] = sum[0, j] - sum[0, i - 1] = k;
-
-    => a + b = k
-    =>
-
-    num:    [1, 1, 1]
-    sum:    [1, 2, 3]
-    k:      2
-
-    sum(i, j) = s2 - s1 = k; ---> s2 - k = s1
-
-*/
-
     public int subarraySum(int[] nums, int k) {
-        // brute force
-        int[] sums = new int[nums.length];
-        sums[0] = nums[0];
-        for(int i = 1; i < nums.length; i ++){
-            sums[i] = sums[i - 1] + nums[i];
-        }
+        if(nums == null || nums.length == 0) return 0;
+        int n = nums.length;
+        int sum = 0;
 
-
-        // use map to optimize it
-
-        // sum[i, j] = k = sum[j] - sum[i - 1];
-        int count = 0;
-
+        // find sums[i]  = k + sums[j] (i > j);
         Map<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1);
 
-        map.put(0, 1);  // when target is 0, then sums[j] = k is an valid solution
-        for(int i = 0; i < sums.length; i ++){
-            int target = sums[i] - k;
-            if(map.containsKey(target)){
-                count += map.get(target);
+        int res = 0;
+        for(int i = 0; i < n; i ++){
+            sum = sum + nums[i];
+            if(map.containsKey(sum - k)){
+                res += map.get(sum - k);
             }
-            map.put(sums[i], map.getOrDefault(sums[i], 0) + 1);
+            map.put(sum, map.getOrDefault(sum, 0) + 1);
         }
-        return count;
+        return res;
     }
 }

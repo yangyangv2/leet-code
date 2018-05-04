@@ -1,50 +1,46 @@
 package prob148.sort.list;
 
+import utils.list.ListNode;
+
 /**
  * Created by yanya04 on 8/4/2017.
+ * Modified by yanya04 on 4/29/2017
  */
 public class Solution {
+    /*
+        merge sort
 
-    static class ListNode{
-        int val;
-        ListNode next;
-        ListNode(int x){
-            this.val = x;
-        }
+        1. break list;
+        2. merge list
 
-        @Override
-        public String toString(){
-
-            StringBuilder sb = new StringBuilder();
-            ListNode node = this;
-            do {
-                sb.append(node.val).append("->");
-                node = node.next;
-            }while(node != null);
-            return sb.toString();
-        }
-    }
-
+    */
     public ListNode sortList(ListNode head) {
 
         if(head == null || head.next == null) return head;
 
         ListNode[] lists = split(head);
 
-        ListNode list1 = lists[0];
-        ListNode list2 = lists[1];
+        ListNode list1 = sortList(lists[0]);
+        ListNode list2 = sortList(lists[1]);
 
-        ListNode sorted1 = sortList(list1);
-        ListNode sorted2 = sortList(list2);
-
-        return merge(sorted1, sorted2);
+        return merge(list1, list2);
     }
 
-    // merge two sorted list
-    private ListNode merge(ListNode sorted1, ListNode sorted2){
+    private ListNode[] split(ListNode head){
 
-        ListNode cur = new ListNode(0);
-        ListNode head = cur;
+        ListNode slow = new ListNode(0), fast = head;
+        slow.next = fast;
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        ListNode next = slow.next;
+        slow.next = null;
+        return new ListNode[]{head, next};
+    }
+
+    private ListNode merge(ListNode sorted1, ListNode sorted2){
+        ListNode dummy = new ListNode(0), cur = dummy;
 
         while(sorted1 != null && sorted2 != null){
             if(sorted1.val < sorted2.val){
@@ -57,29 +53,10 @@ public class Solution {
             cur = cur.next;
         }
 
-        if(sorted1 == null) cur.next = sorted2;
-        if(sorted2 == null) cur.next = sorted1;
+        if(sorted1 != null) cur.next = sorted1;
+        else cur.next = sorted2;
 
-        return head.next;
-    }
+        return dummy.next;
 
-
-    // assumption, head list has at least 2 nodes
-    private ListNode[] split(ListNode head){
-        ListNode[] lists = new ListNode[2];
-
-        ListNode slow = head;
-        ListNode fast = head;
-        ListNode prev = slow;
-
-        while(fast != null && fast.next != null){
-            prev = slow;
-            slow = slow.next;
-            fast = fast.next.next;
-        }
-        lists[0] = head;
-        lists[1] = slow;
-        prev.next = null;
-        return lists;
     }
 }

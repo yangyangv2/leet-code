@@ -1,56 +1,41 @@
 package prob085.maximal.rectangle;
 
-import java.util.Stack;
-
+import java.util.ArrayDeque;
+import java.util.Deque;
 /**
  * Created by yanya04 on 1/6/2018.
+ * Modified by yanya04 on 5/1/2018.
  */
 public class Solution {
-    /*
-        left[]
-        right[]
-        height[]
-        res : (right[j] - left[j]) * height[j]
-
-    */
     public int maximalRectangle(char[][] matrix) {
-
-        if(matrix == null || matrix.length == 0) return 0;
+        if(matrix == null || matrix.length == 0 || matrix[0].length == 0)
+            return 0;
 
         int m = matrix.length, n = matrix[0].length;
 
         int[] heights = new int[n];
-
-        int maxarea = 0;
+        int max = 0, h = 0, w = 0, cur = 0;
+        Deque<Integer> stack = new ArrayDeque<>();
 
         for(int i = 0; i < m; i ++){
-            // calculate height
-            if(i == 0)
-                for(int j = 0; j < n; j ++) heights[j] = matrix[0][j] - '0';
-            else {
-                for(int j = 0; j < n; j ++){
-                    if(matrix[i][j] == '1'){
-                        heights[j] = heights[j] + 1;
-                    } else {
-                        heights[j] = 0;
-                    }
-                }
+            // build the height
+            for(int j = 0; j < n; j ++){
+                if (matrix[i][j] == '0') heights[j] = 0;
+                else heights[j] += 1;
             }
 
-            // calculate maximum histogram area
-            Stack<Integer> stack = new Stack<>();
-
+            // histgram problem
+            stack.clear();
             for(int j = 0; j <= n; j ++){
-                int h = (j == n)? 0: heights[j];
-                while( !stack.isEmpty() && h <= heights[stack.peek()]){
-                    int curHeight = heights[stack.pop()];
-                    int preIndex = stack.isEmpty()? -1 : stack.peek();
-                    int localarea = curHeight * (j - preIndex - 1);
-                    maxarea = Math.max(maxarea, localarea);
+                cur = (j == n) ? - 1: heights[j];
+                while(!stack.isEmpty() && cur < heights[stack.peek()]){
+                    h = heights[stack.pop()];
+                    w = stack.isEmpty() ? j: (j - stack.peek() - 1);
+                    max = Math.max(h * w, max);
                 }
                 stack.push(j);
             }
         }
-        return maxarea;
+        return max;
     }
 }

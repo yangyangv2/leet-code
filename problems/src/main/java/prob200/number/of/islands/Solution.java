@@ -6,7 +6,7 @@ package prob200.number.of.islands;
  */
 public class Solution {
     public int numIslands(char[][] grid) {
-        // return bfs(grid);
+        // return dfs(grid);
 
         return uf(grid);
     }
@@ -87,8 +87,8 @@ public class Solution {
     }
 
 
-    /*  BFS solution    */
-    private int bfs(char[][] grid) {
+    /*  DFS solution    */
+    private int dfs(char[][] grid) {
         if(grid == null || grid.length == 0 || grid[0].length == 0)
             return 0;
         int m = grid.length, n = grid[0].length;

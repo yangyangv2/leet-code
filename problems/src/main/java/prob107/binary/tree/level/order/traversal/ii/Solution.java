@@ -10,27 +10,21 @@ import java.util.Queue;
 
 /**
  * Created by yanya04 on 1/9/2018.
+ * Modified by yanya04 on 4/23/2018
  */
 public class Solution {
     public List<List<Integer>> levelOrderBottom(TreeNode root) {
 
-        List<List<Integer>> result = new ArrayList<>();
-        if(root == null) return result;
+        List<List<Integer>> res = new ArrayList<>();
+        dfs(root, 0, res);
+        return res;
+    }
 
-        Queue<TreeNode> queue = new LinkedList<>();
-        queue.offer(root);
-        while(!queue.isEmpty()){
-            int size = queue.size();
-            List<Integer> list = new ArrayList<>();
-            for(int i = 0; i < size; i ++){
-                TreeNode node = queue.poll();
-                list.add(node.val);
-                if(node.left != null) queue.offer(node.left);
-                if(node.right != null) queue.offer(node.right);
-            }
-            result.add(list);
-        }
-        Collections.reverse(result);
-        return result;
+    private void dfs(TreeNode root, int depth, List<List<Integer>> res){
+        if(root == null) return;
+        if(res.size() == depth) res.add(0, new ArrayList<Integer>());
+        dfs(root.left, depth + 1, res);
+        dfs(root.right, depth + 1, res);
+        res.get(res.size() - depth - 1).add(root.val);
     }
 }

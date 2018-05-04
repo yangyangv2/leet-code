@@ -9,6 +9,7 @@ import java.util.Queue;
 
 /**
  * Created by yanya04 on 1/8/2018.
+ * Modified by yanya04 on 4/23/2018
  */
 public /**
  * Definition for a binary tree node.
@@ -20,61 +21,30 @@ public /**
  * }
  */
 class Solution {
-    public List<List<Integer>> levelOrder(TreeNode root) {
-        // return preorder(root);
-        return interative(root);
-    }
-
-    private List<List<Integer>> interative(TreeNode root){
-
-        List<List<Integer>> result = new ArrayList<>();
-        if(root == null)
-            return result;
-
-        Queue<TreeNode> queue = new LinkedList<>();
-        queue.offer(root);
-        while(!queue.isEmpty()){
-            int size = queue.size();
-            List<Integer> list = new ArrayList<>();
-            for(int i = 0; i < size; i ++){
-                TreeNode node = queue.poll();
-                list.add(node.val);
-                if(node.left != null) queue.offer(node.left);
-                if(node.right != null) queue.offer(node.right);
-            }
-            result.add(list);
-        }
-        return result;
-    }
-
-
-
-
-    private List<List<Integer>> preorder(TreeNode root){
-        List<List<Integer>> orders = new ArrayList<>();
-
-        traverse(orders, root, 0);
-
-        return orders;
-    }
-
-
-    /*  pre-order traverse
+    /*
+        BFS
     */
-    private void traverse(List<List<Integer>> orders, TreeNode node, int depth){
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        Queue<TreeNode> queue = new LinkedList<>();
+        List<List<Integer>> res = new ArrayList<>();
 
-        if(node == null)
-            return;
+        if(root == null) return res;
 
-        if(orders.size() == depth){
-            orders.add(new ArrayList<Integer>());
+        queue.offer(root);
+        int level = 0, levelSize = 0;
+        TreeNode next = null;
+        while(!queue.isEmpty()){
+            res.add(new ArrayList<>());
+            levelSize = queue.size();
+            while(levelSize -- > 0){
+                next = queue.poll();
+                res.get(level).add(next.val);
+                if(next.left != null) queue.offer(next.left);
+                if(next.right != null) queue.offer(next.right);
+            }
+            // prepare for the next level;
+            level ++;
         }
-
-        orders.get(depth).add(node.val);
-
-        traverse(orders, node.left, depth + 1);
-        traverse(orders, node.right, depth + 1);
-
-
+        return res;
     }
 }

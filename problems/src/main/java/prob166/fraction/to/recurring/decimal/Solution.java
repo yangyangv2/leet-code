@@ -7,66 +7,55 @@ import java.util.Map;
 
 /**
  * Created by yanya04 on 8/9/2017.
+ * Modified by yanya04 on 4/28/2018
  */
 public class Solution {
 
-    public static void main(String[] args) {
-
-        System.out.println(1.0/90);
-
-
-
-        System.out.println(1.0 / 9);
-        System.out.println(new BigDecimal("1").divide(new BigDecimal("333"), 20, RoundingMode.HALF_UP));
-    }
-
     public String fractionToDecimal(int numerator, int denominator) {
 
-        if(denominator == 0) return "0";
+        if(numerator == 0) return "0";
+        if(denominator == 0) {
+            if(numerator > 0) return "inf";
+            else return "-inf";
+        }
 
 
-        int res = numerator % denominator;
-        int value = numerator / denominator;
+        long numer = (long) numerator;
+        long denom = (long) denominator;
 
-        StringBuilder frac = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
+        if(numer > 0 ^ denom > 0) {
+            // negative result
+            sb.append("-");
+        }
 
-        //  residual, last
-        Map<Integer, Integer> cache = new HashMap<>();
+        numer = Math.abs(numer);
+        denom = Math.abs(denom);
 
-        String fraction = "";
-        int reslen = 0;
+        long integral = numer / denom;
+        long remain = numer % denom;
 
-        while(res != 0){
-            res *= 10;
-            int tmp = Math.abs(res / denominator);
-            frac.append(tmp);
-            if(tmp > 0){
-                if(cache.containsKey(res)){
-                    // repeat
-                    int lastIndex = cache.get(res);
-                    int repeatLength = frac.length() - lastIndex - 1;
-                    int startIndex = frac.length() - 1 - reslen - repeatLength;
-                    if(startIndex > 0){
-                        fraction = frac.substring(0, startIndex) + "(" + frac.substring(startIndex, startIndex + repeatLength) + ")";
-                    } else {
-                        fraction = "(" + frac.substring(0, frac.length() - reslen - 1) + ")";
-                    }
-                    return value + "." + fraction;
-                } else {
-                    cache.put(res, frac.length() - 1);
-                }
-                reslen = 0;
-            } else {
-                reslen ++;
+        // add the integral part
+        sb.append(String.valueOf(integral));
+
+        if(remain == 0) return sb.toString();
+
+        // prepar for the fractional
+        sb.append(".");
+        Map<Long, Integer> indexMap = new HashMap<>();
+        while(remain != 0) {
+            if(indexMap.containsKey(remain)){
+                sb.insert(indexMap.get(remain), "(");
+                sb.append(")");
+                break;
             }
-
-            res = res % denominator;
-        }
-        if(frac.length() > 0){
-            return value + "." + frac.toString();
-        } else {
-            return String.valueOf(value);
+            indexMap.put(remain, sb.length());
+            remain *= 10;
+            integral = remain / denom;
+            remain = remain % denom;
+            sb.append(String.valueOf(integral));
         }
 
+        return sb.toString();
     }
 }

@@ -3,39 +3,25 @@ package prob443.string.compression;
 public class Solution {
     public int compress(char[] chars) {
 
-        char pre = (char) 0, cur = (char) 0;
+        int cur = 0, pre = 0, len = chars.length;
         int count = 0;
+        char c = 0;
+        while(cur < len){
+            c = chars[cur];
+            chars[pre] = c;
+            cur ++;
+            pre ++;
+            count = 1;
 
-        int index = 0;
-        for(int i = 0; i < chars.length; i ++){
-            cur = chars[i];
-            if(pre == 0 || pre == cur){
+            while(cur < len && chars[cur] == c){
                 count ++;
-            } else {
-                chars[index] = pre;
-                index ++;
-                if(count > 1){
-                    String num = String.valueOf(count);
-                    for(int j = 0; j < num.length(); j ++){
-                        chars[index++] = num.charAt(j);
-                    }
-                }
-                count = 1;
+                cur ++;
             }
-            pre = cur;
-        }
-
-        if(count > 0 && pre != 0){
-            chars[index] = pre;
-            index ++;
             if(count > 1){
-                String num = String.valueOf(count);
-                for(int j = 0; j < num.length(); j ++){
-                    chars[index++] = num.charAt(j);
-                }
+                for( char t : Integer.toString(count).toCharArray() )
+                    chars[pre++] = t;
             }
         }
-
-        return index;
+        return pre;
     }
 }

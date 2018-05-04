@@ -4,23 +4,18 @@ import utils.list.ListNode;
 
 /**
  * Created by yanya04 on 8/7/2017.
+ * Modified by yanya04 on 4/29/2018
  */
 public class Solution {
     public boolean hasCycle(ListNode head) {
-/*
-        X->1->2->3->4->5->6->4
-slow    1 step
-fast    2 steps
-*/
-        ListNode slow = head;
-        ListNode fast = head;
 
+        ListNode dummy = new ListNode(0);
+        dummy = head;
+        ListNode fast = head, slow = dummy;
         while(fast != null && fast.next != null){
-            slow = slow.next;
             fast = fast.next.next;
-            if(fast == slow){
-                return true;
-            }
+            slow = slow.next;
+            if(fast == slow) return true;
         }
         return false;
     }

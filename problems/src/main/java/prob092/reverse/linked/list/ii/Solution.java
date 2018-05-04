@@ -6,61 +6,47 @@ import java.util.List;
 
 /**
  * Created by yanya04 on 8/6/2017.
+ * Modified by yanya04 on 4/29/2018
  */
 public class Solution {
-
-
-    public static void main(String[] args) {
-
-        ListNode node1 = new ListNode(3);
-        ListNode node2 = new ListNode(5);
-        node1.next = node2;
-
-        Solution solution = new Solution();
-
-        ListNode.print(solution.reverseBetween(node1, 1, 2));
-
-    }
-
-
+    /*
+        1. move m steps
+        2. reverse (n - m + 1) nodes
+    */
     public ListNode reverseBetween(ListNode head, int m, int n) {
 
+        m --; n --;
+        int k = n - m + 1;
 
-        ListNode dummy = new ListNode(0);
-        dummy.next = head;
-        ListNode s = dummy;
-        for (int i = 0; i < m - 1; i++) {
-            s = s.next;
-            if (s == null) {
-                return head;
+        if(m == 0) return reverse(head, k);
+
+        ListNode cur = head, pre = null;
+        while(cur != null){
+            pre = cur;
+            cur = cur.next;
+            if(--m == 0){
+                pre.next = reverse(cur, k);
+                break;
             }
         }
+        return head;
+    }
 
-        if (s.next == null || s.next.next == null) return head;
+    private ListNode reverse(ListNode head, int k){
 
-        ListNode p = s.next;
-        ListNode c = s.next.next;
+        if(k == 0) return head;
 
-        //                          counter
-        //  x->3->5->NULL
-        //  s
-        //     p
-        //        c
-
-        //  x->5->3->NULL
-
-        for (int i = 0; i < (n - m); i++) {
-            ListNode next = c.next;     // null
-            c.next = s.next;            // 5->3
-            p.next = next;              // 3->NULL
-            s.next = c;                 // x->5
-            c = next;                   // c = next;
-
-            if (c == null) {
-                return dummy.next;
+        ListNode cur = head, pre = null, temp = null;
+        while(cur != null){
+            temp = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = temp;
+            if(--k == 0){
+                head.next = cur;
+                break;
             }
         }
-
-        return dummy.next;
+        return pre;
     }
 }
