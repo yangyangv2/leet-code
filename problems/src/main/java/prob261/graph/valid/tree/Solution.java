@@ -3,33 +3,53 @@ package prob261.graph.valid.tree;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Modified by yanya04 On 5/5/2018.
+ */
 public class Solution {
 
-    /*
-        Union Find
-    */
-    public boolean validTree(int n, int[][] edges) {
 
-
-        if(n - 1 > edges.length)
-            return false;
-
-        int[] roots = new int[n];
-        Arrays.fill(roots, - 1);
-
-        for(int[] edge : edges){
-            int x = find(roots, edge[0]);
-            int y = find(roots, edge[1]);
-            if(x == y) return false;
-            roots[x] = y;
+    class UF{
+        private int[] parents;
+        UF(int n){
+            parents = new int[n];
+            for(int i = 0; i < n; i ++){
+                parents[i] = i;
+            }
         }
-        return true;
+
+        int find(int x){
+            while(x != parents[x]){
+                parents[x] = parents[parents[x]];
+                x = parents[x];
+            }
+            return x;
+        }
+
+        boolean union(int x, int y){
+            x = find(x);
+            y = find(y);
+            if(x != y){
+                parents[x] = y;
+                return true;
+            } else {
+                return false;
+            }
+        }
+
     }
 
-    private int find(int[] roots, int x){
-        while(roots[x] != -1){
-            x = roots[x];
+    public boolean validTree(int n, int[][] edges) {
+        UF uf = new UF(n);
+
+        int count = n;
+        for(int[] edge : edges){
+            if(uf.union(edge[0], edge[1])) count --;
+            else return false;
         }
-        return x;
+        if(count != 1) return false;
+
+        return true;
+
     }
 }
