@@ -5,88 +5,77 @@ import java.util.List;
 
 /**
  * Created by yanya04 on 2/20/2018.
+ * Modified by yanya04 on 5/5/2018.
  */
 public class Solution {
 
-    private static class UFSet{
+    class UF{
 
         int[] parents;
-        int[][] positions;
-        int m;
-        int n;
-        int count;
-        UFSet(int m, int n){
+        int m, n, count;
+        int[][] map;
+        UF(int m, int n){
             this.m = m;
             this.n = n;
+            map = new int[m][n];
             parents = new int[m * n];
-            for(int i = 0; i < m; i ++){
-                for(int j = 0; j < n; j ++){
-                    parents[id(i, j)] = id(i, j);
+            int id = 0;
+            for(int i = 0; i < m; i ++)
+                for(int j = 0; j < n; j++){
+                    id = id(i, j);
+                    parents[id] = id;
                 }
-            }
-            positions = new int[m][n];
+
         }
 
-        private boolean union(int x1, int y1, int x2, int y2){
-            int id1 = find(x1, y1);
-            int id2 = find(x2, y2);
-            if(id1 == id2)
-                return false;
+        private int id(int x, int y){
+            return x * n + y;
+        }
 
-            if(id1 <= id2){
-                parents[id2] = id1;
-            } else {
+        private int find(int x){
+            while(x != parents[x]){
+                parents[x] = parents[parents[x]];
+                x = parents[x];
+            }
+            return x;
+        }
+
+        private void union(int x1, int y1, int x2, int y2){
+            int id1 = id(x1, y1), id2 = id(x2, y2);
+            id1 = find(id1);
+            id2 = find(id2);
+            if(id1 != id2){
                 parents[id1] = id2;
+                count --;
             }
-            return true;
         }
 
-        // for n, [1,2,3 ... n]
-        private int id(int r, int c){
-            return r * n  + c;
-        }
-
-        private int find(int r, int c){
-            int id = id(r, c);
-            while(parents[id] != id){
-                parents[id] = parents[parents[id]];
-                id = parents[id];
-            }
-            return id;
-        }
-
-        private boolean isConnected(int r, int c){
-            if(r < 0 || c < 0 || r == m || c == n){
-                return false;
-            }
-            return positions[r][c] == 1;
-        }
-
-        private final static int[][] dirs = new int[][]{{0, 1}, {1, 0}, {0, -1} , {-1, 0}};
-
-
-        int add(int r, int c){
-            positions[r][c] = 1;
+        void addIsland(int x, int y){
+            if(map[x][y] == 1) return;
+            map[x][y] = 1;
             count ++;
-            for(int[] dir: dirs){
-                if(isConnected(r + dir[0], c + dir[1])){
-                    if(union(r, c, r + dir[0], c + dir[1])){
-                        count --;
-                    }
-                }
-            }
+            if(x > 0 && map[x - 1][y] == 1) union(x, y, x - 1, y);
+            if(x < m - 1 && map[x + 1][y] == 1) union(x, y, x + 1, y);
+            if(y > 0 && map[x][y - 1] == 1) union(x, y, x, y - 1);
+            if(y < n - 1 && map[x][y + 1] == 1) union(x, y, x, y + 1);
+        }
+
+        int getIslandCount(){
             return count;
         }
     }
 
     public List<Integer> numIslands2(int m, int n, int[][] positions) {
-        UFSet ufset = new UFSet(m, n);
 
-        List<Integer> list = new ArrayList<>();
-        for(int[] position : positions){
-            int x = position[0], y = position[1];
-            list.add(ufset.add(x, y));
+        List<Integer> res = new ArrayList<>();
+        if(positions == null || positions.length == 0) return res;
+
+        UF uf = new UF(m, n);
+        for(int[] position: positions){
+            uf.addIsland(position[0], position[1]);
+            res.add(uf.getIslandCount());
         }
-        return list;
+
+        return res;
     }
 }
