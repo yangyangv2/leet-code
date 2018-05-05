@@ -2,39 +2,44 @@ package prob643.maximum.average.subarray.i;
 
 /**
  * Created by yanya04 on 8/20/2017.
+ * Modified by yanya04 on 5/4/2018.
  */
 public class Solution {
-
-/*
-    1. rotating hash (sum)
-    3. average
-
-*/
-
     public double findMaxAverage(int[] nums, int k) {
+        return slidewindow(nums, k);
+    }
 
-
-        int sumLen = nums.length - k + 1;
-
-        int[] sums = new int[sumLen];
-
-        int sum = 0;
+    private double slidewindow(int[] nums, int k){
+        if(nums == null || nums.length == 0) return -1;
+        int n = nums.length;
+        long sum = 0;
         for(int i = 0; i < k; i ++){
             sum += nums[i];
         }
-        sums[0] = sum;
 
-        for(int i = 1; i < sumLen; i ++){
-            // rotate
-            int old = sums[i - 1] - nums[i - 1];
-            sums[i] = old + nums[i + k -1];
+        double res = sum * 1.0 / k;
+
+        for(int i = k; i < n; i ++){
+            sum = sum - nums[i - k] + nums[i];
+            res = Math.max(res, 1.0 * sum / k);
         }
 
-        double max = Double.NEGATIVE_INFINITY;
-        for(int i = 0; i < sums.length; i ++){
-            max = Math.max(sums[i] * 1.0 / k, max);
+        return res;
+    }
+
+    private double presum(int[] nums, int k){
+        if(nums == null || nums.length == 0) return -1;
+        int n = nums.length;
+        long[] presum = new long[n];
+        presum[0] = nums[0];
+        for(int i = 1; i < n; i ++){
+            presum[i] = nums[i] + presum[i - 1];
         }
 
-        return max;
+        double res = 1.0 * presum[k - 1] / k;
+        for(int i = k; i < n; i ++){
+            res = Math.max(res, 1.0 * (presum[i] - presum[i - k]) / k);
+        }
+        return res;
     }
 }
