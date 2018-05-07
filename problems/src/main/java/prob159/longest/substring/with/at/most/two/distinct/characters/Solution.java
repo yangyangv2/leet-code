@@ -4,35 +4,27 @@ import java.util.Arrays;
 
 /**
  * Created by yanya04 on 9/3/2017.
+ * Modified by yanya04 on 5/6/2018.
  */
 public class Solution {
-/*
-    1. map count
-    2. shift j: if map[j] == 0 then len ++
-    3. shift i: if map[i--] -- == 1 then len --;
-*/
-
     public int lengthOfLongestSubstringTwoDistinct(String s) {
+        int[] stats = new int[128];
+        int left = 0, right = 0, idx1 = 0, idx2 = 0, max = 0, count = 0;
+        while(right < s.length()){
+            idx1 = (int) s.charAt(right ++);
 
-        int[] map = new int[128];
-        Arrays.fill(map, 0);
+            if(stats[idx1] == 0) count ++;
 
-        int i = 0, j = 0, max = Integer.MIN_VALUE, count = 0;
+            stats[idx1]++;
 
-        while(j < s.length()){
-            if(map[s.charAt(j++)]++ == 0) count ++;
-            // j - i > 2
-            if(count <= 2) {
-                // valid
-                int len = j - i;
-                max = Math.max( max, len );
-            } else {
-                // exceed, move i
-                while(count > 2){
-                    if(map[s.charAt(i ++)]-- == 1) count --;
-                }
+            while(count > 2){
+                idx2 = (int) s.charAt(left ++);
+                stats[idx2] --;
+                if(stats[idx2] == 0 ) count --;
             }
+            max = Math.max(right - left, max);
         }
-        return Integer.MIN_VALUE == max ? 0: max;
+        return max;
+
     }
 }

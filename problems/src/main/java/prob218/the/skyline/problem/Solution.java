@@ -4,135 +4,56 @@ import java.util.*;
 
 /**
  * Created by yanya04 on 1/19/2018.
+ * Modified by yanya04 on 5/6/2018.
  */
 public class Solution {
+
     /*
-                   s e h     s e h
-        Input:  [ [2 9 10], [3 7 15], [5 12 12], [15 20 10], [19 24 8] ]
-        Output: [ [2 10], [3 15], [7 12], [12 0], [15 10], [20 8], [24, 0] ]
+    [2 9 10], [3 7 15], [5 12 12], [15 20 10], [19 24 8]
 
-        SweepLine:
-
-        on start
-        1. put the height into a Queue
-        2. if new high, mark [s, high]
-
-        on end
-
-        1. remove the height from the Queue
-        2. if new low, mark [e, low]
+    [2,10,0],[3,15,0],[5,12,0],[7,15,1],[9,10,1],[12,12,1],[15,10,0],[19,8,0],[20,10,1],[24,8,1]
 
     */
+
     public List<int[]> getSkyline(int[][] buildings) {
-        return tm(buildings);
-    }
 
+        List<int[]> res = new ArrayList<>();
+        if(buildings == null || buildings.length == 0) return res;
 
-    /*
-        TreeMap solution
+        int n = buildings.length;
 
-        Space:      O(n);
-        Complexity: O(nlog(n))
-    */
-    private List<int[]> tm(int[][] buildings){
-        List<int[]> heights = new ArrayList<>();
-        for(int[] b: buildings){
-            int s = b[0];
-            int e = b[1];
-            int h = b[2];
-            heights.add(new int[]{s, h, 0});    // start
-            heights.add(new int[]{e, h, 1});    // end
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+        int[][] points = new int[2 * n][3];
+        int index = 0;
+        for(int[] building: buildings){
+            points[index ++] = new int[] {building[0], building[2], 0};
+            points[index ++] = new int[] {building[1], building[2], 1};
         }
+        Arrays.sort(points, (a, b) -> a[0] - b[0]);
+        // need to handle overlapped time, such as [5,3,0], [5,2,1], or [5,2,1],[5,1,1]
 
-        Collections.sort(heights, (a, b) ->{
-            // if coordinates are different, prior node go first
-            if(a[0] != b[0]) return a[0] - b[0];
 
-            // if coordinate are the same, start node go first over end node
-            if(a[2] != b[2]) return a[2] - b[2];
+        int maxLevel = 0, curLevel = 0;
+        for(int i = 0; i < points.length; i ++){
 
-            // if start node, then higher node go first
-            if(a[2] == 0) return b[1] - a[1];
-
-            // if end node, then lower node go first
-            return a[1] - b[1];
-        });
-
-        List<int[]> result = new ArrayList<>();
-        PriorityQueue<Integer> queue = new PriorityQueue<>((a, b) -> b - a);
-
-        TreeMap<Integer, Integer> map = new TreeMap<>((a, b) -> b - a);
-        map.put(0, 1);
-        int pre = 0;
-        for(int[] h: heights){
-
-            if(h[2] == 0)
-                map.put(h[1], map.getOrDefault(h[1], 0) + 1);
-            else {
-                int count = map.get(h[1]);
-                if(count == 1){
-                    map.remove(h[1]);
-                } else {
-                    map.put(h[1], count - 1);
-                }
+            if(points[i][2] == 0){ // start
+                pq.offer(points[i][1]);
             }
 
-            int cur = map.firstKey();
-            if(cur != pre){
-                result.add(new int[]{h[0], cur});
-                pre = cur;
+            if(points[i][2] == 1){ // end
+                pq.remove(points[i][1]);
+            }
+            if(i < points.length - 1 && points[i][0] == points[i + 1][0])
+                continue;
+
+            curLevel = pq.isEmpty() ? 0 : pq.peek();
+
+            if(maxLevel != curLevel){
+                res.add(new int[]{ points[i][0], curLevel });
+                maxLevel = curLevel;
             }
         }
-        return result;
+
+        return res;
     }
-
-
-    /*
-        PriorityQueue Solution
-
-        Space:      O(n);
-        Complexity: O(n ^ 2)
-    */
-    private List<int[]> pq(int[][] buildings){
-        List<int[]> heights = new ArrayList<>();
-        for(int[] b: buildings){
-            int s = b[0];
-            int e = b[1];
-            int h = b[2];
-            heights.add(new int[]{s, h, 0}); // 0 indicate start
-            heights.add(new int[]{e, h, 1}); // 1 indicate end
-        }
-        List<int[]> result = new ArrayList<>();
-
-        Collections.sort(heights, (a, b) -> {
-            // if coordinate is different, pick the earlier one
-            if(a[0] != b[0]) return a[0] - b[0];
-
-            // if one start, one end, start takes the prioirty
-            if(a[2] != b[2]) return a[2] - b[2];
-
-            // if start, take the highest
-            if(a[2] == 0) return b[1] - a[1];
-
-            // if end, take the lowest
-            return a[1] - b[1];
-        });
-
-        PriorityQueue<Integer> queue = new PriorityQueue<>((a, b) -> b - a);
-        queue.offer(0);
-        int pre = 0;
-        for(int[] h: heights){
-            if(h[2] == 0) queue.offer(h[1]);    // start point      // O(log(n))
-            else queue.remove(h[1]);            // end point        // O(n)
-
-            int cur = queue.peek();
-            if(pre != cur){                     // max height is changed, add current coordinate into result
-                result.add(new int[]{h[0], cur});
-                pre = cur;
-            } else {}                           // max height is unchanged, do nothing
-        }
-        return result;
-    }
-
-
 }

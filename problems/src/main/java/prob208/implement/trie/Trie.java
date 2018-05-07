@@ -2,66 +2,80 @@ package prob208.implement.trie;
 
 /**
  * Created by yanya04 on 1/18/2018.
+ * Modified by yanya04 on 5/5/2018.
  */
 public class Trie {
 
-
-    private static class TrieNode{
+    class TrieNode{
+        char c;
+        boolean word;
         TrieNode[] children;
-        String word;
+        TrieNode(char c){
+            this.c = c;
+        }
     }
 
-
     private TrieNode root;
+
     /** Initialize your data structure here. */
     public Trie() {
-        this.root = new TrieNode();
+        this.root = new TrieNode(' ');
     }
 
     /** Inserts a word into the trie. */
     public void insert(String word) {
-        TrieNode node = root;
-        for(int i = 0; i < word.length(); i ++){
-            int index = word.charAt(i) - 'a';
-            if(node.children == null){
-                node.children = new TrieNode[26];
+        if(word == null) return;
+
+        int i = 0;
+        char c = ' ';
+        TrieNode cur = root;
+        while(i < word.length()){
+            c = word.charAt(i);
+            if(cur.children == null){
+                cur.children = new TrieNode[26];
             }
-            if(node.children[index] == null){
-                node.children[index] = new TrieNode();
+            if(cur.children[c - 'a'] == null){
+                cur.children[c - 'a'] = new TrieNode(c);
             }
-            node = node.children[index];
+
+            if(i == word.length() - 1){
+                cur.children[c - 'a'].word = true;
+            } else {
+                cur = cur.children[c - 'a'];
+            }
+            i ++;
         }
-        node.word = word;
     }
 
     /** Returns if the word is in the trie. */
     public boolean search(String word) {
-        return search(word, root, 0, false);
+        TrieNode node = find(word);
+        if(node == null) return false;
+        return node.word;
+    }
+
+    private TrieNode find(String word){
+        int i = 0;
+        char c = ' ';
+        TrieNode cur = root;
+        while(i < word.length()){
+            c = word.charAt(i);
+            if(cur.children == null || cur.children[c - 'a'] == null)
+                return null;
+
+            cur = cur.children[c - 'a'];
+            if(i == word.length() - 1){
+                return cur;
+            }
+            i ++;
+        }
+        return null;
     }
 
     /** Returns if there is any word in the trie that starts with the given prefix. */
     public boolean startsWith(String prefix) {
-        return search(prefix, root, 0, true);
-    }
-
-
-    private boolean search(String word, TrieNode node, int start, boolean startsWith){
-        if(node == null) return false;
-        if(start == word.length()){
-            // startsWith
-            if(startsWith) return true;
-
-            // search
-            if(node.word != null) return true;
-            return false;
-        }
-
-        int index = word.charAt(start) - 'a';
-
-        if(node.children == null || node.children[index] == null)
-            return false;
-
-        return search(word, node.children[index], start + 1, startsWith);
+        TrieNode node = find(prefix);
+        return node != null;
     }
 }
 

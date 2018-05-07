@@ -4,54 +4,39 @@ import java.util.Arrays;
 
 /**
  * Created by yanya04 on 9/2/2017.
+ * Modified by yanya04 on 5/6/2018.
  */
 public class Solution {
-    /*
-        create a map counter for T
-        two pointers from the begining
-    */
     public String minWindow(String s, String t) {
-        int[] map = new int[128];
-        Arrays.fill(map, 0);
+
+        String res = "";
+        if(s == null || t == null || s.length() == 0 || t.length() == 0)
+            return res;
+
+        int[] stats = new int[128];
+        int count = 0, idx = 0;
         for(int i = 0; i < t.length(); i ++){
-            map[t.charAt(i)] ++;
+            idx = (int) t.charAt(i);
+            count ++;
+            stats[idx] --;
         }
-        int i = 0, j = 0;
-        int match = 0;
-        int min = Integer.MAX_VALUE;
-        String result = "";
-/*
-    S = "ADOBECODEBANC"
-    T = "ABC"
-    map[A] = 1, map[B] = 1, map[C] = 1
-*/
-        while(j < s.length()){
-            if(map[s.charAt(j)]-- > 0){
-                match ++;
-            }
-            j++;
 
-            while(match == t.length()){
-                if(min > j - i){
-                    min = j - i;
-                    result = s.substring(i, j);
-                }
+        int left = 0, right = 0, idx1 = 0, idx2 = 0, min = Integer.MAX_VALUE;
 
-                if(map[s.charAt(i)]++ == 0){
-                    match --;
+        while(right < s.length()){
+            idx1 = (int)s.charAt(right ++);
+            if(stats[idx1] < 0) count --;
+            stats[idx1] ++;
+            while(count == 0){
+                idx2 = (int) s.charAt(left ++);
+                stats[idx2] --;
+                if(stats[idx2] < 0) count ++;
+                if(min > right - left){
+                    min = right - left;
+                    res = s.substring(left - 1, right);
                 }
-                i ++;
             }
         }
-        return result;
-
-    }
-
-
-    public static void main(String[] args) {
-        String s = "ADOBECODEBANC";
-        String t = "ABC";
-        Solution solution = new Solution();
-        System.out.println(solution.minWindow(s, t));
+        return res;
     }
 }
