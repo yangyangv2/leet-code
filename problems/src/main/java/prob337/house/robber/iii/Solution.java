@@ -5,24 +5,35 @@ import utils.tree.TreeNode;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Modified by yanya04 on 5/7/2018.
+ */
 public class Solution {
-    public int rob(TreeNode root) {
-        Map<TreeNode, Integer> map = new HashMap<>();
-        return rob(root, map);
-    }
+    /*
+        1. rob
+        2. not rob
+    */
 
-    private int rob(TreeNode root, Map<TreeNode, Integer> map){
+    private Map<TreeNode, Integer> map = new HashMap<>();
+
+    public int rob(TreeNode root) {
         if(root == null) return 0;
 
-        Integer result = map.get(root);
-        if(result != null) return result;
+        if(map.containsKey(root)) return map.get(root);
 
-        int val = 0;
-        if(root.left != null) val += rob(root.left.left, map) + rob(root.left.right, map);
-        if(root.right != null) val += rob(root.right.left, map) + rob(root.right.right, map);
+        int value =  Math.max(root.val + notrob(root.left) + notrob(root.right),
+                rob(root.left) + rob(root.right));
 
-        result = Math.max(root.val + val, rob(root.left, map) + rob(root.right, map));
-        map.put(root, result);
-        return result;
+        map.put(root, value);
+
+        return value;
     }
+
+    private int notrob(TreeNode root){
+
+        if(root == null) return 0;
+
+        return rob(root.left) + rob(root.right);
+    }
+
 }

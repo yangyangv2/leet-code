@@ -2,36 +2,40 @@ package prob312.burst.balloons;
 
 /**
  * Created by yanya04 on 3/5/2018.
+ * Modified by yanya04 on 5/8/2018.
  */
 public class Solution {
     /*
-        DP: dp[i][j] = maximum coins between i and j
-            dp[i][j] = max(dp[i][k - 1] + dp[k + 1][j] + nums[k] * nums[i - 1] * nums[j + 1]);
+        f[i][j] = max coins to get at range [i, j]
+        f[i][j] = max{ f[i][k - 1] + f[k + 1][j] + nums[k - 1] * nums[k + 1] * nums[k]  }
     */
     public int maxCoins(int[] nums) {
-
+        if(nums == null || nums.length == 0) return 0;
         int n = nums.length;
-        if(n == 0) return 0;
-        int[][] dp = new int[n][n];
-        return dfs(nums, dp, 0, n - 1);
+        int[] nums2 = new int[n + 2];
+        System.arraycopy(nums, 0, nums2, 1, n);
+        nums2[0] = nums2[n + 1] = 1;
+        int[][] f = new int[n + 2][n + 2];
+        search(f, nums2, 1, n);
+
+        return f[1][n];
     }
 
-    private int dfs(int[] nums, int[][] dp, int i, int j)
-    {
-        if(i < 0 || j == nums.length || j < i) return 0;
 
-        if(dp[i][j] > 0) return dp[i][j];
+    private int search(int[][] f, int[] nums, int start, int end){
+        int max = 0;
 
-        for(int k = i; k <= j; k ++){
+        if(f[start][end] > 0) return f[start][end];
 
-            int left = i - 1 < 0 ? 1: nums[i - 1];
-            int right = j + 1 == nums.length? 1: nums[j + 1];
+        for(int k = start; k <= end; k ++){
 
-            dp[i][j] = Math.max(dp[i][j],
-                    nums[k] * left * right +
-                            dfs(nums, dp, i, k - 1) +
-                            dfs(nums, dp, k + 1, j));
+            int left = search(f, nums, start, k - 1);
+            int right = search(f, nums, k + 1, end);
+            max = Math.max(left + right + nums[start - 1] * nums[k] * nums[end + 1], max);
         }
-        return dp[i][j];
+        f[start][end] = max;
+        return max;
+
     }
+
 }

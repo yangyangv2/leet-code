@@ -1,36 +1,31 @@
 package prob221.maximal.square;
 
-import static java.lang.Math.*;
-
+/**
+ * Modified by yanya04 on 5/7/2018.
+ */
 public class Solution {
+
+    /*
+        let f[i][j] be the max lens of the square.
+        f[i][j] = min(f[i][j - 1], f[i - 1][j], f[i - 1][j - 1]) + 1
+    */
     public int maximalSquare(char[][] matrix) {
 
-        int m = matrix.length;
-        if(m == 0) return 0;
-        int n = matrix[0].length;
+        if(matrix == null || matrix.length == 0 || matrix[0].length == 0)
+            return 0;
 
-        int[][] ms = new int[m][n];
-
-        int max = matrix[0][0] - '0';
-
-        for(int c = 0; c < n; c ++){
-            ms[0][c] = matrix[0][c] - '0';
-            max = max(max, ms[0][c]);
-        }
-
-        for(int r = 0; r < m; r ++){
-            ms[r][0] = matrix[r][0] - '0';
-            max = max(max, ms[r][0]);
-        }
-
-        for(int r = 1; r < m; r ++)
-            for(int c = 1; c < n; c ++){
-                if(matrix[r][c] == '1'){
-                    ms[r][c] = min(min(ms[r - 1][c], ms[r][c - 1]), ms[r - 1][c - 1]) + 1;
-                    max = max(max, ms[r][c]);
+        int m = matrix.length, n = matrix[0].length, max = 0;
+        int[][] f = new int[2][n + 1];
+        for(int i = 0; i < m; i ++){
+            for(int j = 0; j < n; j ++){
+                if(matrix[i][j] == '1'){
+                    f[(i + 1)%2][j + 1] = Math.min(Math.min(f[i%2][j + 1], f[(i + 1)%2][j]), f[i%2][j]) + 1;
+                    max = Math.max(f[(i + 1)%2][j + 1] * f[(i + 1)%2][j + 1], max);
+                } else {
+                    f[(i + 1)%2][j + 1] = 0;
                 }
             }
-
-        return max * max;
+        }
+        return max;
     }
 }

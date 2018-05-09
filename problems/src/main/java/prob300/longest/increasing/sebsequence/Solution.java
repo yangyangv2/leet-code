@@ -4,33 +4,51 @@ import java.util.Arrays;
 
 /**
  * Created by yanya04 on 8/27/2017.
+ * Modified by yanya04 on 5/7/2018.
  */
 public class Solution {
-
     /*
-        solution 1, dynamic programming
+        f[i], LIS ends with char[i];
+        iterate and keep the longest distance
     */
 
-    public int lengthOfLIS(int[] nums) {
+    private int dp(int[] nums){
+        int n = nums.length;
+        int[] f = new int[n];
+        Arrays.fill(f, 1);
 
-        int[] lens = new int[nums.length];
-        Arrays.fill(lens, 1);
-
-        for(int i = 1; i < nums.length; i ++){
-            for(int j = 0; j < i; j ++){
+        for(int i = 0; i < n; i ++){
+            for(int j = 0; j <= i; j ++){
                 if(nums[j] < nums[i]){
-                    lens[i] = Math.max(lens[j] + 1, lens[i]);
+                    f[i] = Math.max(f[j] + 1, f[i]);
                 }
             }
         }
-
-        int maxLen = Integer.MIN_VALUE;
-
-        for(int i = 0; i < lens.length;i ++){
-            maxLen = Math.max(maxLen, lens[i]);
+        int max = 0;
+        for(int i = 0; i < n; i ++){
+            max = Math.max(max, f[i]);
         }
-
-        return maxLen == Integer.MIN_VALUE ? 0 : maxLen;
+        return max;
     }
 
+
+    private int binary(int[] nums){
+        int n = nums.length;
+        int[] maxarr = new int[n];
+        int index = 0, level = 0;
+        for(int i = 0; i < n; i ++){
+            index = Arrays.binarySearch(maxarr, 0, level, nums[i]);
+            index = index < 0 ? -(index + 1): index;
+            if(index == level) level ++;
+            maxarr[index] = nums[i];
+        }
+        return level;
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        if(nums == null || nums.length == 0)
+            return 0;
+
+        return binary(nums);
+    }
 }

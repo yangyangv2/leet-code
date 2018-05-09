@@ -1,30 +1,25 @@
 package prob070.climbing.stairs;
 
+
+/**
+ * Modified by yanya04 on 5/7/2018.
+ */
 public class Solution {
-
-    // let s[i] be the number of ways to get the position i
-    // s[i] = s[i - 1] + s[i - 2];
-
-    // init
-    // n = 0    s[n] = 0
-    // n = 1    s[n] = 1
-    // n = 2    s[n] = s[n - 1] + s[n - 2]   = 2
-    // n = 3    s[n] = s[n - 1] + s[n - 2]   = 3
-    //
-
+    /*
+        f[n]: number of ways to get n;
+        f[0] = 1;
+        f[1] = 1;
+        f[2] = f[1] + f[0]
+        f[n] = f[n - 1] + f[n - 2]
+    */
     public int climbStairs(int n) {
 
-        if(n <= 0) return 0;
-        else if(n == 1) return 1;
-        else if(n == 2) return 2;
+        int[] f = new int[2];
+        f[0] = 1; f[1] = 1;
 
-        int[] s = new int[n + 1];
-        s[0] = 0;
-        s[1] = 1;
-        s[2] = 2;
-        for(int i = 3; i <= n; i ++)
-            s[i] = s[i - 1] + s[i - 2];
-
-        return s[n];
+        for(int i = 2; i <= n; i ++){
+            f[i % 2] = f[(i - 1) % 2] + f[(i - 2) % 2];
+        }
+        return f[n % 2];
     }
 }
