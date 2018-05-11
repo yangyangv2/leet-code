@@ -6,27 +6,10 @@ import java.util.Map;
 /**
  * Created by yanya04 on 1/14/2018.
  */
-<<<<<<< HEAD:problems/src/main/java/prob146/lru/cache/Solution.java
-public class Solution {
-=======
+
 public class LRUCache {
-    /*
-        O(1) operation, then HashMap + DoubledLinkedList
-    */
-    private static class Node{
-        int key;
-        int val;
-        Node pre;
-        Node next;
-        Node(int key, int val){
-            this.key = key;
-            this.val = val;
-        }
-    }
->>>>>>> 575447edca41ea1ae0976a2efdc75cd92b5556c5:problems/src/main/java/prob146/lru/cache/LRUCache.java
 
 
-<<<<<<< HEAD:problems/src/main/java/prob146/lru/cache/Solution.java
     // 1. need a map for fast access on value
     // 2. need a double linked list to keep track of the least recently used
 
@@ -53,10 +36,7 @@ public class LRUCache {
         ["LRUCache","put","put","get","put","get","put","get","get","get"]
         [[2],       [1,1],[2,2],[1],[3,3],[2],[4,4],[1],[3],[4]]
     */
-    public Solution(int capacity) {
-=======
-    public LRUCache(int capacity){
->>>>>>> 575447edca41ea1ae0976a2efdc75cd92b5556c5:problems/src/main/java/prob146/lru/cache/LRUCache.java
+    public LRUCache(int capacity) {
         this.capacity = capacity;
         this.map = new HashMap<>();
     }

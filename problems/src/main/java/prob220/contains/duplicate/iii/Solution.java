@@ -4,34 +4,37 @@ import java.util.TreeSet;
 
 /**
  * Created by yanya04 on 8/10/2017.
+ * Modified by yanya04 on 5/9/2018.
  */
 public class Solution {
     public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
 
-        if(nums == null || nums.length == 0){
-            return false;
-        }
+        if(nums == null || nums.length == 0) return false;
 
-        TreeSet<Long> set = new TreeSet<>();
+        int start = 0, end = 0;
+        Long floor = null, ceiling = null;
+        TreeSet<Long> ts = new TreeSet<>();
+        while(end < nums.length){
 
-        long lt = (long) t;
+            floor = ts.floor((long)nums[end]);
+            ceiling = ts.ceiling((long)nums[end]);
 
-        for(int i = 0; i < nums.length; i ++){
-
-            Long ceiling = set.ceiling(nums[i] - lt);
-            Long floor = set.floor(nums[i] + lt);
-
-            if((ceiling != null && ceiling <= nums[i]) ||
-                    (floor != null && floor >= nums[i])){
+            if(floor != null && nums[end] - floor <= t){
                 return true;
             }
-            set.add((long)nums[i]);
-            if(set.size() > k){
-                set.remove((long)nums[i - k]);
+
+            if(ceiling != null && ceiling - nums[end] <= t){
+                return true;
             }
 
-        }
+            ts.add((long)nums[end]);
+            end ++;
 
+            if(end > k){
+                ts.remove((long)nums[start]);
+                start ++;
+            }
+        }
         return false;
     }
 }

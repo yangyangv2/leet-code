@@ -1,21 +1,44 @@
 package utils.test;
 
-import java.util.Arrays;
-
 public class TestPartition {
 
-    private static int[] nums = new int[]{1,2,3,3,3,3,3,3,3,3,4,5};
+    private static int[] nums = new int[]{1,2,3,3,3,3,3,3,3,5,6};
 
     public static void main(String[] args) {
 
-        int loc1 = findLeftMost(nums, 3);
-        int loc2 = findRightMode(nums, 3);
+        int target = 3;
 
-        System.out.println(loc2 - loc1 + 1);
+        int loc0 = binarySearch(nums, target);
+        int loc1 = findLeftMost(nums, target);
+        int loc2 = findRightMost(nums, target);
+
+
+        System.out.println(loc0);
+        System.out.println(loc1);
+        System.out.println(loc2);
+
     }
 
+    //  return is either the target position or insert position
+    private static int binarySearch(int[] nums, int target){
 
-    private static int findRightMode(int[] nums, int target){
+        int lo = 0, hi = nums.length - 1, mid = 0;
+
+        while(lo <= hi) {
+            mid = lo + (hi - lo) / 2;
+            if (nums[mid] == target) {
+                return mid;
+            } else if (nums[mid] < target) {
+                lo = mid + 1;
+            } else {
+                hi = mid - 1;
+            }
+        }
+        return lo;
+    }
+
+    // return the right most position
+    private static int findRightMost(int[] nums, int target){
         int lo = 0, hi = nums.length - 1, mid = 0;
 
         while(lo <= hi){
@@ -28,10 +51,10 @@ public class TestPartition {
                 lo = mid + 1;   // shrink from left to the right
             }
         }
-        return - 1;
+        return lo;
     }
 
-
+    // return the left post position
     private static int findLeftMost(int[] nums, int target){
 
         int lo = 0, hi = nums.length - 1, mid = 0;
@@ -46,6 +69,6 @@ public class TestPartition {
                 hi = mid - 1;   // shrink from right to the left
             }
         }
-        return - 1;
+        return lo;
     }
 }

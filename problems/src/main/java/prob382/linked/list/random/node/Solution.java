@@ -6,45 +6,33 @@ import java.util.Random;
 
 /**
  * Created by yanya04 on 9/12/2017.
+ * Modified by yanya04 on 5/11/2018.
  */
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode(int x) { val = x; }
- * }
- */
+
 public class Solution {
 
-    private ListNode head;
-    private Random rand;
-
-
+    ListNode head;
     /** @param head The linked list's head.
     Note that the head is guaranteed to be not null, so it contains at least one node. */
     public Solution(ListNode head) {
         this.head = head;
-        this.rand = new Random();
     }
 
     /** Returns a random node's value. */
     public int getRandom() {
-
-        ListNode cur = head;
-        ListNode result = head;
-        int n = 0;
+        ListNode cur = head, res = head;
+        int count = 0;
+        Random rand = new Random();
         while(cur != null){
-            if(rand.nextInt(++ n) == 0) {
-                result = cur;
+            if(rand.nextInt(++count) == 0){
+                res = cur;
             }
             cur = cur.next;
         }
-        return result.val;
+        return res.val;
     }
-
-
 }
+
 
 /**
  * Your WordDictionary object will be instantiated and called as such:
