@@ -2,15 +2,13 @@ package prob154.find.minimum.in.rotated.sorted.array.ii;
 
 /**
  * Created by yanya04 on 8/17/2017.
+ * Modified by yanya04 on 5/12/2018.
  */
 public class Solution {
-
     public int findMin(int[] nums) {
-
         int lo = 0, hi = nums.length - 1, mid = 0;
         while(lo < hi){
-
-            mid = lo + (hi - lo) / 2;
+            mid = lo + ((hi - lo) >> 1);
             if(nums[mid] > nums[hi]){
                 lo = mid + 1;
             } else if(nums[mid] < nums[hi]){
@@ -19,15 +17,14 @@ public class Solution {
 
                 // nums[mid] == nums[hi]
 
-                // if lo is already at the pivot?   0 1 1 1 1       pivot = 0
-                // if lo equals mid as well?        1 1 1 0 1       pivot = 3
-                // if lo is the largest number      2 1 1 1 1       pivot = 1;
+                // 222201
+                // 111101
+                // 000010
+                // 010000
+                // 311111
+                // 133333
 
-                if(nums[lo] == nums[mid]){
-                    lo ++;
-                } else{
-                    hi = mid;
-                }
+                hi = hi - 1;
             }
         }
         return nums[lo];
