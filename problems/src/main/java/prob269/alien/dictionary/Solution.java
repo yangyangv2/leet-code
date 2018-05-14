@@ -1,97 +1,120 @@
 package prob269.alien.dictionary;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Queue;
-import java.util.Set;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * Created by yanya04 on 1/24/2018.
  */
 public class Solution {
-
     /*
-        1.  build a direcinal graph from words
-            each character is a node
-            the relation between two character is the edge
-            the direction is from lower alphabeta to higher
-        2.  use topology sort, which can give the right order from lowerest character to the highest
+        Input 1:
+        [
+          "z",
+          "x"
+        ]
+        z -> x
 
+        Input 2:
+        [
+          "wrt",
+          "wrf",
+          "er",
+          "ett",
+          "rftt"
+        ]
+
+        t -> f
+        w -> e
+        r -> t
+        e -> r
     */
     public String alienOrder(String[] words) {
 
-        // build a graph
+        if(words == null || words.length == 0) return "";
 
-        HashMap<Character, Set<Character>> graph = new HashMap<>();
-        int[] degree = new int[26]; // only 26 possible characters
+        Map<Character, Set<Character>> indegree = new HashMap<>();
+        Map<Character, Set<Character>> graph = new HashMap<>();
 
-        // compare horizontally
+        Set<Character> lowerSet = null;
+        Set<Character> charSet = new HashSet<>();
 
-        for(String word: words){
-            for(char c: word.toCharArray()){
-                if(degree[c - 'a'] == 0){
-                    degree[c - 'a'] = 1;
-                }
+        for(int i = 0; i < words.length; i ++){
+            // build up char set
+            for(int j = 0; j < words[i].length(); j ++){
+                charSet.add(words[i].charAt(j));
             }
         }
 
-        for(int i = 0; i < words.length - 1; i ++){
-            String cur = words[i];
-            String next = words[i + 1];
-            int len = Math.min(cur.length(), next.length());
-            for(int j = 0; j < len; j ++){
-                if(cur.charAt(j) != next.charAt(j)){
-                    // cur[j] is lower than next[j]
+        Set<Character> indegreeSet = null;
 
-                    if(!graph.containsKey(cur.charAt(j))){
-                        graph.put(cur.charAt(j), new HashSet<Character>());
-                    }
+        for(int i = 1; i < words.length; i ++){
+            char[] chars = getOrder(words[i - 1], words[i]);
+            if(chars == null) continue;
 
-                    if(graph.get(cur.charAt(j)).add(next.charAt(j))){
-                        degree[next.charAt(j) - 'a'] ++;
-                    }
-                    break;
-                }
+            indegreeSet = indegree.get(chars[1]);
+            if(indegreeSet == null){
+                indegreeSet = new HashSet<>();
+                indegree.put(chars[1], indegreeSet);
             }
+            indegreeSet.add(chars[0]);
+
+            //indegree.put(chars[1], indegree.getOrDefault(chars[1], 0) + 1);
+            lowerSet = graph.get(chars[0]);
+            if(lowerSet == null){
+                lowerSet = new HashSet<>();
+                graph.put(chars[0], lowerSet);
+            }
+            lowerSet.add(chars[1]);
         }
-
-        // topology sort
-
-        return topologySort(graph, degree);
-    }
-
-    private String topologySort(HashMap<Character, Set<Character>> graph, int[] degree){
-
-        StringBuilder sb = new StringBuilder();
-        int count = 0;
 
         Queue<Character> queue = new LinkedList<>();
-
-        for(int i = 0; i < degree.length; i ++){
-            if(degree[i] == 0) continue;
-            count ++;
-            if(degree[i] == 1) {
-                queue.offer((char) (i + 'a'));
+        for(Character c: charSet){
+            if(indegree.getOrDefault(c, new HashSet<>()).isEmpty()){
+                queue.offer(c);
             }
         }
 
-
+        StringBuilder sb = new StringBuilder();
+        Character c = null;
+        int ind = 0;
         while(!queue.isEmpty()){
-
-            char node = queue.poll();
-            sb.append(node);
-            if(graph.containsKey(node)){
-                for(char child: graph.get(node)){
-                    if(--degree[child - 'a'] == 1){
-                        queue.offer(child);
+            c = queue.poll();
+            sb.append(c);
+            lowerSet = graph.get(c);
+            if(lowerSet != null){
+                for(Character l: lowerSet){
+                    indegreeSet = indegree.get(l);
+                    indegreeSet.remove(c);
+                    if(indegreeSet.isEmpty()){
+                        queue.offer(l);
                     }
                 }
             }
         }
 
-        if(sb.length() != count) return "";
-        else return sb.toString();
-
+        if(sb.length() == charSet.size()){
+            return sb.toString();
+        } else {
+            return "";
+        }
     }
+
+    private char[] getOrder(String word1, String word2){
+
+        int min = Math.min(word1.length(), word2.length());
+
+        for(int i = 0; i < min; i ++){
+            if(word1.charAt(i) == word2.charAt(i)) continue;
+            return new char[]{word1.charAt(i), word2.charAt(i)};
+        }
+        /* skip this case.
+        "abx"
+        "ab"
+
+        "abx"
+        "ab"
+        */
+        return null;
+    }
+
 }

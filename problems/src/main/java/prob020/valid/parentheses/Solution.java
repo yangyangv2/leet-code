@@ -4,36 +4,27 @@ import java.util.Stack;
 
 /**
  * Created by yanya04 on 9/3/2017.
- * Modified by yanya04 on 3/14/2017
+ * Modified by yanya04 on 3/14/2018.
+ * Modified by yanya04 on 5/14/2018.
  */
 public class Solution {
-
     public boolean isValid(String s) {
-        Stack<Character> stack = new Stack();
+        if(s == null || s.length() == 0) return true;
+        Stack<Character> stack = new Stack<>();
         for(char c: s.toCharArray()){
-            char exp = '0';
-            switch(c){
-                case '}':
-                    exp = '{';
-                    break;
-                case ']':
-                    exp = '[';
-                    break;
-                case ')':
-                    exp = '(';
-                    break;
-                default:
-                    stack.push(c);
-            }
 
-            if(exp != '0'){
-                if(stack.isEmpty()) return false;
-                char start = stack.pop();
-                if(start != exp) return false;
+            switch(c){
+                case    '{' :   stack.push('}'); break;
+                case    '(' :   stack.push(')'); break;
+                case    '[' :   stack.push(']'); break;
+                default     :   if (stack.isEmpty() || stack.peek() != c){
+                    return false;
+                } else {
+                    stack.pop();
+                }
             }
         }
+
         return stack.isEmpty();
     }
-
-
 }

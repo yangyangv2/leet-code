@@ -1,62 +1,51 @@
 package prob210.course.schedule.ii;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Queue;
+import java.util.*;
 
+/**
+ *  Modified by yanya04 on 5/13/2018.
+ */
 public class Solution {
     public int[] findOrder(int numCourses, int[][] prerequisites) {
 
-        /*
-            WordDictionary
-
-            prepare graph, indegree, process queue
-            BFS, record process sequence
-        */
-
-        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
-        int[] inDegree = new int[numCourses];
-        Queue<Integer> processQueue = new ArrayDeque<>();
-        // result
-        int[] processOrder = new int[numCourses];
-        int processCount = 0;
-
-        for(int i = 0; i < numCourses; i ++){
-            graph.add(new ArrayList<Integer>());
-        }
-
+        Map<Integer, Set<Integer>> graph = new HashMap<>();
+        int[] indegree = new int[numCourses];
+        Set<Integer> enableSet = null;
         for(int[] prereq: prerequisites){
-            // finish prereq[1] will enable prereq[0]
-            graph.get(prereq[1]).add(prereq[0]);
-
-            // prereq[0] has one more prerequisite
-            inDegree[prereq[0]] ++;
+            // course: [0], prereq: [1]
+            enableSet = graph.get(prereq[1]);
+            if(enableSet == null){
+                enableSet = new HashSet<>();
+                graph.put(prereq[1], enableSet);
+            }
+            enableSet.add(prereq[0]);
+            indegree[prereq[0]] ++;
         }
 
-        // put courses with no prerequiste into process queue
+        Queue<Integer> queue = new LinkedList<>();
+        // find the entry points
         for(int i = 0; i < numCourses; i ++){
-            if(inDegree[i] == 0){
-                processQueue.offer(i);
+            if(indegree[i] == 0){
+                queue.offer(i);
             }
         }
 
-        // start BFS
-        while(!processQueue.isEmpty()){
-            Integer course = processQueue.poll();
-            processOrder[processCount] = course;
-            processCount ++;
-            for(Integer enabled: graph.get(course)){
-                inDegree[enabled] --;
-                if(inDegree[enabled] == 0){
-                    processQueue.offer(enabled);
+        int[] res = new int[numCourses];
+        int course = 0, processed = 0;
+        // BFS
+        while(!queue.isEmpty()){
+            course = queue.poll();
+            res[processed ++] = course;
+            enableSet = graph.get(course);
+            if(enableSet != null){
+                for(Integer enabled: enableSet){
+                    indegree[enabled] --;
+                    if(indegree[enabled] == 0)
+                        queue.offer(enabled);
                 }
             }
         }
 
-        if(processCount == numCourses){
-            return processOrder;
-        } else {
-            return new int[0];
-        }
+        return processed == numCourses ? res : new int[0];
     }
 }

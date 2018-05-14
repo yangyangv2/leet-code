@@ -12,31 +12,47 @@ import java.util.Arrays;
 /**
  * Created by yanya04 on 7/23/2017.
  * Modified by yanya04 on 5/2/2018.
+ * Modified by yanya04 on 5/14/2018.
  */
 public class Solution {
     public List<List<Integer>> permuteUnique(int[] nums) {
-        List<List<Integer>> list = new ArrayList<>();
-        boolean[] used = new boolean[nums.length];
+        List<List<Integer>> res = new ArrayList<>();
+        if(nums == null || nums.length == 0) return res;
+
         Arrays.sort(nums);
-        backtrack(list, new ArrayList<Integer>(), used, nums);
-        return list;
+        boolean[] visited = new boolean[nums.length];
+        backtrack(res, nums, visited, new ArrayList<>());
+
+        return res;
     }
 
-    private void backtrack(List<List<Integer>> list, List<Integer> temp, boolean[] used, int[] nums){
-
-        if(temp.size() == nums.length){
-            list.add(new ArrayList<Integer>(temp));
-            return;
+    private void backtrack(List<List<Integer>> res, int[] nums, boolean[] visited, List<Integer> list){
+        if(list.size() == nums.length){
+            res.add(new ArrayList<>(list));
+            return ;
         }
 
+        /*
+        used    t t t
+                1 1 2
+
+                1 1 2
+        1           i
+        2         i
+        3
+
+        used    t   t
+                2 1 1
+        */
+
         for(int i = 0; i < nums.length; i ++){
-            if(used[i]) continue;
-            if(i > 0 && !used[i - 1] && nums[i - 1] == nums[i]) continue;
-            used[i] = true;
-            temp.add(nums[i]);
-            backtrack(list, temp, used, nums);
-            used[i] = false;
-            temp.remove(temp.size() - 1);
+            if(visited[i]) continue;
+            if(i > 0 && nums[i - 1] == nums[i] && !visited[i - 1]) continue;
+            visited[i] = true;
+            list.add(nums[i]);
+            backtrack(res, nums, visited, list);
+            list.remove(list.size() - 1);
+            visited[i] = false;
         }
     }
 }

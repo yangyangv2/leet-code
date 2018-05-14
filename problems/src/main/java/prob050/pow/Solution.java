@@ -2,43 +2,41 @@ package prob050.pow;
 
 /**
  * Created by yanya04 on 8/16/2017.
+ * Modified by yanya04 on 5/14/2018.
  */
 public class Solution {
+    /*
+    // edge case
+
+    // optimization
+
+        a ^ 9
+        9 = 2 ^ 3 + 1
+
+        a ^ 9 = a ^ 8 * a ^ 1
+
+        a * a ^ 8
+
+        a ^ 8 = (a ^ 4) ^ 2 = (((a ^ 2) ^ 2) ^ 2)
+
+        a ^ 3 = (a ^ 2) * a
+
+    */
     public double myPow(double x, int n) {
+        double res = 1;
+        long bigN = Math.abs((long) n);
+        /*
+        for(long i = 0; i < bigN; i ++){
+            res *= x;
+        }*/
 
-        // if n == Integer.MIN_VALUE... then cast to long
-
-        if( n == Integer.MIN_VALUE){
-            return 1 / pow(x, Math.abs((long)n));
+        while(bigN > 0){
+            if( bigN % 2 == 1)
+                res *= x;
+            bigN = bigN >> 1;
+            x *= x;
         }
-        if(n < 0) return 1/pow(x, Math.abs(n));
-        else return pow(x, n);
+
+        return (n < 0) ? 1 / res: res;
     }
-
-    private double pow(double x, long n){
-        double val = 1;
-        long c = 0;
-/*
-        1. handle 0 and negative
-        2. 1 2 4 8 16 => 15 break at 16;
-             1 2 4    => 8 + 7 reach at 7;
-
-        case 1: n = 0;
-        case 2: n = 1;
-        case 3: n = 5;
-
-*/
-        while(c < n){
-            long i = 1;
-            double v = x;
-            while(c + i * 2 < n){
-                i *= 2;
-                v *= v;
-            }
-            val *= v;
-            c += i;
-        }
-        return val;
-    }
-
 }
