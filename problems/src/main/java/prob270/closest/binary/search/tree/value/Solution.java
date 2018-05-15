@@ -4,24 +4,22 @@ import utils.tree.TreeNode;
 
 /**
  * Created by yanya04 on 8/19/2017.
+ * Modified by yanya04 on 5/14/2018.
  */
-class Solution {
+public class Solution {
     public int closestValue(TreeNode root, double target) {
-        TreeNode upper = root, lower = root, cur = root;
+        TreeNode cur = root, upper = root, lower = root;
         while(cur != null){
-            if(target < cur.val){
-                upper = cur;
-                cur = cur.left;
-            } else if(target > cur.val){
+            if(cur.val < target){
                 lower = cur;
                 cur = cur.right;
+            } else if(cur.val > target){
+                upper = cur;
+                cur = cur.left;
             } else {
-                // not possible i suppose
                 return cur.val;
             }
         }
-        int upperVal = upper.val, lowerVal = lower.val;
-        return Math.abs(upperVal - target) < Math.abs(lowerVal - target) ? upperVal : lowerVal;
-
+        return (Math.abs(target - lower.val) < Math.abs(upper.val - target))? lower.val : upper.val;
     }
 }

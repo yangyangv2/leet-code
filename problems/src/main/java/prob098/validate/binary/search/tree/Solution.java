@@ -8,50 +8,24 @@ import java.util.Stack;
 
 /**
  * Created by yanya04 on 10/1/2017
- * Modifed by yanay04 on 4/23/2018
+ * Modified by yanay04 on 4/23/2018
+ * Modified by yanya04 on 5/14/2018
  */
 public class Solution {
-
-
-    private boolean isBst(TreeNode root, long max, long min){
-        if(root == null) return true;
-        if(root.val >= max || root.val <= min) return false;
-        return isBst(root.left, root.val, min) && isBst(root.right, max, root.val);
-    }
-
-    private boolean recursive(TreeNode root){
-        return isBst(root, Long.MAX_VALUE, Long.MIN_VALUE);
-    }
-
-    private boolean iterative(TreeNode root){
-        TreeNode cur = root, node = null;
-        Deque<TreeNode> stack = new ArrayDeque<>();
-        Integer pre = null;
-        while(!stack.isEmpty() || cur != null){
+    public boolean isValidBST(TreeNode root) {
+        TreeNode cur = root, node = null, pre = null;
+        Stack<TreeNode> stack = new Stack<>();
+        while(cur != null || !stack.isEmpty()){
             if(cur != null){
                 stack.push(cur);
                 cur = cur.left;
             } else {
                 node = stack.pop();
-
-                if(pre == null){
-                    pre = node.val;
-                } else if(pre < node.val){
-                    pre = node.val;
-                } else {
-                    return false;
-                }
-
+                if(pre != null && !(node.val > pre.val)) return false;
+                pre = node;
                 cur = node.right;
             }
         }
         return true;
-    }
-
-
-    public boolean isValidBST(TreeNode root) {
-
-        return recursive(root);
-        //return iterative(root);
     }
 }

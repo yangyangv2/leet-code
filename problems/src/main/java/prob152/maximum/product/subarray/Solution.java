@@ -2,29 +2,38 @@ package prob152.maximum.product.subarray;
 
 import static java.lang.Math.*;
 
+/**
+ *  Modified by yanya04 on 5/14/2018.
+ */
 public class Solution {
 
+    /*
+        if there is no zero ...
+        the max or min will be the product of the entire array
+        if zero presents, the max or min will be (.A.) 0 (.B.)
+
+        if negative sign is seen, max become min, min becomes max
+
+    */
     public int maxProduct(int[] nums) {
 
-        int n = nums.length;
-        if(n == 0) return 0;
+        if(nums == null || nums.length == 0)
+            return 0;
+        int n = nums.length, max = nums[0], min = nums[0], temp = 0, res = nums[0];
 
-        int max = nums[0], min = nums[0], res = nums[0];
-
-        for(int i = 1; i < n; i ++){
-            // negative
+        for(int i = 1; i < n; i ++) {
             if(nums[i] < 0){
-                int temp = max;
+                temp = max;
                 max = min;
                 min = temp;
             }
+            max = Math.max(nums[i], max * nums[i]);
+            min = Math.min(nums[i], min * nums[i]);
 
-            max = max(nums[i], max * nums[i]);
-            min = min(nums[i], min * nums[i]);
-
-            res = max(max(max, min), res);
-
+            res = Math.max(res, max);
         }
+
         return res;
     }
+
 }

@@ -7,43 +7,33 @@ import java.util.Map;
 
 /**
  * Created by yanya04 on 1/20/2018.
+ * Modified by yanya04 on 5/14/2018.
  */
 public class WordDistance {
 
-    private Map<String, List<Integer>> dict;
-
+    private HashMap<String, List<Integer>> map;
 
     public WordDistance(String[] words) {
-        dict = new HashMap<String, List<Integer>>();
+        map = new HashMap<>();
         for(int i = 0; i < words.length; i ++){
-            String word = words[i];
-            List<Integer> list = dict.get(word);
-            if(list == null){
-                list = new ArrayList<Integer>();
-                dict.put(word, list);
-            }
-            list.add(i);
+            map.putIfAbsent(words[i], new ArrayList<>());
+            map.get(words[i]).add(i);
         }
     }
 
     public int shortest(String word1, String word2) {
-        List<Integer> list1 = dict.get(word1);
-        List<Integer> list2 = dict.get(word2);
-        int i = 0, j = 0;
-        int res = Integer.MAX_VALUE;
-        while(i < list1.size() && j < list2.size()){
-            int pos1 = list1.get(i);
-            int pos2 = list2.get(j);
-            if(pos1 < pos2){
-                res = Math.min(res, pos2 - pos1);
-                i ++;
-            } else {
-                res = Math.min(res, pos1 - pos2);
-                j ++;
-            }
-        }
-        return res;
 
+        List<Integer> list1 = map.get(word1), list2 = map.get(word2);
+        if(list1 == null || list2 == null) return -1;
+        int i = 0, j = 0, shortest = Integer.MAX_VALUE;
+        int pos1 = 0, pos2 = 0;
+        while(i < list1.size() && j < list2.size()){
+            pos1 = list1.get(i); pos2 = list2.get(j);
+            if(pos1 < pos2) i ++;
+            else j ++;
+            shortest = Math.min(shortest, Math.abs(pos2 - pos1));
+        }
+        return shortest;
     }
 }
 

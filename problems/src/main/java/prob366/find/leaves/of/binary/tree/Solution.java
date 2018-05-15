@@ -5,27 +5,37 @@ import utils.tree.TreeNode;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *  Modified by yanya04 5/14/2018.
+ */
 public class Solution {
+    /*
+              1
+             / \
+            2   3
+           / \
+          4   5
+
+    */
     public List<List<Integer>> findLeaves(TreeNode root) {
         List<List<Integer>> res = new ArrayList<>();
-        height(root, res);
-
+        remove(root, res);
         return res;
     }
 
-    // height is the number of edges from a node to
-    private int height(TreeNode root, List<List<Integer>> res){
+    private int remove(TreeNode node, List<List<Integer>> res){
 
-        if(root == null) return -1;
+        if(node == null) return 0;
 
-        int height = 1 + Math.max(height(root.left, res), height(root.right, res));
+        int depth = Math.max(remove(node.left, res), remove(node.right, res));
 
-        if(height >= res.size()) res.add(new ArrayList<Integer>());
+        if(depth == res.size()){
+            res.add(new ArrayList<>());
+        }
 
-        res.get(height).add(root.val);
+        res.get(depth).add(node.val);
 
-        root.left = null;
-        root.right = null;
-        return height;
+        return depth + 1;
+
     }
 }
