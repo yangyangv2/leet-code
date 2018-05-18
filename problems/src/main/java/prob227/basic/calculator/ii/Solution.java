@@ -4,54 +4,42 @@ import java.util.Stack;
 
 /**
  * Created by yanya04 on 1/19/2018.
+ * Modified by yanya04 on 5/16/2018.
  */
 public class Solution {
-
-/*
-    "3+2*2" = 7
-    " 3/2 " = 1
-    " 3+5 / 2 " = 5
-*/
-
+    /*
+        Input: " 3 - 5 / 2 "
+        Output: 5
+    */
     public int calculate(String s) {
-
-        return stack(s);
-
-    }
-
-    private int stack(String s){
-
         Stack<Integer> stack = new Stack<>();
-
-        char sign = '+';
-
-        int cur = 0;
-
+        char c = 0, op = '+';
         for(int i = 0; i < s.length(); i ++){
-
-            if(Character.isDigit(s.charAt(i))){
+            c = s.charAt(i);
+            if(c == ' ') continue;
+            if(Character.isDigit(c)){
                 StringBuilder sb = new StringBuilder();
-                sb.append(s.charAt(i));
-                while(i < s.length() - 1 && Character.isDigit(s.charAt(i + 1)))
-                    sb.append(s.charAt(1 + i++));
+                sb.append(c);
+                while(i < s.length() - 1 && Character.isDigit(s.charAt(i + 1))){
+                    sb.append(s.charAt(++i));
+                }
+                int num = Integer.parseInt(sb.toString());
 
-                cur = Integer.parseInt(sb.toString());
-            }
-            char c = s.charAt(i);
-            // evaluate
-            if( (!Character.isDigit(c) && c != ' ') || i == s.length() - 1){
-                if(sign == '+') stack.push(cur);
-                else if(sign == '-') stack.push(- cur);
-                else if(sign == '*') stack.push(stack.pop() * cur);
-                else if(sign == '/') stack.push(stack.pop() / cur);
-                sign = c;
+                switch(op){
+                    case '+': stack.push(num); break;
+                    case '-': stack.push(- num); break;
+                    case '*': stack.push(stack.pop() * num); break;
+                    case '/': stack.push(stack.pop() / num); break;
+                }
+            } else {
+                op = c;
             }
         }
 
         int res = 0;
-        while(!stack.isEmpty())
+        while(!stack.isEmpty()){
             res += stack.pop();
-
+        }
         return res;
     }
 }

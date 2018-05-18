@@ -4,51 +4,45 @@ import utils.list.ListNode;
 
 /**
  * Created by yanya04 on 8/8/2017.
+ * Modified by yanya04 on 5/14/2018.
  */
 public class Solution {
 
-/*
-    1. length the lists
-    2. get the common start and find the intersaction
-*/
+    private int len(ListNode head){
+        int count = 0;
+        while(head != null){
+            head = head.next;
+            count ++;
+        }
+        return count;
+    }
+
+    private ListNode shift(ListNode head, int len){
+
+        while(head!= null && len -- > 0){
+            head = head.next;
+        }
+        return head;
+    }
 
     public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        int len1 = len(headA), len2 = len(headB);
+        int diff = Math.abs(len1 - len2);
 
-        int lenA = length(headA);
-        int lenB = length(headB);
-        int offset = 0;
-        if(lenA > lenB){
-            while(offset < lenA - lenB){
-                offset++;
-                headA = headA.next;
-            }
+        if(len1 > len2){
+            headA = shift(headA, diff);
         } else {
-            while(offset < lenB - lenA){
-                offset++;
-                headB = headB.next;
-            }
+            headB = shift(headB, diff);
         }
 
         while(headA != null && headB != null){
-            if(headA == headB){
+            if(headA == headB)
                 return headA;
-            }
+
             headA = headA.next;
             headB = headB.next;
         }
 
         return null;
     }
-
-    private int length(ListNode node){
-        int length = 0;
-        ListNode cur = node;
-        while(cur != null){
-            length ++;
-            cur = cur.next;
-        }
-
-        return length;
-    }
-
 }

@@ -4,29 +4,33 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ *  Modified by yanya04 on 5/15/2018.
+ */
 public class Solution {
-
-    // duplicate allowed
-    // can't use the same elements
-
     public List<List<Integer>> combinationSum2(int[] candidates, int target) {
-        List<List<Integer>> list = new ArrayList<>();
+        List<List<Integer>> res = new ArrayList<>();
         Arrays.sort(candidates);
-        backtrack(list, new ArrayList<Integer>(), candidates, target, 0, 0);
-        return list;
+        backtrack(candidates, 0, target, new ArrayList<Integer>(), res);
+        return res;
     }
 
-    private void backtrack(List<List<Integer>> list, List<Integer> temp, int[] candidates, int target, int sum, int start){
-        if(sum == target) list.add(new ArrayList<Integer>(temp));
-        if(sum > target) return;
+    private void backtrack(int[] candidates, int start, int target, List<Integer> list, List<List<Integer>> res){
+
+        if(target < 0)
+            return;
+        if(target == 0){
+            res.add(new ArrayList<>(list));
+            return;
+        }
         for(int i = start; i < candidates.length; i ++){
-            if(i > start && candidates[i] == candidates[i - 1]) continue;
-            sum += candidates[i];
-            temp.add(candidates[i]);
-            backtrack(list, temp, candidates, target, sum, i + 1);
-            temp.remove(temp.size() - 1);
-            sum -= candidates[i];
+
+            if(i > start && candidates[i] == candidates[i - 1])
+                continue;
+
+            list.add(candidates[i]);
+            backtrack(candidates, i + 1, target - candidates[i], list, res);
+            list.remove(list.size() - 1);
         }
     }
-
 }

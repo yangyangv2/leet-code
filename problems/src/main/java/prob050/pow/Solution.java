@@ -3,40 +3,28 @@ package prob050.pow;
 /**
  * Created by yanya04 on 8/16/2017.
  * Modified by yanya04 on 5/14/2018.
+ * Modified by yanya04 on 5/16/2018.
  */
 public class Solution {
+
     /*
-    // edge case
-
-    // optimization
-
-        a ^ 9
-        9 = 2 ^ 3 + 1
-
-        a ^ 9 = a ^ 8 * a ^ 1
-
-        a * a ^ 8
-
-        a ^ 8 = (a ^ 4) ^ 2 = (((a ^ 2) ^ 2) ^ 2)
-
-        a ^ 3 = (a ^ 2) * a
-
+        9:          1001
+        x ^ 9 = x ^ 8 * x ^ 1
     */
-    public double myPow(double x, int n) {
-        double res = 1;
-        long bigN = Math.abs((long) n);
-        /*
-        for(long i = 0; i < bigN; i ++){
-            res *= x;
-        }*/
 
-        while(bigN > 0){
-            if( bigN % 2 == 1)
+    public double myPow(double x, int n) {
+        long pow = (long)n;
+        if(pow < 0) {
+            x = 1 / x;
+            pow = - pow;
+        }
+        double res = 1;
+        while(pow > 0){
+            if((pow & 1) == 1)
                 res *= x;
-            bigN = bigN >> 1;
+            pow = pow >> 1;
             x *= x;
         }
-
-        return (n < 0) ? 1 / res: res;
+        return res;
     }
 }

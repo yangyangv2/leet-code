@@ -5,55 +5,29 @@ import utils.interval.Interval;
 import java.util.ArrayList;
 import java.util.List;
 
-public /**
- * Definition for an interval.
- * public class Interval {
- *     int start;
- *     int end;
- *     Interval() { start = 0; end = 0; }
- *     Interval(int s, int e) { start = s; end = e; }
- * }
+/**
+ *  Modified by yanya04 on 5/16/2018.
  */
-class Solution {
-    /*
-                               s        e
-        [beining intervals ..]   s1 e1 s2      e2   s2    [remaining intervals ]
+public class Solution {
 
+    /*
+      [1,2]     [3,5]   [6,8]
+              [   ]
     */
     public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
-        int n = intervals.size();
-        List<Interval> result = new ArrayList<>();
-        if(n == 0){
-            result.add(newInterval);
-            return result;
-        }
-
+        List<Interval> res = new ArrayList<>();
         int index = 0;
-        // add the begining elements
-        while(index < n && intervals.get(index).end < newInterval.start) {
-            result.add(intervals.get(index ++));
-        }
+        // add before
+        while(index < intervals.size() && intervals.get(index).end < newInterval.start) res.add(intervals.get(index ++));
 
-        // if newInterval should be appended at tail
-        if(index == n) {
-            result.add(newInterval);
-            return result;
+        int start = newInterval.start, end = newInterval.end;
+        while(index < intervals.size() && intervals.get(index).start <= newInterval.end ){
+            start = Math.min(intervals.get(index).start, start);
+            end = Math.max(intervals.get(index).end, end);
+            index ++;
         }
-
-        // merge new Interval;
-        newInterval.start = Math.min(newInterval.start,intervals.get(index).start);
-        while(index < n && intervals.get(index).start <= newInterval.end){
-            newInterval.end = Math.max(newInterval.end, intervals.get(index++).end);
-        }
-        result.add(newInterval);
-
-        // add the remaining elements
-        while(index < n){
-            result.add(intervals.get(index++));
-        }
-
-        return result;
+        res.add(new Interval(start, end));
+        while(index < intervals.size()) res.add(intervals.get(index ++));
+        return res;
     }
-
-
 }
