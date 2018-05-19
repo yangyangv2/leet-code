@@ -7,30 +7,37 @@ import java.util.Map;
 
 /**
  * Created by yanya04 on 10/7/2017.
+ * Modified by yanya04 on 5/18/2018.
  */
 public class Solution {
+
+    /*
+    preorder    [3,9,20,15,7]
+    inorder     [9,3,15,20,7]
+
+        3
+    [9]     [15,20,7]
+    */
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-
-        // value, index
-        Map<Integer,Integer> map = new HashMap<>();
-        for(int i = 0; i < inorder.length; i ++)
-            map.put(inorder[i], i);
-
-
-        return helper(0, 0, inorder.length - 1, preorder, inorder, map);
+        return build(0, 0, inorder.length - 1, preorder, inorder);
     }
 
-    private TreeNode helper(int preStart, int inStart, int inEnd, int[] preorder, int[] inorder, Map<Integer, Integer> map){
+    private TreeNode build(int p, int lo, int hi, int[] preorder, int[] inorder){
+        if(p >= preorder.length || lo > hi ) return null;
 
-        if(preStart >= preorder.length || inStart > inEnd) return null;
-        int preValue = preorder[preStart];
-        TreeNode root = new TreeNode(preorder[preStart]);
-        int inIndex = map.get(preValue);
+        TreeNode node = new TreeNode(preorder[p]);
+        int pivot = -1;
+        for(int i = lo; i <= hi; i ++){
+            if(preorder[p] == inorder[i]){
+                pivot = i;
+                break;
+            }
+        }
 
-        root.left = helper(preStart + 1, inStart, inIndex - 1, preorder, inorder, map);
+        node.left = build(p + 1, lo, pivot - 1, preorder, inorder );
+        node.right= build(p + pivot - lo + 1, pivot + 1, hi, preorder, inorder );
 
-        root.right = helper(preStart + inIndex - inStart + 1, inIndex + 1, inEnd, preorder, inorder, map);
-
-        return root;
+        return node;
     }
+
 }

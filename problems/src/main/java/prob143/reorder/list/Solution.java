@@ -5,6 +5,7 @@ import utils.list.ListNode;
 /**
  * Created by yanya04 on 8/7/2017.
  * Modified by yanya04 on 4/29/2018
+ * Modified by yanya04 on 5/19/2018.
  */
 public class Solution {
 
@@ -23,15 +24,15 @@ public class Solution {
 
     private ListNode split(ListNode head){
 
-        ListNode slow = new ListNode(0), fast = head;
-        slow.next = fast;
-        while(fast != null && fast.next != null){
-            fast = fast.next.next;
+        ListNode slow = head, fast = head.next;
+        while(fast!= null && fast.next != null ){
             slow = slow.next;
+            fast = fast.next.next;
         }
-        ListNode res = slow.next;
+        ListNode next = slow.next;
         slow.next = null;
-        return res;
+        return next;
+
     }
 
     private ListNode reverse(ListNode head){

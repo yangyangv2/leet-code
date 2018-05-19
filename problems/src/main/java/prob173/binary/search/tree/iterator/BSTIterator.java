@@ -8,20 +8,17 @@ import java.util.Stack;
 
 /**
  * Created by yanya04 on 1/15/2018.
+ * Modified by yanya04 on 5/19/2018.
  */
 public class BSTIterator {
 
-    private Deque<TreeNode> stack;
+    private Stack<TreeNode> stack;
 
     public BSTIterator(TreeNode root) {
-        stack = new ArrayDeque<TreeNode>();
-        move(root);
-    }
-
-    private void move(TreeNode node){
-        while(node != null){
-            stack.push(node);
-            node = node.left;
+        stack = new Stack<TreeNode>();
+        while(root != null){
+            stack.push(root);
+            root = root.left;
         }
     }
 
@@ -34,7 +31,12 @@ public class BSTIterator {
     public int next() {
         if(!hasNext()) return -1;
         TreeNode node = stack.pop();
-        move(node.right);
+
+        TreeNode cur = node.right;
+        while(cur != null){
+            stack.push(cur);
+            cur = cur.left;
+        }
         return node.val;
     }
 }
