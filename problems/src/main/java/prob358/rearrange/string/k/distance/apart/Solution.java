@@ -4,59 +4,45 @@ import java.util.*;
 
 /**
  * Created by yanya04 on 9/9/2017.
+ * Modified by yanya04 on 5/20/2018.
  */
 
-class Solution {
-
-/*
-    map<char, count>
-    pq<Entry<Character, Count>>
-*/
-
+public class Solution {
     public String rearrangeString(String s, int k) {
 
-        int[] map = new int[128];
+        if(k == 0) return s;
+
+        Map<Character, Integer> map = new HashMap<>();
         for(char c: s.toCharArray()){
-            map[c] ++;
+            map.put(c, map.getOrDefault(c, 0) + 1);
         }
 
-        PriorityQueue<Map.Entry<Character, Integer>> pq =
-                new PriorityQueue<Map.Entry<Character, Integer>>(
-                        (item1, item2) -> { return item2.getValue() == item1.getValue() ?
-                                item2.getKey() - item1.getKey() :
-                                item2.getValue() - item1.getValue(); }
-                );
+        PriorityQueue<Map.Entry<Character, Integer>> pq = new PriorityQueue<>((a, b) -> b.getValue() - a.getValue());
+        pq.addAll(map.entrySet());
 
-        for(int i = 0; i < map.length; i ++){
-            if(map[i] == 0){
-                continue;
-            }
-            pq.add(new AbstractMap.SimpleEntry<Character, Integer>((char)i, map[i]));
-        }
+        // queue is used to maintain the distance
+        Queue<Map.Entry<Character, Integer>> queue = new LinkedList<>();
 
-
-        Queue<Map.Entry<Character, Integer>> waitQueue = new ArrayDeque<>();
         StringBuilder sb = new StringBuilder();
+
+        Map.Entry<Character, Integer> cur = null;
+
         while(!pq.isEmpty()){
 
-            Map.Entry<Character, Integer> entry = pq.poll();
+            cur = pq.poll();
+            cur.setValue(cur.getValue() - 1);
+            queue.offer(cur);
+            sb.append(cur.getKey());
 
-            sb.append(entry.getKey());
-
-            entry.setValue(entry.getValue() - 1);
-            waitQueue.offer(entry);
-
-            if(waitQueue.size() < k){
-                continue;
-            }
-
-            entry = waitQueue.poll();
-            if(entry.getValue() > 0){
-                pq.add(entry);
+            if(queue.size() == k){
+                cur = queue.poll();
+                if(cur.getValue() > 0){
+                    pq.offer(cur);
+                }
             }
         }
 
-
         return sb.length() == s.length() ? sb.toString() : "";
+
     }
 }

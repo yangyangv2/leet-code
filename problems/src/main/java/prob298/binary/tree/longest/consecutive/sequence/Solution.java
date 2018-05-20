@@ -4,44 +4,24 @@ import utils.tree.TreeNode;
 
 /**
  * Created by yanya04 on 1/10/2018.
+ * Modified by yanya04 on 5/19/2018.
  */
 public class Solution {
-    /*
-        pre-order:
-
-    */
-
-    private int max = 0;
-
     public int longestConsecutive(TreeNode root) {
+        if(root == null) return 0;
 
-        if(root == null)
-            return max;
-
-        preorder(root, 1);
-
-        return max;
+        return Math.max(dfs(root.left, 1, root.val), dfs(root.right, 1, root.val));
     }
 
+    private int dfs(TreeNode root, int count, int val){
+        if(root == null)
+            return count;
 
-    private void preorder(TreeNode node, int target){
+        count = (root.val - val == 1) ? count + 1:1;
 
-        max = Math.max(target, max);
+        int left = dfs(root.left, count, root.val);
+        int right = dfs(root.right, count, root.val);
 
-        if(node.left != null){
-            if(node.val + 1 == node.left.val){
-                preorder(node.left, target + 1);
-            } else {
-                preorder(node.left, 1);
-            }
-        }
-
-        if(node.right != null){
-            if(node.val + 1 == node.right.val){
-                preorder(node.right, target + 1);
-            } else{
-                preorder(node.right, 1);
-            }
-        }
+        return Math.max(Math.max(left, right), count);
     }
 }

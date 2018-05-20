@@ -2,31 +2,23 @@ package prob487.max.consecutive.ones.ii;
 
 /**
  * Created by yanya04 on 8/27/2017.
+ * Modified by yanya04 on 5/20/2018.
  */
 public class Solution {
-
-/*
-    0 0 0 1 1 1 1 1 1 0 1 1 1 1 1 0 1 1
-          left
-                        right
-
-*/
-
     public int findMaxConsecutiveOnes(int[] nums) {
-        int max = 0;
-        int left = 0, right = 0;
+        int start = 0, end = 0, max = 0;
+        int zeros = 0;
+        while(end < nums.length){
+            if(nums[end++] == 0)
+                zeros ++;
 
-
-        for(int i = 0; i < nums.length; i ++){
-            right ++;
-            if(nums[i] == 0){
-                left = right;
-                right = 0;
+            while(zeros > 1){
+                if(nums[start++] == 0)
+                    zeros--;
             }
-            max = Math.max(left+right + 1, max);
+
+            max = Math.max(max, end - start);
         }
-
-
         return max;
     }
 }

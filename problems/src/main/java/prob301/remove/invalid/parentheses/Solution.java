@@ -4,52 +4,60 @@ import java.util.*;
 
 /**
  * Created by yanya04 on 2/6/2018.
+ * Modified by yanya04 on 5/19/2018.
  */
 public class Solution {
+    /*
+        take out each ( or ) and see if they are valid
+        using bfs to ensure the minimum remove
+    */
     public List<String> removeInvalidParentheses(String s) {
-        Set<String> set = new HashSet<>();
-        bfs(set, s);
-        return new ArrayList<String>(set);
-    }
+        List<String> res = new ArrayList<>();
+        if(s == null) return res;
 
-    private void bfs(Set<String> set, String s){
-        Queue<String> queue = new LinkedList<>();
-        queue.offer(s);
+        Queue<String> queue = new LinkedList<String>();
         Set<String> visited = new HashSet<>();
-        while(!queue.isEmpty()){
-            String str = queue.poll();
-            if(isValid(str)){
-                set.add(str);
-                continue;
-            }
-            for(int i = 0; i < str.length(); i ++){
-                if(str.charAt(i) != '(' && str.charAt(i) != ')')
+
+        visited.add(s);
+        queue.offer(s);
+
+        String cur = null, left = null, right = null, next = null;
+        int size = 0;
+        while(!queue.isEmpty() && res.isEmpty()){
+            size = queue.size();
+            while(size -- > 0){
+                cur = queue.poll();
+                if(isValid(cur)){
+                    res.add(cur);
                     continue;
-                StringBuilder sb = new StringBuilder(str);
-                sb.deleteCharAt(i);
-                if(set.isEmpty()){
-                    String newStr = sb.toString();
-                    if(!visited.contains(newStr)){
-                        queue.offer(newStr);
-                        visited.add(newStr);
+                }
+                char[] chars = cur.toCharArray();
+                for(int i = 0; i < chars.length; i ++){
+                    if(chars[i] == '(' || chars[i] == ')'){
+                        left = cur.substring(0, i);
+                        right = (i + 1 == chars.length) ? "" : cur.substring(i + 1, chars.length);
+                        next = left + right;
+                        if(visited.contains(next))
+                            continue;
+                        visited.add(next);
+                        queue.offer(next);
                     }
                 }
             }
         }
-    }
+        return res;
 
+    }
     private boolean isValid(String s){
-        if(s.isEmpty()) return true;
-        int balance = 0;
-        for(char c: s.toCharArray()){
-            if(c == '('){
-                balance ++;
-            } else if(c == ')'){
-                balance --;
-            }
-            if(balance < 0) return false;
-        }
-        return balance == 0;
-    }
 
+        char[] chars = s.toCharArray();
+        int count = 0;
+        for(int i = 0; i < chars.length; i ++){
+            if(chars[i] == '(') count ++;
+            else if(chars[i] == ')') count --;
+
+            if(count < 0) return false;
+        }
+        return count == 0;
+    }
 }

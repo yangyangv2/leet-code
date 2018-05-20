@@ -25,6 +25,9 @@ public class Main {
 
         for(int num: res)
             System.out.println(num);
+
+
+        String str = "a+b-(c+e)";
     }
 
     // 0, 1, 0 , 2, 0, 0, 5, 8

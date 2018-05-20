@@ -4,44 +4,35 @@ import java.util.Arrays;
 
 /**
  * Created by yanya04 on 7/23/2017.
+ * Modified by yanya04 on 5/20/2018.
  */
 public class Solution {
-
-    public static void main(String[] args) {
-        Solution solution = new Solution();
-        int[] nums = new int[]{1,3,2};
-        solution.nextPermutation(nums);
-        for(Integer num: nums){
-            System.out.print(num);
-        }
-    }
-
-    private void reverse(int[] nums, int start, int end){
-        for(int i = start, j = end; i < j; i ++, j --){
-            int temp = nums[i];
-            nums[i] = nums[j];
-            nums[j] = temp;
-        }
-    }
-
     public void nextPermutation(int[] nums) {
-
-        if(nums == null || nums.length <= 1) return ;
-
-        for(int i = nums.length - 2; i >= 0; i --){
-            if(nums[i] < nums[i + 1]){
-                for(int j = nums.length - 1; j > i; j --){
-                    if(nums[i] < nums[j]){
-                        int temp = nums[j];
-                        nums[j] = nums[i];
-                        nums[i] = temp;
-                        reverse(nums, i + 1, nums.length - 1);
-                        return;
-                    }
+        if(nums == null) return;
+        int n = nums.length;
+        for(int i = n - 2; i >= 0; i --){
+            if(nums[i] >= nums[i + 1]) continue;
+            // num[i] < nums[i + 1]
+            for(int j = n - 1; j >= 0; j --){
+                if(nums[j] > nums[i]){
+                    swap(nums, i, j);
+                    reverse(nums, i + 1, n - 1);
+                    return;
                 }
             }
         }
-        // if processed to here, sort the array and return the minimum
-        reverse(nums, 0, nums.length - 1);
+        reverse(nums, 0, n - 1);
+    }
+
+    private void reverse(int[] nums, int lo, int hi){
+        while(lo < hi){
+            swap(nums, lo, hi);
+            lo ++; hi --;
+        }
+    }
+    private void swap(int[] nums, int i, int j){
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
     }
 }

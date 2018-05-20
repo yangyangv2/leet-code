@@ -2,6 +2,7 @@ package prob157.read.n.characters.given.read4;
 
 /**
  * Created by yanya04 on 1/14/2018.
+ * Modified by yanya04 on 5/20/2018.
  */
 public class Solution extends Reader4
 {
@@ -15,22 +16,21 @@ public class Solution extends Reader4
      * @return    The number of characters read
      */
     public int read(char[] buf, int n) {
+        int count = 0, total = 0;
 
-        char[] tmp = new char[4];
-        if(buf.length < n){
-            buf = new char[n];
-        }
+        char[] b = new char[4];
 
-        int index = 0;
         while(true){
-            int count = read4(tmp);
-            count = Math.min(count, n - index);
+            count = read4(b);
             for(int i = 0; i < count; i ++){
-                buf[index ++] = tmp[i];
+                buf[total + i] = b[i];
             }
-            if(index == n || count < 4)
-                break;
+
+            total += Math.min(n, count);
+            n -= count;
+            if(n <= 0 || count != 4) break;
+
         }
-        return index;
+        return total;
     }
 }
