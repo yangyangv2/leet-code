@@ -10,9 +10,10 @@ public class Solution {
 
         for(int i = m - 1; i >= 0; i --){
             for(int j = n - 1; j >= 0; j --){
-                product[i + j + 1] += (num1.charAt(i) - '0') * (num2.charAt(j) - '0');
-                product[i + j] += product[i + j + 1] / 10;
-                product[i + j + 1] = product[i + j + 1] % 10;
+                int val = (num1.charAt(i) - '0') * (num2.charAt(j) - '0');
+                val += product[i + j + 1];
+                product[i + j] += val / 10;
+                product[i + j + 1] = val % 10;
             }
         }
 

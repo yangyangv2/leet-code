@@ -7,6 +7,7 @@ import java.util.LinkedList;
 
 /**
  * Created by yanya04 on 7/24/2017.
+ * Modified by yanya04 on 5/20/2018.
  */
 public class Solution {
     /*
@@ -28,32 +29,25 @@ public class Solution {
             cur = cur.next;
 
             if(count == 0){
-                tail = reverseKGroup(cur, k);
-                head = reverse(head, k, tail);
+                pre.next = null;
+                reverse(head);
+                head.next = reverseKGroup(cur, k);
+                head = pre;
                 break;
             }
         }
-
-
         return head;
     }
 
 
-    private ListNode reverse(ListNode head, int k, ListNode tail){
+    private ListNode reverse(ListNode head){
         ListNode cur = head, pre = null, temp = null;
         while(cur != null){
             temp = cur.next;
             cur.next = pre;
             pre = cur;
             cur = temp;
-            if(--k == 0) break;
         }
-
-        head.next = tail;
-
         return pre;
     }
-
-
-
 }

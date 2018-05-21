@@ -4,29 +4,31 @@ import utils.tree.TreeNode;
 
 /**
  * Created by yanya04 on 1/21/2018.
+ * Modified by yanya04 on 5/20/2018.
  */
 public class Solution {
     public String tree2str(TreeNode t) {
         StringBuilder sb = new StringBuilder();
-        helper(t, sb);
+        dfs(t, sb);
         return sb.toString();
     }
 
-    private void helper(TreeNode t, StringBuilder sb){
-        if(t == null) return;
-        sb.append(t.val);
+    private void dfs(TreeNode node, StringBuilder sb){
+        if(node == null)
+            return;
+        sb.append(String.valueOf(node.val));
 
-        if(t.right != null){
+        if(node.right != null) {
             sb.append("(");
-            helper(t.left, sb);
+            dfs(node.left, sb);
             sb.append(")");
 
             sb.append("(");
-            helper(t.right, sb);
+            dfs(node.right, sb);
             sb.append(")");
-        } else if(t.left != null){
+        } else if(node.left != null){
             sb.append("(");
-            helper(t.left, sb);
+            dfs(node.left, sb);
             sb.append(")");
         }
     }

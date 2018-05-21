@@ -10,31 +10,37 @@ import java.util.Map;
 public class Solution {
     public boolean checkSubarraySum(int[] nums, int k) {
 
-        int presum = 0, value = 0;
-
-        // Two continuous "0" will form a subarray which has sum = 0. 0 * k == 0 will always be true.
-        for (int i = 0; i < nums.length - 1; i++) {
-            if (nums[i] == 0 && nums[i + 1] == 0) return true;
+        if(nums == null || nums.length == 0) return false;
+        int n = nums.length;
+        for(int i = 0; i < n - 1; i ++){
+            if(nums[i] == 0 && nums[i + 1] == 0)
+                return true;
         }
+
         if(k == 0) return false;
 
         Map<Integer, Integer> map = new HashMap<>();
-        map.put(0, -1);
-        for(int i = 0; i < nums.length; i ++){
+
+        // when sum == k, sum % k == 0, then the other index is - 1;
+        map.put(0, - 1);
+
+        // s[j] - s[i] = k * n
+        // (s[j] - s[i]) % k == 0
+        // s[j] % k == s[i] % k
+
+        int presum = 0;
+        for(int i = 0; i < nums.length; i ++) {
             presum += nums[i];
-
-            value = ( k != 0 ) ? presum % k : presum;
-
+            int value = presum % k;
             Integer index = map.get(value);
-
             if(index != null){
-                if(i - index > 1){
+                if(i - index > 1)
                     return true;
-                }
             } else {
                 map.put(value, i);
             }
         }
+
         return false;
     }
 }

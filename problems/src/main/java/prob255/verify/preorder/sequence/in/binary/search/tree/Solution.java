@@ -5,31 +5,27 @@ import java.util.Stack;
 /**
  * Created by yanya04 on 1/13/2018.
  * Modified by yanya04 on 5/19/2018.
+ * Modified by yanya04 on 5/20/2018.
  */
 public class Solution {
-/*
-         5
-        / \
-       2   6
-      / \
-     1   3
-         (when turn right, 3 is the lower bound)
-*/
-
     public boolean verifyPreorder(int[] preorder) {
-        if(preorder == null || preorder.length == 0)
-            return true;
-        int lowerbound = Integer.MIN_VALUE;
-        Stack<Integer> stack = new Stack<>();
+        if(preorder == null || preorder.length < 2) return true;
 
-        for(int i = 0; i < preorder.length; i ++){
-            while(!stack.isEmpty() && preorder[i] > stack.peek() ){
-                lowerbound = stack.pop();
+        Stack<Integer> stack = new Stack<>();
+        stack.push(preorder[0]);
+        int min = Integer.MIN_VALUE;
+
+        for(int i = 1; i < preorder.length; i ++){
+
+            while(!stack.isEmpty() && stack.peek() <= preorder[i]){
+                min = stack.pop();
             }
-            if(preorder[i] < lowerbound)
+
+            if(preorder[i] < min)
                 return false;
 
             stack.push(preorder[i]);
+
         }
         return true;
     }

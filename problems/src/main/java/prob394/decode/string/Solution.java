@@ -2,55 +2,40 @@ package prob394.decode.string;
 
 import java.util.Stack;
 
+/**
+ *  Modified by yanya04 on 5/20/2018.
+ *  Modified by yanya04 on 5/21/2018.
+ */
 public class Solution {
-
-    /*  2 stacks
-          - number
-          - words
-    */
     public String decodeString(String s) {
-
-        if(s == null || s.length() == 0) return "";
-
-
-        Stack<Integer> countStack = new Stack<>();
-        Stack<String> wordStack = new Stack<>();
-
-        int idx = 0;
-
-        StringBuilder countSb = new StringBuilder();
-        StringBuilder wordSb = new StringBuilder();
-
-        // s = "c3[a2[c]b]e", return "accaccacc".
-
-        while(idx < s.length()){
-            char c = s.charAt(idx);
+        Stack<StringBuilder> words = new Stack<>();
+        Stack<Integer> counts = new Stack<>();
+        char c = 0;
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+        String str = null;
+        words.push(new StringBuilder());
+        for(int i = 0; i < s.length(); i ++){
+            c = s.charAt(i);
             if(Character.isDigit(c)){
-                while( Character.isDigit(c = s.charAt(idx)) ){
-                    countSb.append(c);
-                    idx++;
+                sb.setLength(0);
+                sb.append(c);
+                while(i + 1 < s.length() && Character.isDigit(s.charAt(i + 1))){
+                    sb.append(s.charAt(++i));
                 }
-                countStack.push(Integer.parseInt(countSb.toString()));
-                countSb.setLength(0);
+                count = Integer.parseInt(sb.toString());
+                counts.push(count);
             } else if(c == '['){
-                wordStack.push(wordSb.toString());
-                wordSb = new StringBuilder();
-                idx ++;
+                words.push(new StringBuilder());
             } else if(c == ']'){
-                int count = countStack.pop();
-                String word = wordStack.pop();
-                String cur = wordSb.toString();
-                wordSb = new StringBuilder(word);
-                for(int i = 0; i < count; i ++){
-                    wordSb.append(cur);
-                }
-                idx ++;
+                count = counts.pop();
+                str = words.pop().toString();
+                for(int j = 0; j < count; j ++)
+                    words.peek().append(str);
             } else {
-                // words
-                wordSb.append(c);
-                idx ++;
+                words.peek().append(c);
             }
         }
-        return wordSb.toString();
+        return words.pop().toString();
     }
 }
