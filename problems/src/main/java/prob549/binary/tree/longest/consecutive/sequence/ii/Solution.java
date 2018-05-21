@@ -4,50 +4,49 @@ import utils.tree.TreeNode;
 
 /**
  * Created by yanya04 on 1/10/2018.
+ * Modified by yanya04 on 5/21/2018.
  */
 public class Solution {
-
-    /*
-        divide-and-conquer
-        post-order traverse (LRT)
-    */
-    private int max = 0;
-
     public int longestConsecutive(TreeNode root) {
-        if(root == null)
-            return 0;
-
-        postorder(root);
-
-        return max;
+        int[] res = postorder(root);
+        return res[2];
     }
 
+    private int[] postorder(TreeNode root){
 
-    private int[] postorder(TreeNode node){
+        if(root == null)
+            return new int[]{0, 0, 0};
 
-        int inc = 1, dec = 1;
+        int inc = 1, dec = 1, max = 0;
 
-        if(node.left != null){
-            int[] res = postorder(node.left);
-            if(node.val + 1 == node.left.val){
+        int[] res = null;
+
+        if(root.left != null){
+            res = postorder(root.left);
+            if(root.val + 1 == root.left.val){
                 inc += res[0];
-            } else if(node.val -1 == node.left.val){
+            }
+            if(root.val - 1 == root.left.val){
                 dec += res[1];
             }
+            max = Math.max(max, res[2]);
         }
 
-        if(node.right != null){
-            int[] res = postorder(node.right);
-            if(node.val + 1 == node.right.val){
+        if(root.right != null){
+
+            res = postorder(root.right);
+            if(root.val + 1 == root.right.val){
                 inc = Math.max(inc, res[0] + 1);
-            } else if(node.val - 1 == node.right.val){
+            }
+
+            if(root.val - 1 == root.right.val){
                 dec = Math.max(dec, res[1] + 1);
             }
+            max = Math.max(max,res[2]);
+
         }
-
         max = Math.max(max, inc + dec -1);
-        return new int[]{inc, dec};
+        return new int[]{inc, dec, max};
     }
-
 
 }

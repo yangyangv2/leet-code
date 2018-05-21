@@ -3,88 +3,90 @@ package prob307.range.sum.query.mutable;
 /**
  * Created by yanya04 on 9/4/2017.
  * Modified by yanya04 on 5/10/2018.
+ * Modified by yanya04 on 5/21/2018.
  *
  * https://leetcode.com/articles/range-sum-query-mutable/
  *
  * https://www.youtube.com/watch?v=Oq2E2yGadnU&t=3s
  */
-public class NumArray {
+class NumArray {
 
-    static class BIT{
-        int[] sums;
-        int[] nums;
-        BIT(int[] nums){
-            this.sums = new int[nums.length + 1];
-            this.nums = new int[nums.length];
-            for(int i = 0; i < nums.length; i ++){
-                update(i, nums[i]);
-            }
-        }
-
-        void update(int i, int val){
-            int diff = val - nums[i];
-            nums[i] = val;
-            i ++;
-            while(i < sums.length){
-                sums[i] += diff;
-                i += i & (-i);
-            }
-        }
-
-        int find(int i){
-            i ++;
-            int sum = 0;
-            while(i > 0){
-                sum += sums[i];
-                i -= i & (-i);
-            }
-            return sum;
-        }
-
-        void print(){
-
-            System.out.print("index:\t");
-            for(int i = 1; i < sums.length; i ++){
-                System.out.print(i + "\t");
-            }
-            System.out.println("");
-            System.out.print("bit:\t");
-            for(int i = 1; i < sums.length; i ++){
-                System.out.print(sums[i] + "\t");
-            }
-            System.out.println("");
-            System.out.print("num:\t");
-            for(int i = 0; i < nums.length; i ++){
-                System.out.print(nums[i] + "\t");
-            }
-        }
-    }
-
-
-    private BIT bit;
+    private SegmentTree st;
 
     public NumArray(int[] nums) {
-        this.bit = new BIT(nums);
+        st = new SegmentTree(nums);
     }
 
     public void update(int i, int val) {
-        bit.update(i, val);
+        st.update(i, val);
     }
 
     public int sumRange(int i, int j) {
-        if(i == 0) return bit.find(j);
-        else return bit.find(j) - bit.find(i - 1);
+        return st.sum(i, j);
     }
 
 
-    public static void main(String[] args) {
+    private static class SegmentTree
+    {
+
+        private int n;
+        private int[] data;
+
+        SegmentTree(int[] nums)
+        {
+            // init
+            buildTree(nums);
+        }
 
 
-        int[] nums = new int[]{1, 3, 5};
-        BIT bit = new BIT(nums);
+        void buildTree(int[] nums)
+        {
+            this.n = nums.length;
+            this.data = new int[n * 2];
+            System.arraycopy(nums, 0, data, n, n);
+            for (int i = n - 1; i >= 0; i--)
+            {
+                data[i] = data[i * 2] + data[i * 2 + 1];
+            }
+        }
 
-        bit.print();
+        void update(int index, int value)
+        {
+            index = index + n;
+            data[index] = value;
+            while (index > 1)
+            {
+                index >>= 1;
+                data[index] = data[2 * index] + data[2 * index + 1];
+            }
+        }
 
+        int sum(int left, int right)
+        {
+            left += n;
+            right += n;
+            int sum = 0;
+            while (left <= right)
+            {
+
+                // when left is odd
+                if ((left & 1) == 1)
+                {
+                    sum += data[left];
+                    left++;
+                }
+
+                // when right is even
+                if ((right & 1) == 0)
+                {
+                    sum += data[right];
+                    right--;
+                }
+                left >>= 1;
+                right >>= 1;
+            }
+            return sum;
+        }
     }
 }
 
