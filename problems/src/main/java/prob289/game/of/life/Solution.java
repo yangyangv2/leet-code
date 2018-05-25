@@ -3,15 +3,16 @@ package prob289.game.of.life;
 import static java.lang.Math.*;
 /**
  * Created by yanya04 on 2/3/2018.
+ * Modified by yanya04 on 5/24/2018.
  */
 public class Solution {
 
     /*
         1. change 0 to 2 to represent die
-        2.  1 - live
-           -1 - die next
-            2 - die
-           -2 - live next
+        2.  01 - live and die next
+            11 - live and live next
+            00 - die and die next
+            10 - die and live next
     */
     public void gameOfLife(int[][] board) {
 
@@ -35,10 +36,10 @@ public class Solution {
                 if(live == 2){
                     // stay live
                     if(board[i][j] == 1)
-                        board[i][j] += 2;
+                        board[i][j] += 2;   //  => 11
                 } else if(live == 3){
                     // become live
-                    board[i][j] += 2;
+                    board[i][j] += 2;       //  => 11 or 10
                 }
             }
         }

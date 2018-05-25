@@ -5,23 +5,25 @@ import utils.tree.TreeNode;
 /**
  * Created by yanya04 on 1/10/2018.
  * Modified by yanya04 on 5/19/2018.
+ * Modified by yanya04 on 5/24/2018.
  */
 public class Solution {
     public int longestConsecutive(TreeNode root) {
         if(root == null) return 0;
 
-        return Math.max(dfs(root.left, 1, root.val), dfs(root.right, 1, root.val));
+        return dfs(root, 1, null);
     }
 
-    private int dfs(TreeNode root, int count, int val){
-        if(root == null)
-            return count;
+    private int dfs(TreeNode node, int count, TreeNode parent){
 
-        count = (root.val - val == 1) ? count + 1:1;
+        if(node == null) return count;
 
-        int left = dfs(root.left, count, root.val);
-        int right = dfs(root.right, count, root.val);
+        count = (parent == null || parent.val + 1 != node.val) ? 1: count + 1;
+
+        int left = dfs(node.left, count, node);
+        int right = dfs(node.right, count, node);
 
         return Math.max(Math.max(left, right), count);
+
     }
 }

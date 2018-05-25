@@ -2,22 +2,22 @@ package prob450.delete.node.in.a.bst;
 
 import utils.tree.TreeNode;
 
+/**
+ *  Modified by yanya04 on 5/24/2018.
+ */
 public class Solution {
-
-    /*
-        return root of the sub-tree after deletion
-    */
     public TreeNode deleteNode(TreeNode root, int key) {
+        if(root == null) return root;
 
-        if(root == null) return null;
-
-        if(root.val < key){
-            root.right = deleteNode(root.right, key);
-        } else if(root.val > key){
+        if(key < root.val){
             root.left = deleteNode(root.left, key);
+        } else if(key > root.val){
+            root.right = deleteNode(root.right, key);
         } else {
-            if(root.right == null) return root.left;
-            else{
+            // delete root
+            if(root.right == null){
+                return root.left;
+            } else {
                 root.val = findMin(root.right);
                 root.right = deleteNode(root.right, root.val);
             }
@@ -25,12 +25,12 @@ public class Solution {
         return root;
     }
 
-    private int findMin(TreeNode node){
-        TreeNode cur = node, pre = null;
-        while(cur != null){
-            pre = cur;
-            cur = cur.left;
+    private int findMin(TreeNode root){
+        int min = 0;
+        while(root != null){
+            min = root.val;
+            root = root.left;
         }
-        return pre.val;
+        return min;
     }
 }

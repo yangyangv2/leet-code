@@ -4,27 +4,33 @@ import utils.tree.TreeNode;
 
 /**
  * Created by yanya04 on 8/18/2017.
+ * Modified by yanya04 on 5/24/2018.
  */
 public class Solution {
-    private int n = 1;
-
     public int kthSmallest(TreeNode root, int k) {
-/*
-    use inorder-traverse to find kth smallest
+
+        /*
+        int count = count(root.left);
+        if (k <= count) {
+            return kthSmallest(root.left, k);
+        } else if (k > count + 1) {
+            return kthSmallest(root.right, k-1-count); // 1 is counted as current node
+        }
+
+        return root.val;
 */
-        if(root == null){
-            return -1;
+        int count = count(root.left);
+        if(k <= count){
+            return kthSmallest(root.left, k);
+        } else if (k > count + 1){
+            return kthSmallest(root.right, k - count - 1);
         }
+        return root.val;
+    }
 
-        int left = kthSmallest(root.left, k);
+    private int count(TreeNode root){
+        if(root == null) return 0;
 
-        if(left != -1) return left;
-
-        if(k == n){
-            return root.val;
-        }
-        n ++;
-
-        return kthSmallest(root.right, k);
+        return 1 + count(root.left) + count(root.right);
     }
 }

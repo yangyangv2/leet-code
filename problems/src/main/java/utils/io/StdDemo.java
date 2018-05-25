@@ -10,8 +10,9 @@ public class StdDemo {
 
         double v1 = scanner.nextDouble();
         double v2 = scanner.nextDouble();
-
-        System.out.println(v1 + v2);
+        scanner.nextLine();
+        String line = scanner.nextLine();
+        System.out.println(v1 + v2 + line);
 
     }
 }

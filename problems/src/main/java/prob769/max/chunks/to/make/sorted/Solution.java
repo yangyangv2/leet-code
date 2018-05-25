@@ -2,6 +2,7 @@ package prob769.max.chunks.to.make.sorted;
 
 /**
  *  Created by yanya04 on 5/16/2018.
+ *  Modified by yanya04 on 5/22/2018.
  */
 public class Solution {
 
@@ -16,8 +17,8 @@ public class Solution {
         int max = Integer.MIN_VALUE;
         int count = 0;
         for(int i = 0; i < arr.length; i ++){
-            if(max < arr[i]){
-                max = arr[i];
+            max = Math.max(max, arr[i]);
+            if(max == i){
                 count ++;
             }
         }

@@ -7,32 +7,31 @@ import java.util.Map;
 
 /**
  * Modified by yanya04 on 5/7/2018.
+ * Modified by yanya04 on 5/24/2018.
  */
 public class Solution {
-    /*
-        1. rob
-        2. not rob
-    */
 
     private Map<TreeNode, Integer> map = new HashMap<>();
 
     public int rob(TreeNode root) {
-        if(root == null) return 0;
 
-        if(map.containsKey(root)) return map.get(root);
+        if(root == null)
+            return 0;
 
-        int value =  Math.max(root.val + notrob(root.left) + notrob(root.right),
-                rob(root.left) + rob(root.right));
+        if(map.containsKey(root)){
+            return map.get(root);
+        }
 
-        map.put(root, value);
+        int res = Math.max(root.val + norob(root.left) +
+                norob(root.right), norob(root));
+        map.put(root, res);
 
-        return value;
+        return res;
     }
 
-    private int notrob(TreeNode root){
-
-        if(root == null) return 0;
-
+    private int norob(TreeNode root){
+        if(root == null)
+            return 0;
         return rob(root.left) + rob(root.right);
     }
 
