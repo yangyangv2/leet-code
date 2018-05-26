@@ -14,7 +14,6 @@ public class BloomFilterTest {
 
         int numEls = 500000;
 
-
         BloomFilter<String> filter = BloomFilter.create(
                 Funnels.stringFunnel(Charset.defaultCharset()),
                 numEls, 0.01 );

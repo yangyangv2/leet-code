@@ -12,6 +12,7 @@ public class TestPartition {
         int loc1 = findLeftMost(nums, target);
         int loc2 = findRightMost(nums, target);
 
+        System.out.println(countSmaller(nums, 0, nums.length - 1, 1));
 
         System.out.println(loc0);
         System.out.println(loc1);
@@ -70,5 +71,45 @@ public class TestPartition {
             }
         }
         return lo;
+    }
+
+
+    private static int countSmaller(int[] nums, int lo, int hi, int target) {
+        // find left most
+        int mid = 0, i = lo, j = hi;
+
+        int res = 0;
+        while(i <= j){
+            mid = i + (j - i) / 2;
+            if(nums[mid] == target && (mid == lo || nums[mid - 1] != target )){
+                i = mid;
+                break;
+            } else if(nums[mid] < target){
+                i = i + 1;
+            } else {
+                j = j - 1;
+            }
+        }
+
+        // i is either
+        // 1) left most of target
+        // 2) insertion position
+        //    a) left most
+        //    b) right most
+        //    c) in the middle
+
+
+        if(i < lo){
+            return 0;
+        } else if(i > hi){
+            return hi - lo + 1;
+        } else {
+            if(nums[i] == target){
+                if(i == lo) return 0;
+                else return i - lo;
+            } else {
+                return i - lo;
+            }
+        }
     }
 }
