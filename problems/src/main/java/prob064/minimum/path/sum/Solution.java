@@ -1,27 +1,27 @@
 package prob064.minimum.path.sum;
 
+/**
+ *  Modified by yanya04 on 5/25/2018.
+ */
 public class Solution {
-    /*
-        f[i][j] minimum sum up to [i][j]
-        f[i][j] = min(f[i - 1][j], f[i][j - 1]) + A[i][j]
-    */
     public int minPathSum(int[][] grid) {
-        if(grid == null || grid.length == 0 || grid[0].length == 0)
-            return 0;
         int m = grid.length, n = grid[0].length;
-        int[][] f = new int[m][n];
-        f[0][0] = grid[0][0];
-
-        for(int j = 1; j < n; j ++)
-            f[0][j] = grid[0][j] + f[0][j - 1];
+        int[][] sum = new int[m][n];
+        for(int i = 0; i < n; i ++){
+            sum[0][i] = grid[0][i];
+            if(i > 0) sum[0][i] += sum[0][i - 1];
+        }
+        for(int i = 0; i < m; i ++){
+            sum[i][0] = grid[i][0];
+            if(i > 0) sum[i][0] += sum[i - 1][0];
+        }
 
         for(int i = 1; i < m; i ++){
-            f[i%2][0] = grid[i][0] + f[(i - 1)%2][0];
             for(int j = 1; j < n; j ++){
-                f[i%2][j] = Math.min(f[i%2][j - 1], f[(i - 1)%2][j]) + grid[i][j];
+                sum[i][j] = grid[i][j] + Math.min(sum[i][j - 1], sum[i - 1][j]);
             }
         }
 
-        return f[(m - 1)%2][n - 1];
+        return sum[m - 1][n - 1];
     }
 }

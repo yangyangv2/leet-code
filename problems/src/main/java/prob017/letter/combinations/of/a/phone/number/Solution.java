@@ -3,55 +3,31 @@ package prob017.letter.combinations.of.a.phone.number;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *  Modified by yanya04 on 5/25/2018.
+ */
 public class Solution {
 
-    private final static String[] CODE_MAP = new String[]{
-            "",     //  0
-            "",     //  1
-            "abc",  //  2
-            "def",  //  3
-            "ghi",
-            "jkl",  //  5
-            "mno",
-            "pqrs", //  7
-            "tuv",  //  8
-            "wxyz"  //  9
-    };
+    private final static String[] dict = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
 
     public List<String> letterCombinations(String digits) {
 
-        // get a list of lists and find all combinations
+        List<String> res = new ArrayList<>();
 
-        List<String> result = new ArrayList<>();
-        List<char[]> combs = new ArrayList<>();
-        for(Character c: digits.toCharArray()){
-            char[] chars = CODE_MAP[c - '0'].toCharArray();
-            if(chars != null && chars.length > 0)
-                combs.add(chars);
-        }
+        backtrack(digits, 0, res, "", dict);
 
-        dfs(combs, result, new StringBuilder());
-
-        return result;
-
+        return res;
     }
 
-    private void dfs(List<char[]> combs, List<String> result, StringBuilder path){
-
-        int depth = path.length();
-
-        if(depth == combs.size()){
-            if(path.length() > 0){
-                result.add(path.toString());
-            }
+    private void backtrack(String digits, int start, List<String> list, String path, String[] dict){
+        if(start == digits.length()){
+            if(path.length() > 0) list.add(path);
             return;
         }
 
-        char[] chars = combs.get(depth);
-        for(char c: chars){
-            path.append(c);
-            dfs(combs, result, path);
-            path.deleteCharAt(depth);
+        String ops = dict[digits.charAt(start) - '0'];
+        for(int i = 0; i < ops.length(); i ++){
+            backtrack(digits, start + 1, list, path + ops.charAt(i), dict);
         }
     }
 }

@@ -4,29 +4,30 @@ import utils.tree.TreeNode;
 
 /**
  *  Modified by yanya04 5/13/2018.
+ *  Modified by yanya04 5/25/2018.
  */
 public class Solution {
     public TreeNode[] splitBST(TreeNode root, int V) {
+        if(root == null) return new TreeNode[]{null, null};
 
         TreeNode left = null, right = null;
-        TreeNode[] temp = null;
+        TreeNode[] nodes = null;
 
-        if(root == null){
-            // do nothing;
-        } else if (root.val == V){
+        if(root.val == V){
             left = root;
             right = root.right;
             root.right = null;
-        } else if(root.val < V){
-            left = root;
-            temp = splitBST(root.right, V);
-            root.right = temp[0];
-            right = temp[1];
-        } else {
+        }
+        else if(V < root.val){
             right = root;
-            temp = splitBST(root.left, V);
-            root.left = temp[1];
-            left = temp[0];
+            nodes = splitBST(root.left, V);
+            root.left = nodes[1];
+            left = nodes[0];
+        } else {
+            left = root;
+            nodes = splitBST(root.right, V);
+            root.right = nodes[0];
+            right = nodes[1];
         }
 
         return new TreeNode[]{left, right};

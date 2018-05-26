@@ -2,22 +2,23 @@ package prob096.unique.binary.search.trees;
 
 /**
  * Created by yanya04 on 1/8/2018.
+ * Modified by yanya04 on 5/25/2018.
  */
 public class Solution {
 
-    // nums[i]  number of trees of [i]
-    // tree[i,j] = when root is [i], total number is [j]
+    /*
+         [0, i-1]   [i] [i+1 ..n]
 
+         f[n] = sum( f[i - 1] * f[n - i - 1] )
+    */
     public int numTrees(int n) {
-        int[] nums = new int[n + 1];
-        nums[0] = nums[1] = 1;
-
-        for(int i = 2; i <= n; i ++){
-            for(int j = 1; j <= i; j ++){
-                nums[i] += nums[j - 1] * nums[i - j];
+        int[] f = new int[n + 1];
+        f[0] = f[1] = 1;
+        for(int i = 2; i <= n; i ++){ // i is root
+            for(int j = 0; j < i; j ++){
+                f[i] += f[j] * f[i - j - 1];
             }
         }
-
-        return nums[n];
+        return f[n];
     }
 }

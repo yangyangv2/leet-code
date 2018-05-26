@@ -3,43 +3,40 @@ package prob095.unique.binary.search.trees.ii;
 import utils.tree.TreeNode;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+/**
+ *  Modified by yanya04 on 5/25/2018.
+ */
 public class Solution {
-
-    /*
-        n = 3 => [1, 2, 3]
-
-        f([1,2,3]) = f([1,2]) + f([2,3]) + f([1,3]);
-
-    */
-
     public List<TreeNode> generateTrees(int n) {
+
+        if(n == 0) return Collections.emptyList();
+
         int[] nums = new int[n];
-        for(int i = 0; i < n; i ++){
+        for(int i = 0; i < n; i ++)
             nums[i] = i + 1;
-        }
-        return helper(nums, 0, n - 1);
+        return backtrack(nums, 0, n - 1);
     }
 
-    private List<TreeNode> helper(int[] nums, int start, int end){;
-
+    private List<TreeNode> backtrack(int[] nums, int lo, int hi){
         List<TreeNode> res = new ArrayList<>();
-        for(int i = start; i <= end; i ++){
-            int next = nums[i];
+        if(lo > hi){
+            res.add(null);
+            return res;
+        }
 
-            List<TreeNode> left = helper(nums, start, i - 1);
-            List<TreeNode> right = helper(nums, i + 1, end);
+        int val = 0;
+        for(int i = lo; i <= hi; i ++){
+            val = nums[i];
 
-            if(left.isEmpty())
-                left.add(null);
+            List<TreeNode> left = backtrack(nums, lo, i - 1);
+            List<TreeNode> right = backtrack(nums, i + 1, hi);
 
-            if(right.isEmpty())
-                right.add(null);
-
-            for(TreeNode l: left) {
-                for (TreeNode r : right) {
-                    TreeNode root = new TreeNode(next);
+            for(TreeNode l: left){
+                for(TreeNode r: right){
+                    TreeNode root = new TreeNode(val);
                     root.left = l;
                     root.right = r;
                     res.add(root);

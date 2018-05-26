@@ -1,56 +1,40 @@
 package prob140.word.breaker.ii;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+/**
+ *  Created by yanya04 on 5/25/2018.
+ */
 public class Solution {
-
-    /*
-        recursive
-    */
-
     public List<String> wordBreak(String s, List<String> wordDict) {
-
-        Map<String, List<String>> map = new HashMap<>();
-
-        return search(s, wordDict, map);
+        Set<String> dict = new HashSet<>(wordDict);
+        Map<String, List<String>> mem = new HashMap<>();
+        return backtrack(s, dict, mem);
     }
 
+    private List<String> backtrack(String s, Set<String> dict, Map<String, List<String>> mem){
 
-    private List<String> search(String substr, List<String> wordDict, Map<String, List<String>> map){
+        if(s.length() == 0)
+            return Collections.emptyList();
 
+        if(mem.containsKey(s))
+            return mem.get(s);
 
-        if(map.containsKey(substr)){
-            return map.get(substr);
-        }
-
-        if(substr.length() == 0) {
-            // no character left, add history into result
-            return null;
-        }
-
-
-        List<String> result = new ArrayList<>();
-
-        for(int i = 1; i <= substr.length(); i ++) {
-            String word = substr.substring(0, i);
-            if(wordDict.contains(word)){
-                String newstr = substr.substring(i, substr.length());
-                List<String> list = search(newstr, wordDict, map);
-                if(list == null){
-                    result.add(word);
-                } else {
-                    for(String str: list){
-                        result.add(word + " " + str);
-                    }
+        List<String> list = new ArrayList<>();
+        String word = null;
+        for(int i = 1; i <= s.length(); i ++){
+            word = s.substring(0, i );
+            if(!dict.contains(word)) continue;
+            // only when word is the last one in the sentance
+            if(i == s.length()){
+                list.add(word);
+            } else {
+                for(String str: backtrack(s.substring(i), dict, mem)){
+                    list.add(word + " " + str);
                 }
             }
         }
-
-        map.put(substr, result);
-
-        return result;
+        mem.put(s, list);
+        return list;
     }
 }
