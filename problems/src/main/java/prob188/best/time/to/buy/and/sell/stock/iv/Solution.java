@@ -1,15 +1,13 @@
 package prob188.best.time.to.buy.and.sell.stock.iv;
 
-import static java.lang.Math.*;
-
-
+/**
+ *  Created by yanya04 on 5/27/2018.
+ */
 public class Solution {
-
 
     private int greedysolve(int[] prices){
         int profit = 0;
         for(int i = 1; i < prices.length; i ++){
-
             if(prices[i] > prices[i - 1]){
                 profit += prices[i] - prices[i - 1];
             }
@@ -19,30 +17,22 @@ public class Solution {
 
 
     public int maxProfit(int k, int[] prices) {
-
         if(k == 0 || prices == null || prices.length < 2) return 0;
-
-
         if(k >= prices.length / 2) return greedysolve(prices);
 
-
-        int[] buys = new int[k];
-        int[] sells = new int[k];
-
-
-        for(int i = 0; i < k; i ++){
-            buys[i] = Integer.MIN_VALUE;
-            sells[i] = 0;
+        int n = prices.length;
+        int[][][] dp = new int[n + 1][k + 1][2];
+        for(int i = 0; i <= k; i ++){
+            dp[0][i][1] = Integer.MIN_VALUE;
         }
 
-        for(int price: prices){
-            for(int i = 0; i < k - 1; i ++){
-                sells[i] = max(sells[i], buys[i] + price);
-                buys[i] = max(buys[i], sells[i + 1] - price);
+        for(int i = 0; i < n; i ++){
+            for(int j = k; j > 0; j --){
+                dp[i + 1][j][0] = Math.max(dp[i][j][0], dp[i][j][1] + prices[i]);
+                dp[i + 1][j][1] = Math.max(dp[i][j][1], dp[i][j - 1][0] - prices[i]);
             }
-            sells[k - 1] = max(sells[k - 1], buys[k - 1] + price);
-            buys[k - 1] = max(buys[k - 1], - price);
         }
-        return sells[0];
+
+        return dp[n][k][0];
     }
 }

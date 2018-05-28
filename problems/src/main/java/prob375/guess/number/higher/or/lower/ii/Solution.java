@@ -2,26 +2,32 @@ package prob375.guess.number.higher.or.lower.ii;
 
 import static java.lang.Math.*;
 
+/**
+ *  Created by yanya04 on 5/27/2018.
+ */
 public class Solution {
 
+    /*
+        top down
+        bruteforce
+        min-max
+    */
     public int getMoneyAmount(int n) {
-        int[][] cost = new int[n + 1][n + 1];
-        // cost[0][0] is not used
-        return guess(cost, 1, n);
+        if(n == 0) return 0;
+        int[][] costs = new int[n + 1][n + 1];
+        return guess(1, n, costs);
     }
 
-    private int guess(int[][] cost, int s, int e){
+    private int guess(int s, int e, int[][] costs){
         if(s >= e) return 0;
+        if(costs[s][e] > 0) return costs[s][e];
 
-        if(cost[s][e] > 0) return cost[s][e];
-
-        int result = Integer.MAX_VALUE;
+        int min = Integer.MAX_VALUE;
         for(int i = s; i <= e; i ++){
-            // when pick i;
-            int temp = i + max(guess(cost, s, i - 1), guess(cost, i + 1, e));
-            result = min(temp, result);
+            int temp = i + Math.max(guess(s, i - 1, costs), guess(i + 1, e, costs));
+            min = Math.min(temp, min);
         }
-        cost[s][e] = result;
-        return result;
+        costs[s][e] = min;
+        return min;
     }
 }

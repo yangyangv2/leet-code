@@ -2,23 +2,22 @@ package prob714.best.time.to.buy.and.sell.stock.with.transaction.fee;
 
 import static java.lang.Math.*;
 
+/**
+ *  Created by yanya04 on 5/27/2018.
+ */
 public class Solution {
     public int maxProfit(int[] prices, int fee) {
-
         int n = prices.length;
-        if(n < 2) return 0;
+        if(n == 0) return 0;
 
-        int[] buy = new int[n];
-        int[] sell = new int[n];
+        int[][] dp = new int[n + 1][2];
 
-        buy[0] = - prices[0] - fee;
-        sell[0] = 0;
+        dp[0][1] = Integer.MIN_VALUE;
 
-        for(int i = 1; i < n; i ++){
-            sell[i] = max(sell[i - 1], buy[i - 1] + prices[i]);
-            buy[i] = max(buy[i - 1], sell[i - 1] - prices[i] - fee);
+        for(int i = 0; i < n; i ++){
+            dp[i + 1][0] = Math.max(dp[i][0], dp[i][1] + prices[i]);
+            dp[i + 1][1] = Math.max(dp[i][1], dp[i][0] - prices[i] - fee);
         }
-
-        return sell[n - 1];
+        return dp[n][0];
     }
 }
