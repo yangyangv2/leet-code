@@ -6,37 +6,40 @@ import java.util.Stack;
 
 /**
  * Created by yanya04 on 5/19/2018.
+ * Modified by yanya04 on 5/28/2018.
  */
 public class Solution extends Relation {
     public int findCelebrity(int n) {
-        if(n == 0 ) return -1;
-        if(n == 1 ) return 0;
+
+        int candidate = -1;
 
         Stack<Integer> stack = new Stack<>();
         for(int i = 0; i < n; i ++)
             stack.push(i);
 
+        int a = 0, b = 0;
         while(stack.size() > 1){
-            int a = stack.pop();
-            int b = stack.pop();
+            a = stack.pop();
+            b = stack.pop();
             if(knows(a, b)){
-                // a knows b, a cannot be the celebrity
+                // a is defintely not
                 stack.push(b);
             } else {
-                // a does not b, so b cannot be the celebrity
+                // b is defintely not
                 stack.push(a);
             }
         }
 
-        int last = stack.pop();
+        candidate = stack.pop();
         for(int i = 0; i < n; i ++){
-            if(i == last) continue;
-            if(knows(last, i))
+            if(i == candidate) continue;
+
+            if(!knows(i, candidate))
                 return -1;
-            if(!knows(i, last))
+
+            if(knows(candidate, i))
                 return -1;
         }
-        return last;
-
+        return candidate;
     }
 }
