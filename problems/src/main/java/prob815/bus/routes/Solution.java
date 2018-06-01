@@ -4,38 +4,38 @@ import java.util.*;
 
 /**
  *  Created by yanya04 on 5/22/2018.
+ *  Modified by yanya04 on 5/31/2018.
  */
 public class Solution {
     public int numBusesToDestination(int[][] routes, int S, int T) {
+
         if(S == T) return 0;
-        Map<Integer, List<Integer>> graph = new HashMap<>();
-        int stop = 0;
-        for(int bus = 0; bus < routes.length; bus ++){
-            for(int i = 0; i < routes[bus].length; i ++){
-                stop = routes[bus][i];
-                graph.putIfAbsent(stop, new ArrayList<>());
+
+        Map<Integer, Set<Integer>> graph = new HashMap<>();
+        for(int i = 0; i < routes.length; i ++){
+            for(int j = 0; j < routes[i].length; j ++){
+                int bus = i, stop = routes[i][j];
+                graph.putIfAbsent(stop, new HashSet<>());
                 graph.get(stop).add(bus);
             }
         }
-        Set<Integer> visited = new HashSet<>();
+
         Queue<Integer> queue = new LinkedList<>();
         queue.offer(S);
-        int size = 0, trip = 0;
+        Set<Integer> visited = new HashSet<>();
+
+        int trip = 0, size = 0;
         while(!queue.isEmpty()){
             size = queue.size();
-            // loop through all the stops on the current route
             trip ++;
             while(size -- > 0){
-                stop = queue.poll();
+                int stop = queue.poll();
                 for(Integer bus: graph.get(stop)){
-                    if(!visited.add(bus))
-                        continue;
-                    for(int i = 0; i < routes[bus].length; i ++){
-                        if(routes[bus][i] == T){
-                            return trip;
-                        } else {
-                            queue.offer(routes[bus][i]);
-                        }
+                    if(!visited.add(bus)) continue;
+                    int[] stops = routes[bus];
+                    for(int i = 0; i < stops.length; i ++){
+                        if(stops[i] == T) return trip;
+                        queue.offer(stops[i]);
                     }
                 }
             }

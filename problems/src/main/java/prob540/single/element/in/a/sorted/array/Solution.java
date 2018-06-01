@@ -2,6 +2,7 @@ package prob540.single.element.in.a.sorted.array;
 
 /**
  *  Created by yanya04 on 5/9/2018.
+ *  Modified by yanya04 on 6/1/2018.
  */
 public class Solution {
     /*
@@ -14,13 +15,14 @@ public class Solution {
          L     M     R
     */
     public int singleNonDuplicate(int[] nums) {
-        if(nums == null || nums.length == 0)
-            return -1;
+        if(nums == null ||nums.length == 0) return 0;
+
         int lo = 0, hi = nums.length - 1, mid = 0;
+
         while(lo < hi){
-            mid = (lo + hi) / 2;
-            // must be at least 3
-            if(nums[mid - 1] != nums[mid] && nums[mid + 1] != nums[mid])
+            mid = lo + (hi - lo) / 2;
+
+            if(nums[mid - 1] != nums[mid] && nums[mid] != nums[mid + 1])
                 return nums[mid];
 
             if(mid % 2 == 0){
@@ -38,6 +40,5 @@ public class Solution {
             }
         }
         return nums[lo];
-
     }
 }

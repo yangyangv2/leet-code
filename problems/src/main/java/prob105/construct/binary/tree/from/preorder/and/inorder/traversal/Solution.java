@@ -9,36 +9,44 @@ import java.util.Map;
  * Created by yanya04 on 10/7/2017.
  * Modified by yanya04 on 5/18/2018.
  * Modified by yanya04 on 5/21/2018.
+ * Modified by yanya04 on 5/29/2018.
  */
 public class Solution {
-
     /*
-    preorder    [3,9,20,15,7]
-    inorder     [9,3,15,20,7]
+            A
+          B   C
+         D E F G
 
-        3
-    [9]     [15,20,7]
+         pre-order: A B D E C F G
+         in -order: D B E A F C G
+
     */
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-
-        Map<Integer, Integer> map = new HashMap<>();
-        for(int i = 0; i < inorder.length;i ++){
-            map.put(inorder[i], i);
-        }
-        return build(0, 0, inorder.length - 1, preorder, inorder, map);
+        if(preorder.length == 0 || inorder.length == 0) return null;
+        if(preorder.length != inorder.length) return null;
+        return build(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1);
     }
 
-    private TreeNode build(int p, int lo, int hi, int[] preorder, int[] inorder, Map<Integer, Integer> map){
-        if(p >= preorder.length || lo > hi ) return null;
+    private TreeNode build(int[] preorder, int ps, int pe, int[] inorder, int is, int ie){
 
-        TreeNode node = new TreeNode(preorder[p]);
-        int pivot = map.get(preorder[p]);
+        if(ps > pe || is > ie) return null;
 
-        node.left = build(p + 1, lo, pivot - 1, preorder, inorder, map);
+        int pivot = preorder[ps];
 
-        node.right= build(p + pivot - lo + 1, pivot + 1, hi, preorder, inorder, map );
+        TreeNode root = new TreeNode(pivot);
+        int index = is;
+        while(index <= ie){
+            if(inorder[index] == pivot)
+                break;
+            index ++;
+        }
 
-        return node;
+        int offset = index - is;
+
+        root.left = build(preorder, ps + 1, ps + offset, inorder, is, index - 1);
+        root.right = build(preorder, ps + offset + 1, pe, inorder, index + 1, ie);
+
+        return root;
     }
 
 }

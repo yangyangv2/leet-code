@@ -5,27 +5,25 @@ import java.util.List;
 
 /**
  *  Created by yanya04 5/22/2018.
+ *  Modified by yanya04 6/1/2018.
  */
 public class Solution {
     public List<Integer> partitionLabels(String S) {
-        int[] lastIndex = new int[128];
-        char c = 0;
+        int[] lastIndex = new int[26];
         for(int i = 0; i < S.length(); i ++){
-            c = S.charAt(i);
-            lastIndex[c] = i;
+            lastIndex[S.charAt(i) - 'a'] = i;
         }
 
-        List<Integer> res = new ArrayList<>();
-        int count = 0, last = 0;
+        List<Integer> list = new ArrayList<>();
+        int furthest = 0, count = 0;
         for(int i = 0; i < S.length(); i ++){
-            c = S.charAt(i);
-            last = Math.max(lastIndex[c], last);
+            furthest = Math.max(furthest, lastIndex[S.charAt(i) - 'a']);
             count ++;
-            if(last == i || i == S.length() - 1){
-                res.add(count);
+            if(i == furthest || i == S.length() - 1){
+                list.add(count);
                 count = 0;
             }
         }
-        return res;
+        return list;
     }
 }

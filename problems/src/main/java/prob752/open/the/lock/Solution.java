@@ -4,42 +4,41 @@ import java.util.*;
 
 /**
  *  Created by yanya04 on 5/23/2018.
+ *  Modified by yanya04 on 5/31/2018.
  *
  */
 public class Solution {
     public int openLock(String[] deadends, String target) {
-        Queue<String> queue = new LinkedList<>();
+
+        int move = 0;
         Set<String> deads = new HashSet<>(Arrays.asList(deadends));
+        Queue<String> queue = new LinkedList<>();
         queue.offer("0000");
 
-        int size = 0, level = 0;
-        String code = null, next = null;
-        StringBuilder sb = null;
-        char c = 0;
+        int size = 0;
         while(!queue.isEmpty()){
+
             size = queue.size();
-            while(size > 0){
-                size --;
-                code = queue.poll();
-                if(!deads.add(code)) continue;
-                if(code.equals(target)) return level;
-                sb = new StringBuilder(code);
-                // try each combinations
+            while(size -- > 0){
+                String next = queue.poll();
+                if(!deads.add(next)) continue;
+                if(target.equals(next)){
+                    return move;
+                }
+                StringBuilder sb = new StringBuilder(next);
+                char c = 0;
                 for(int i = 0; i < 4; i ++){
                     c = sb.charAt(i);
-                    sb.setCharAt(i, c == '0' ? '9': (char)(c - 1));
-                    next = sb.toString();
+                    sb.setCharAt(i, (c == '9') ? '0': (char)(c + 1));
+                    queue.offer(sb.toString());
                     sb.setCharAt(i, c);
-                    queue.offer(next);
-                    sb.setCharAt(i, c == '9' ? '0': (char)(c + 1));
-                    next = sb.toString();
+                    sb.setCharAt(i, (c == '0') ? '9': (char)(c - 1));
+                    queue.offer(sb.toString());
                     sb.setCharAt(i, c);
-                    queue.offer(next);
                 }
             }
-            level ++;
+            move ++;
         }
-
-        return - 1;
+        return -1;
     }
 }

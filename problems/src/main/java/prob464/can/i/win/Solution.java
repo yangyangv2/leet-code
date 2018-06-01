@@ -6,42 +6,42 @@ import java.util.Map;
 
 /**
  *  Created by yanya04 on 5/27/2018.
+ *  Modified by yanya04 on 6/1/2018.
  *  
  */
 public class Solution {
-    public boolean canIWin(int maxChoosableInteger, int desiredTotal) {
+    public boolean canIWin(int max, int total) {
+        if(max * (max + 1) / 2 < total) return false;
+        if(max >= total) return true;
 
-        int max = maxChoosableInteger, total = desiredTotal;
-        if( max *( max + 1) / 2 < desiredTotal) return false;
-
+        Map<String, Boolean> mem = new HashMap<>();
         int[] used = new int[max + 1];
-        Map<String, Boolean> map = new HashMap<>();
-        if(total <= max) return true;
-        return backtrack(total, max, used, map);
+        return backtrack(mem, used, max, total);
     }
 
-    private boolean backtrack(int remaining, int max, int[] used, Map<String, Boolean> map){
-        if(remaining <= 0)
-            return false;
+    private boolean backtrack(Map<String, Boolean> mem, int[] used, int max, int total){
+        if(total <= 0) return false;
 
         String key = Arrays.toString(used);
-        if(map.containsKey(key)){
-            return map.get(key);
+        if(mem.containsKey(key)){
+            return mem.get(key);
         }
 
+        boolean res = false;
         for(int i = 1; i <= max; i ++){
             if(used[i] == 1) continue;
             used[i] = 1;
-            if(!backtrack(remaining - i, max, used, map)){
-                map.put(key, true);
+
+            if(!backtrack(mem, used, max, total - i)){
+                res = true;
                 used[i] = 0;
-                return true;
+                break;
             }
             used[i] = 0;
         }
 
-        map.put(key, false);
-        return false;
+        if(res) mem.put(key, true);
+        else mem.put(key, false);
+        return res;
     }
-
 }

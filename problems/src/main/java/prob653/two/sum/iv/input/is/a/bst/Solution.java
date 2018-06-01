@@ -7,35 +7,20 @@ import java.util.Set;
 
 /**
  * Created by yanya04 on 8/14/2017.
+ * Modified by yanya04 on 6/1/2018.
  */
 public class Solution {
+    private Set<Integer> set = new HashSet<>();
     public boolean findTarget(TreeNode root, int k) {
-        Set<Integer> set = new HashSet<>();
 
-        return traverse(root, k, set);
+        if(root == null) return false;
 
-    }
+        if(findTarget(root.left, k)) return true;
 
-    private boolean traverse(TreeNode root, int k, Set<Integer> set){
-        if(root == null){
-            return false;
-        }
+        if(set.contains(k - root.val)) return true;
 
-        boolean result = traverse(root.left, k, set);
+        set.add(root.val);
 
-        if(result){
-            return true;
-        }
-
-        if(set.contains(root.val)){
-            return true;
-        }
-
-        set.add(k - root.val);
-
-        result = traverse(root.right, k, set);
-
-
-        return result;
+        return findTarget(root.right, k);
     }
 }
