@@ -4,11 +4,12 @@ import java.util.*;
 
 /**
  * Created by yanya04 on 9/9/2017.
+ * Modified by yanya04 on 5/29/2018.
  */
 public class Solution {
 
     /*
-        WordDictionary, DFS
+        Solution, DFS
     */
 
     public List<Integer> killProcess(List<Integer> pid, List<Integer> ppid, int kill) {
@@ -20,16 +21,16 @@ public class Solution {
             childMap.get(ppid.get(i)).add(pid.get(i));
         }
 
-        Stack<Integer> killStack = new Stack<>();
-        killStack.add(kill);
+        Queue<Integer> killQueue = new LinkedList<>();
+        killQueue.offer(kill);
 
         List<Integer> killList = new ArrayList<>();
-        while(!killStack.isEmpty())
+        while(!killQueue.isEmpty())
         {
-            int killItem = killStack.pop();
+            int killItem = killQueue.poll();
             killList.add(killItem);
             if(childMap.containsKey(killItem)){
-                killStack.addAll(childMap.get(killItem));
+                killQueue.addAll(childMap.get(killItem));
             }
         }
         return killList;

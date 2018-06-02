@@ -4,6 +4,7 @@ import java.util.*;
 
 /**
  * Created by yanya04 on 3/18/2018.
+ * Modified by yanya04 on 5/29/2018.
  */
 public class Solution {
     public List<String> topKFrequent(String[] words, int k) {
@@ -14,27 +15,35 @@ public class Solution {
 
         // use priority queue to track each element
 
-        // n * log k
-        PriorityQueue<Map.Entry<String, Integer>> pq = new PriorityQueue<>((e1, e2) -> {
-            if(e1.getValue() == e2.getValue()){
-                return e2.getKey().compareTo(e1.getKey());
-            } else {
-                return e1.getValue() - e2.getValue();
-            }
-        });
+
+        // bucket sort
+
+        TreeSet<String>[] buckets = new TreeSet[words.length + 1];
 
         for(Map.Entry<String, Integer> entry: map.entrySet()){
-            pq.offer(entry);
-            if(pq.size() > k){
-                pq.poll();
+            int index = entry.getValue();
+            String word  = entry.getKey();
+            if(buckets[index] == null){
+                buckets[index] = new TreeSet<String>();
             }
+            buckets[index].add(word);
         }
 
         List<String> res = new ArrayList<>();
-        while(!pq.isEmpty()){
-            res.add(pq.poll().getKey());
+
+        for(int i = words.length; i >= 0; i --){
+            if(buckets[i] != null){
+                res.addAll(buckets[i]);
+            }
+            if(res.size() == k) break;
+            else if(res.size() > k){
+                while(res.size() > k){
+                    res.remove(res.size() - 1);
+                }
+                break;
+            }
         }
-        Collections.reverse(res);
+
         return res;
     }
 }
