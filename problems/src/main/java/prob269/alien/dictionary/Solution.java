@@ -4,6 +4,7 @@ import java.util.*;
 
 /**
  * Created by yanya04 on 1/24/2018.
+ * Modifiec by yanya04 on 6/2/2018.
  */
 public class Solution {
     /*
@@ -32,44 +33,32 @@ public class Solution {
 
         if(words == null || words.length == 0) return "";
 
-        Map<Character, Set<Character>> indegree = new HashMap<>();
-        Map<Character, Set<Character>> graph = new HashMap<>();
+        Map<Character, Set<Character>> indegree = new HashMap<>(), graph = new HashMap<>();
 
-        Set<Character> lowerSet = null;
-        Set<Character> charSet = new HashSet<>();
+        Set<Character> indegreeSet = null, charSet = new HashSet<>();
 
         for(int i = 0; i < words.length; i ++){
-            // build up char set
+            // build up char set and init char map
             for(int j = 0; j < words[i].length(); j ++){
-                charSet.add(words[i].charAt(j));
+                char c = words[i].charAt(j);
+                if(charSet.add(c)){
+                    indegree.put(c, new HashSet<>());
+                    graph.put(c, new HashSet<>());
+                }
             }
         }
 
-        Set<Character> indegreeSet = null;
 
         for(int i = 1; i < words.length; i ++){
             char[] chars = getOrder(words[i - 1], words[i]);
             if(chars == null) continue;
-
-            indegreeSet = indegree.get(chars[1]);
-            if(indegreeSet == null){
-                indegreeSet = new HashSet<>();
-                indegree.put(chars[1], indegreeSet);
-            }
-            indegreeSet.add(chars[0]);
-
-            //indegree.put(chars[1], indegree.getOrDefault(chars[1], 0) + 1);
-            lowerSet = graph.get(chars[0]);
-            if(lowerSet == null){
-                lowerSet = new HashSet<>();
-                graph.put(chars[0], lowerSet);
-            }
-            lowerSet.add(chars[1]);
+            indegree.get(chars[1]).add(chars[0]);
+            graph.get(chars[0]).add(chars[1]);
         }
 
         Queue<Character> queue = new LinkedList<>();
         for(Character c: charSet){
-            if(indegree.getOrDefault(c, new HashSet<>()).isEmpty()){
+            if(indegree.get(c).isEmpty()){
                 queue.offer(c);
             }
         }
@@ -80,14 +69,11 @@ public class Solution {
         while(!queue.isEmpty()){
             c = queue.poll();
             sb.append(c);
-            lowerSet = graph.get(c);
-            if(lowerSet != null){
-                for(Character l: lowerSet){
-                    indegreeSet = indegree.get(l);
-                    indegreeSet.remove(c);
-                    if(indegreeSet.isEmpty()){
-                        queue.offer(l);
-                    }
+            for(Character l: graph.get(c)){
+                indegreeSet = indegree.get(l);
+                indegreeSet.remove(c);
+                if(indegreeSet.isEmpty()){
+                    queue.offer(l);
                 }
             }
         }

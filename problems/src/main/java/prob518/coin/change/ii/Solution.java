@@ -2,6 +2,7 @@ package prob518.coin.change.ii;
 
 /**
  *  Created by yanya04 on 5/27/2018.
+ *  Modified by yanya04 on 6/2/2018.
  */
 public class Solution {
     /*
@@ -14,11 +15,12 @@ public class Solution {
         dp[0] = 1;
 
         for(int i = 0; i < coins.length; i ++){
-            for(int j = 0; j <= amount; j ++){
-                if(j - coins[i] < 0) continue;
+            for(int j = 1; j <= amount; j ++){
+                if(j < coins[i]) continue;
                 dp[j] += dp[j - coins[i]];
             }
         }
+
         return dp[amount];
     }
 }

@@ -2,6 +2,7 @@ package prob474.ones.and.zeroes;
 
 /**
  *  Created by yanya04 on 5/27/2018.
+ *  Modified by yanya04 on 6/2/2018.
  */
 public class Solution {
     /*
@@ -14,25 +15,20 @@ public class Solution {
         int len = strs.length;
 
         int[][][] dp = new int[len + 1][m + 1][n + 1];
-        dp[0][0][0] = 0;
-
 
         for(int i = 1; i <= len; i ++){
-            int[] counts = count(strs[i - 1]);
+            int[] cnts = count(strs[i - 1]);
+            int ones = cnts[1], zeros = cnts[0];
             for(int j = 0; j <= m; j ++){
                 for(int k = 0; k <= n; k ++){
-                    int zeros = counts[0];
-                    int ones = counts[1];
-                    if(zeros <= j && ones <= k) {
-                        dp[i][j][k] = Math.max(dp[i - 1][j][k] ,
-                                dp[i - 1][j - zeros][k - ones] + 1);
+                    if(j >= zeros && k >= ones){
+                        dp[i][j][k] = Math.max(1 + dp[i - 1][j - zeros][k - ones], dp[i - 1][j][k]);
                     } else {
                         dp[i][j][k] = dp[i - 1][j][k];
                     }
                 }
             }
         }
-
         return dp[len][m][n];
     }
     private int[] count(String str){
