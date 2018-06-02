@@ -1,7 +1,8 @@
 package prob055.jump.game;
 
 /**
- * Modifed by yanay04 on 4/26/2018
+ * Modified by yanay04 on 4/26/2018.
+ * Modified by yanya04 on 6/2/2018.
  */
 public class Solution {
     public boolean canJump(int[] nums) {
@@ -10,15 +11,11 @@ public class Solution {
     }
 
 
-    private boolean greedy(int[] nums){
-        if(nums == null || nums.length == 0)
-            return true;
+    public boolean greedy(int[] nums) {
         int max = 0, n = nums.length;
         for(int i = 0; i < n; i ++){
-            if(max < i)
-                break;
-
-            max = Math.max(nums[i] + i, max);
+            if(max < i) break;
+            max = Math.max(i + nums[i], max);
             if(max >= n - 1) return true;
         }
         return false;

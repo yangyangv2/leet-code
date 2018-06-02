@@ -7,6 +7,7 @@ import java.util.Set;
 
 /**
  * Created by yanya04 on 1/14/2018.
+ * Modified by yanya04 on 6/2/2018.
  */
 public class LFUCache {
 
@@ -20,6 +21,7 @@ public class LFUCache {
             this.count = 1;
         }
     }
+
 
     private Map<Integer, Node> map;
     private Map<Integer, Set<Integer>> level;
@@ -42,12 +44,10 @@ public class LFUCache {
             min ++;
 
         node.count ++;
-        Set<Integer> set = level.get(node.count);
-        if(set == null){
-            set = new LinkedHashSet<Integer>();
-            level.put(node.count, set);
-        }
-        set.add(key);
+
+        level.putIfAbsent(node.count, new LinkedHashSet<Integer>());
+        level.get(node.count).add(key);
+
         return node.val;
     }
 
@@ -63,6 +63,12 @@ public class LFUCache {
         if(capacity == 0){
             if(map.isEmpty())
                 return;
+
+            while(level.get(min).isEmpty()){
+                level.remove(min);
+                min ++;
+            }
+
             int evit = level.get(min).iterator().next();
             level.get(min).remove(evit);
             map.remove(evit);
@@ -71,16 +77,20 @@ public class LFUCache {
 
         map.put(key, new Node(key, value));
         capacity --;
-        Set<Integer> set = level.get(1);
-        if(set == null){
-            set = new LinkedHashSet<Integer>();
-            level.put(1, set);
-        }
-        set.add(key);
+
+        level.putIfAbsent(1,  new LinkedHashSet<Integer>());
+        level.get(1).add(key);
         min = 1;
 
     }
 }
+
+/**
+ * Your LFUCache object will be instantiated and called as such:
+ * LFUCache obj = new LFUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
 
 /**
  * Your LFUCache object will be instantiated and called as such:

@@ -3,7 +3,8 @@ package prob045.jump.game.ii;
 import java.util.Arrays;
 
 /**
-*   Modified by yanya04 on 4/26/2018.
+ *   Modified by yanya04 on 4/26/2018.
+ *   Modified by yanya04 on 6/2/2018.
  */
 public class Solution {
 
@@ -28,15 +29,16 @@ public class Solution {
     }
 
     private int greedy(int[] nums){
-        int n = nums.length, max = 0, border = 0, count = 0;
+        int max = 0, furthest = 0, n = nums.length, jumps = 0;
+
         for(int i = 0; i < n - 1; i ++){
             max = Math.max(max, i + nums[i]);
-            if(border == i){
-                count ++;
-                border = max;
+            if(furthest == i){
+                furthest = max;
+                jumps ++;
             }
         }
-        return count;
+        return jumps;
     }
 
 
