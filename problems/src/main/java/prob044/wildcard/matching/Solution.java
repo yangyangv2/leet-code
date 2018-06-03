@@ -1,7 +1,25 @@
 package prob044.wildcard.matching;
 
+/**
+ *  Modified by yanya04 on 6/2/2018.
+ */
 public class Solution {
+
+    /*
+        dp[i][j]    match at s[i] and p[j]
+
+        init
+        dp[0][0] = true
+        dp[0][i] = p[i] == '*'      :   dp[0][i - 1]
+
+        dp[i][j] =  s[i] == p[j]    :   dp[i - 1][j - 1]
+                    p[j] == '?'     :   dp[i - 1][j - 1]
+                    p[j] == '*'     :   dp[i - 1][j] || dp[i][j - 1]
+
+    */
     public boolean isMatch(String s, String p) {
+
+
 
         int sl = s.length(), pl = p.length();
         boolean[][] m = new boolean[sl + 1][pl + 1];

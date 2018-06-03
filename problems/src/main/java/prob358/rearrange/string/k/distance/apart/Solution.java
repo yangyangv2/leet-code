@@ -5,9 +5,17 @@ import java.util.*;
 /**
  * Created by yanya04 on 9/9/2017.
  * Modified by yanya04 on 5/20/2018.
+ * Modified by yanya04 on 6/2/2018.
  */
 
 public class Solution {
+    /*
+        task scheduling problem
+
+        1. make frequency stats
+        2. use priority queue + (task) queue
+
+    */
     public String rearrangeString(String s, int k) {
 
         if(k == 0) return s;

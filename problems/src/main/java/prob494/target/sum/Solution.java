@@ -5,33 +5,48 @@ import java.util.Map;
 
 /**
  *  Created by yanya04 on 5/9/2018.
+ *  Modified by yanya04 on 6/2/2018.
  */
 public class Solution {
+    /*
+        Input: nums is [1, 1, 1, 1, 1], S is 3.
+        Output: 5
+        Explanation:
 
+        -1+1+1+1+1 = 3
+        +1-1+1+1+1 = 3
+        +1+1-1+1+1 = 3
+        +1+1+1-1+1 = 3
+        +1+1+1+1-1 = 3
+
+        bruteforce + memo
+
+    */
     public int findTargetSumWays(int[] nums, int S) {
 
-        if(nums == null) return -1;
-        if(nums.length == 0) return S == 0 ? 1: 0;
-        Map<String, Integer> mem = new HashMap<>();
-        return find(nums, 0, 0, S, mem);
+        int[][] memo = new int[20][2000];
+
+        return count(nums, 0, 0, S, memo);
     }
 
-    int find(int[] nums, int start, int value, int S, Map<String, Integer> mem){
+
+    private int count(int[] nums, int start, int value, int target, int[][] memo){
 
         if(start == nums.length){
-            return value == S ? 1 : 0;
+            return value == target ? 1: 0;
         }
 
-        String key = start + "/" + value;
-        if(mem.containsKey(key)) return mem.get(key);
 
-        int res = 0;
-        value += nums[start];
-        res += find(nums, start + 1, value, S, mem);
-        value -= nums[start] * 2;
-        res += find(nums, start + 1, value, S, mem);
+        if(memo[start][value + 1000] > 0) return memo[start][value + 1000];
 
-        mem.put(key, res);
-        return res;
+        int count = 0;
+
+        count += count(nums, start + 1, value + nums[start], target, memo);
+
+        count += count(nums, start + 1, value - nums[start], target, memo);
+
+        memo[start][value + 1000] = count;
+
+        return count;
     }
 }

@@ -6,6 +6,7 @@ import utils.tree.TreeNode;
  * Created by yanya04 on 1/10/2018.
  * Modified by yanya04 on 5/19/2018.
  * Modified by yanya04 on 5/24/2018.
+ * Modified by yanya04 on 6/2/2018.
  */
 public class Solution {
     public int longestConsecutive(TreeNode root) {

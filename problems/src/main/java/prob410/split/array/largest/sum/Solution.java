@@ -26,7 +26,8 @@ public class Solution {
         return (int)lo;
     }
 
-    //  test if target is the largest sum
+    // test if using target (mid) as the largest sum
+    // will the cutted number of arrays exceeds m
 
     public boolean valid(long target, int[] nums, int m) {
         int count = 1;
