@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 /*
     Created by yanya04 on 5/24/2018.
+    Modified by yanya04 on 6/2/2018.
  */
 public class Solution {
 
@@ -37,19 +38,18 @@ public class Solution {
 
     private int dfs(int[][] flights, int[][] days, int city, int week, int[][] cache){
 
-        int cities = flights.length, weeks = days[0].length;
+        int weeks = days[0].length, cities = flights.length;
+        if(weeks == week) return 0;
 
-        if(week == weeks) return 0;
+        if(cache[city][week] > 0) return cache[city][week];
 
-        if(cache[city][week] >= 0) return cache[city][week];
-
-        int max = 0, temp = 0;
+        int max = 0;
         for(int i = 0; i < cities; i ++){
-            if(city == i || flights[city][i] == 1)
-                temp = dfs(flights, days, i, week + 1, cache) + days[i][week];
-            max = Math.max(max, temp);
+            if(i == city || flights[city][i] == 1) {
+                int vacation = days[i][week] + dfs(flights, days, i, week + 1, cache);
+                max = Math.max(max, vacation);
+            }
         }
-
         cache[city][week] = max;
         return max;
     }

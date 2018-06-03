@@ -2,6 +2,7 @@ package prob188.best.time.to.buy.and.sell.stock.iv;
 
 /**
  *  Created by yanya04 on 5/27/2018.
+ *  Modified by yanya04 on 6/2/2018.
  */
 public class Solution {
 
@@ -15,7 +16,15 @@ public class Solution {
         return profit;
     }
 
+    /*
+        init
+        T[0][i][1] = MIN_VALUE,  you cannot hold any stock at day-0
 
+          today          yesterday + hold  yesterday + sell
+        T[i + 1][j][0] = max(T[i][j][0], dp[i][j][1] + prices[i]);          hold or sell
+        T[i + 1][j][1] = max(T[i][j][1], dp[i][j - 1][0] - prices[i]);      hold or buy
+         today           yesterday + buy   yesterday + buy (spent a trans)
+    */
     public int maxProfit(int k, int[] prices) {
         if(k == 0 || prices == null || prices.length < 2) return 0;
         if(k >= prices.length / 2) return greedysolve(prices);

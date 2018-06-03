@@ -5,39 +5,45 @@ import java.util.List;
 
 /**
  * Created by yanya04 on 2/3/2018.
+ * Modified by yanya04 on 6/2/2018.
  */
 public class Solution {
+    /*
+        char by char dfs
+    */
     public List<String> addOperators(String num, int target) {
+
         List<String> res = new ArrayList<>();
-        if(num == null || num.length() == 0) return res;
-        backtrack(0, num, "", res, 0, 0, target);
+
+        dfs(res, num, 0, target, "", 0, 0);
+
         return res;
     }
 
-    private void backtrack(int start, String num, String path, List<String> res, long value, long pre, int target){
+    private void dfs(List<String> res, String num, int start, int target, String path, long value, long pre){
+
         if(start == num.length()){
-            if(target == value){
-                res.add(path);
-            }
+            if(value == target) res.add(path);
             return;
         }
 
         for(int i = start; i < num.length(); i ++){
             String cur = num.substring(start, i + 1);
-            if(cur.charAt(0) == '0' && cur.length() > 1)
-                continue;
-            if(Long.parseLong(cur) > Integer.MAX_VALUE)
-                continue;
+            if(cur.length() > 1 && cur.charAt(0) == '0') return;
+            long n = -1;
+            if((n = Long.parseLong(cur))> Integer.MAX_VALUE) return;
 
-            long n = Long.parseLong(cur);
+            // handle +, -, *
+
             if(start == 0){
-                backtrack(i + 1, num, cur, res, n, Long.parseLong(cur), target);
+                dfs(res, num, i + 1, target, path + n, n, n);
             } else {
-                backtrack(i + 1, num, path + "+" + cur, res, value + n, n, target);
-                backtrack(i + 1, num, path + "-" + cur, res, value - n, -n, target);
-                backtrack(i + 1, num, path + "*" + cur, res, value - pre + pre * n, pre * n, target);
+                dfs(res, num, i + 1, target, path + "+" + n, value + n, n);
+                dfs(res, num, i + 1, target, path + "-" + n, value - n, -n);
+                dfs(res, num, i + 1, target, path + "*" + n, value - pre + pre * n, pre * n);
             }
-        }
 
+        }
+        return;
     }
 }

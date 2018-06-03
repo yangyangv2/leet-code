@@ -3,16 +3,21 @@ package prob010.regular.expression.matching;
 
 /**
  *  Modified by yanya04 on 5/15/2018.
+ *  Modified by yanya04 on 6/2/2018.
  */
 public class Solution {
     /*
 
     let dp[i][j] = matches at p[i] and s[j]
 
+    init    dp[0][0] = true
+            dp[i][0] = s[i] == * :  dp[i - 2][0]
+                                 :  false
+
         1. p[i] == s[j] :   dp[i][j] = dp[i - 1][j - 1]
         2. p[i] == '.'  :   dp[i][j] = dp[i - 1][j - 1]
-        3. p[i] == '*'  :   (p[i - 1] != s[i]):                          dp[i][j] = dp[i - 2][j]
-                            (p[i - 1] == s[i] || p[i - 1] == '.')        dp[i][j] = dp[i - 2][j] ||
+        3. p[i] == '*'  :   (p[i - 1] != s[j]):                          dp[i][j] = dp[i - 2][j]
+                            (p[i - 1] == s[j] || p[i - 1] == '.')        dp[i][j] = dp[i - 2][j] ||
                                                                          dp[i][j] = dp[i - 1][j] ||
                                                                          dp[i][j] = dp[i][j - 1]
 

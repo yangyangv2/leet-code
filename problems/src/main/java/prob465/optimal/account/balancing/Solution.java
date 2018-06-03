@@ -7,16 +7,20 @@ import java.util.Map;
 
 /**
  * Created by yanya04 on 6/1/2018.
+ * Modified by yanya04 on 6/2/2018.
  */
 public class Solution {
     public int minTransfers(int[][] transactions) {
         Map<Integer, Integer> map = new HashMap<>();
+
+        // build up balance map
         for(int[] t: transactions){
             int lender = t[0], borrower = t[1], amount = t[2];
             map.put(lender, map.getOrDefault(lender, 0) + amount);
             map.put(borrower, map.getOrDefault(borrower, 0) - amount);
         }
 
+        // add unbalanced parties into processing list
         List<Long> list = new ArrayList<>();
         for(Integer value: map.values()){
             if(value != 0) list.add(value.longValue());
@@ -28,6 +32,11 @@ public class Solution {
         return count(0, debts, 0);
     }
 
+    /*
+        DFS, find the minimum count to get account balanced
+        start from pos=0, go up to debts.length
+        compare pos with each i where i <= pos + 1, i < debts.length
+    */
     public int count(int pos, Long[] debts, int count){
         // skip all zeros
         while(pos < debts.length && debts[pos] == 0) pos ++;
@@ -44,4 +53,5 @@ public class Solution {
         }
         return res;
     }
+
 }
