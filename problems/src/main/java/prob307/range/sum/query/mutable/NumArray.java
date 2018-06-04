@@ -4,90 +4,78 @@ package prob307.range.sum.query.mutable;
  * Created by yanya04 on 9/4/2017.
  * Modified by yanya04 on 5/10/2018.
  * Modified by yanya04 on 5/21/2018.
+ * Modified by yanya04 on 6/3/2018.
  *
  * https://leetcode.com/articles/range-sum-query-mutable/
  *
  * https://www.youtube.com/watch?v=Oq2E2yGadnU&t=3s
  */
 class NumArray {
-
-    private SegmentTree st;
-
+    private SegTree segTree;
     public NumArray(int[] nums) {
-        st = new SegmentTree(nums);
+        segTree = new SegTree(nums);
     }
 
     public void update(int i, int val) {
-        st.update(i, val);
+        segTree.update(i, val);
     }
 
     public int sumRange(int i, int j) {
-        return st.sum(i, j);
+        return segTree.sum(i, j);
     }
-
-
-    private static class SegmentTree
-    {
-
-        private int n;
-        private int[] data;
-
-        SegmentTree(int[] nums)
-        {
-            // init
-            buildTree(nums);
-        }
-
-
-        void buildTree(int[] nums)
-        {
-            this.n = nums.length;
-            this.data = new int[n * 2];
-            System.arraycopy(nums, 0, data, n, n);
-            for (int i = n - 1; i >= 0; i--)
-            {
-                data[i] = data[i * 2] + data[i * 2 + 1];
-            }
-        }
-
-        void update(int index, int value)
-        {
-            index = index + n;
-            data[index] = value;
-            while (index > 1)
-            {
-                index >>= 1;
-                data[index] = data[2 * index] + data[2 * index + 1];
-            }
-        }
-
-        int sum(int left, int right)
-        {
-            left += n;
-            right += n;
-            int sum = 0;
-            while (left <= right)
-            {
-
-                // when left is odd
-                if ((left & 1) == 1)
-                {
-                    sum += data[left];
-                    left++;
-                }
-
-                // when right is even
-                if ((right & 1) == 0)
-                {
-                    sum += data[right];
-                    right--;
-                }
-                left >>= 1;
-                right >>= 1;
-            }
-            return sum;
+    class Node {
+        int start, end, sum;
+        Node left, right;
+        Node(int start, int end){
+            this.start = start;
+            this.end = end;
         }
     }
+    class SegTree{
+        Node root;
+        SegTree(int[] nums){
+            root = new Node(0, nums.length - 1);
+            for(int i = 0 ;i < nums.length; i ++){
+                update(root, i, nums[i]);
+            }
+        }
+        void update(int i, int val){
+            update(root, i, val);
+        }
+        private void update(Node node, int i, int val){
+            if(node.start == node.end){
+                node.sum = val;
+            } else {
+                int mid = node.start + (node.end - node.start) / 2;
+                if(node.left == null) node.left = new Node(node.start, mid);
+                if(node.right == null) node.right = new Node(mid + 1, node.end);
+
+                if(i <= mid){
+                    update(node.left, i, val);
+                } else {
+                    update(node.right, i, val);
+                }
+                node.sum = node.left.sum + node.right.sum;
+            }
+        }
+
+        int sum(int i, int j){
+            return sum(root, i, j);
+        }
+
+        private int sum(Node node, int i, int j){
+            if(node.start == i && node.end == j)
+                return node.sum;
+            else {
+                int mid = node.start + (node.end - node.start) / 2;
+                if(j <= mid) return sum(node.left, i, j);
+                if(i > mid) return sum(node.right, i, j);
+                return sum(node.left, i, mid) + sum(node.right, mid + 1, j);
+            }
+        }
+
+    }
+
 }
 
 /**

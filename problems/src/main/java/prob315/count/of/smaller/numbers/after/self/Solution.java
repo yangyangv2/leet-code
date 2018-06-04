@@ -8,79 +8,92 @@ import java.util.List;
  * Created by yanya04 on 3/5/2018.
  * Modified by yanya04 on 5/10/2018.
  * Modified by yanya04 on 5/26/2018.
+ * Modified by yanya04 on 6/3/2018.
  */
 public class Solution {
+    /*
+        use a segment tree to count the number of values smaller than the current value
+    */
+
+
     public List<Integer> countSmaller(int[] nums) {
-        int[] counts = new int[nums.length];
-        mergeSort(nums, counts, 0, nums.length - 1);
-        List<Integer> res = new ArrayList<>();
-        for(int count: counts){
-            res.add(count);
+
+        int max = Integer.MIN_VALUE, min = Integer.MAX_VALUE;
+        for(int num: nums){
+            max = Math.max(num, max);
+            min = Math.min(num, min);
         }
+
+        SegTree st = new SegTree(min, max);
+
+        List<Integer> res = new ArrayList<>();
+        for(int i = nums.length - 1; i >= 0; i --){
+            st.insert(nums[i]);
+            res.add(0, st.find(nums[i] - 1));
+        }
+
         return res;
     }
 
-    private void mergeSort(int[] nums, int[] counts, int lo, int hi){
+    class Node {
+        int start, end, count;
+        Node left, right;
+        Node(int start, int end){
+            this.start = start;
+            this.end = end;
+        }
+    }
+    class SegTree{
 
-        if(lo >= hi) return;
-
-        int mid = lo + (hi - lo) / 2;
-        mergeSort(nums, counts, mid + 1, hi);
-
-        for(int i = lo; i <= mid; i ++){
-            counts[i] += countSmaller(nums, mid + 1, hi, nums[i]);
+        Node root;
+        SegTree(int min, int max){
+            root = new Node(min, max);
         }
 
-        mergeSort(nums, counts, lo, mid);
-        merge(nums, lo, mid, hi);
-    }
-
-    private void merge(int[] nums, int lo, int mid, int hi){
-
-        int[] merge = new int[hi - lo + 1];
-
-        int i = lo, j = mid + 1, index = 0;
-        while(index < merge.length){
-            int num1 = (i > mid) ? Integer.MAX_VALUE: nums[i];
-            int num2 = (j > hi) ? Integer.MAX_VALUE: nums[j];
-            merge[index ++] = num1 < num2 ? nums[i ++] : nums[j ++ ];
+        void insert(int val){
+            insert(root, val);
         }
-        System.arraycopy(merge, 0, nums, lo, merge.length);
-    }
+
+        private void insert(Node node, int val){
+
+            if(val > node.end || val < node.start) return;
+
+            node.count ++;
 
 
-    private int countSmaller(int[] nums, int lo, int hi, int target) {
-        // find left most
+            if(node.start == node.end) return;
 
-        int mid = 0, i = lo, j = hi;
+            int mid = node.start + (node.end - node.start) / 2;
 
-        int res = 0;
-        while(i <= j){
-            mid = i + (j - i) / 2;
-            if(nums[mid] == target && (mid == lo || nums[mid - 1] != target )){
-                i = mid;
-                break;
-            } else if(nums[mid] < target){
-                i = mid + 1;
+            if(val <= mid){
+                if(node.left == null) node.left = new Node(node.start, mid);
+                insert(node.left, val);
             } else {
-                j = mid - 1;
+                if(node.right == null) node.right = new Node(mid + 1, node.end);
+                insert(node.right, val);
             }
         }
 
-        // 4 cases
-        // i < lo => 0
-        // i > hi => hi - lo + 1
-        // i == lo && nums[i] == target => 0
-        // others i - lo;
-
-        if(i < lo){
-            return 0;
-        } else if(i > hi){
-            return hi - lo + 1;
-        } else if(nums[i] == target && i == lo){
-            return 0;
-        } else {
-            return i - lo;
+        int find(int val){
+            return find(root, val);
         }
+
+        private int find(Node node, int val){
+
+            if(node == null || node.start > val) return 0;
+
+            if(val >= node.end){
+                return node.count;
+            }
+
+            int mid = node.start + (node.end - node.start) / 2;
+            if(val <= mid){
+                return find(node.left, val);
+            } else {
+                return find(node.left, val) + find(node.right, val);
+            }
+        }
+
     }
+
 }
