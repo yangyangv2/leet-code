@@ -6,6 +6,7 @@ import java.util.Arrays;
  * Created by yanya04 on 7/23/2017.
  * Modified by yanya04 on 5/1/2018.
  * Modified by yanya04 on 5/18/2018.
+ * Modified by yanay04 on 6/10/2018.
  */
 public class Solution {
     /*
@@ -24,19 +25,17 @@ public class Solution {
             lo = i + 1; hi = n - 1;
             while(lo < hi){
                 sum = nums[i] + nums[lo] + nums[hi];
-                if(target == sum){
-                    return sum;
-                } else if(target > sum){
-                    lo ++;
-                    while(lo < hi && nums[lo] == nums[lo - 1]) lo ++;
-                } else {
-                    hi --;
-                    while(lo < hi && nums[hi] == nums[hi + 1]) hi --;
-                }
+                if(target == sum) return sum;
+                else if(target > sum) lo ++;
+                else hi --;
                 if(Math.abs(sum - target) < diff){
                     diff = Math.abs(sum - target);
                     res = sum;
                 }
+
+                while(lo > i + 1 && lo < hi && nums[lo] == nums[lo - 1]) lo ++;
+                while(hi < n - 1 && lo < hi && nums[hi] == nums[hi + 1]) hi --;
+
             }
         }
         return res;

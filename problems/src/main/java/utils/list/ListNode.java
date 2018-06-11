@@ -5,7 +5,7 @@ package utils.list;
  */
 public class ListNode {
     public int val;
-    public ListNode next;
+    public ListNode next, prev;
     public ListNode(int x){val = x;}
 
     public static void print(ListNode node){

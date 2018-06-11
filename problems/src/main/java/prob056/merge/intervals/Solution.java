@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * Modified by yanya04 on 5/12/2018.
  * Modified by yanya04 on 5/18/2018.
+ * Modified by yanya04 on 6/10/2018.
  */
 public class Solution {
     public List<Interval> merge(List<Interval> intervals) {
@@ -25,7 +26,7 @@ public class Solution {
                 start = interval.start;
                 end = interval.end;
             } else {
-                end = Math.max(end, interval.end);
+                end = Math.max(interval.end, end);
             }
         }
         res.add(new Interval(start, end));

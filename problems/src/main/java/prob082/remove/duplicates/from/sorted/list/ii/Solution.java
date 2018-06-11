@@ -4,27 +4,31 @@ import utils.list.ListNode;
 
 /**
  * Created by yanya04 on 8/5/2017.
- * Modified by yanya04 on 4/28/2018
+ * Modified by yanya04 on 4/28/2018.
+ * Modified by yanya04 on 6/10/2018.
  */
 public class Solution {
     public ListNode deleteDuplicates(ListNode head) {
-        ListNode dummy = new ListNode(0), pre = dummy, cur = head;
+        ListNode dummy = new ListNode(0), cur = head, pre = dummy;
         dummy.next = head;
-        boolean hasDup = false;
+        boolean dup = false;
+
         while(cur != null){
-            hasDup = false;
+
             while(cur.next != null && cur.val == cur.next.val){
                 cur = cur.next;
-                hasDup = true;
+                dup = true;
             }
-            if(hasDup){
+
+            if(dup){
                 pre.next = cur.next;
+                dup = false;
             } else {
                 pre = cur;
             }
             cur = cur.next;
         }
-        return dummy.next;
 
+        return dummy.next;
     }
 }

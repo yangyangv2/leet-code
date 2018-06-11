@@ -23,17 +23,17 @@ public class Solution {
     }
 
     private ListNode split(ListNode head){
-
+        if(head == null) return null;
         ListNode slow = head, fast = head.next;
-        while(fast!= null && fast.next != null ){
+        while(fast != null && fast.next != null){
             slow = slow.next;
             fast = fast.next.next;
         }
-        ListNode next = slow.next;
+        ListNode res = slow.next;
         slow.next = null;
-        return next;
-
+        return res;
     }
+
 
     private ListNode reverse(ListNode head){
         ListNode cur = head, pre = null, temp = null;

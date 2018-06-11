@@ -1,5 +1,8 @@
 package prob067.add.binary;
 
+/**
+ *  Created by yanya04 on 6/10/2018.
+ */
 public class Solution {
 
     /*
@@ -32,10 +35,8 @@ public class Solution {
         while(j >= 0 || i >= 0){
 
             int sum = carry;
-
             if(j >= 0 ) sum += (b.charAt(j--) - '0');
             if(i >= 0 ) sum += (a.charAt(i--) - '0');
-
             sb.append(sum % 2);
             carry = sum / 2;
         }
