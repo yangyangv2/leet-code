@@ -2,6 +2,7 @@ package prob273.integer.to.english.words;
 
 /**
  * Created by yanya04 on 2/1/2018.
+ * Modified by yanya04 on 6/12/2018.
  */
 public class Solution {
 
@@ -33,16 +34,15 @@ public class Solution {
         if(num == 0) return "Zero";
 
         String res = "";
+
         int count = 0;
         while(num > 0){
-            int hundreds = num % 1000;
-            if(hundreds != 0){
-                res = eval(hundreds) + thousands[count] + " " + res;
-            }
-            num = num / 1000;
+            int handreds = num % 1000;
+            if(handreds != 0)
+                res = eval(handreds) + thousands[count] + " " + res;
             count ++;
+            num /= 1000;
         }
-
         return res.trim();
     }
 

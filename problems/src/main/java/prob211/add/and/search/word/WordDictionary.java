@@ -1,77 +1,54 @@
 package prob211.add.and.search.word;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by yanya04 on 1/18/2018.
  * Modified by yanya04 on 5/5/2018.
  */
-class WordDictionary {
+public class WordDictionary {
 
-    class TrieNode {
-        char c;
-        boolean end;
-        TrieNode[] children;
-        TrieNode(char c){
-            this.c = c;
-            this.children = new TrieNode[26];
-        }
-    }
-    class Trie {
-        TrieNode root;
+    private Map<Integer, List<String>> map;
 
-        Trie(){
-            root = new TrieNode(' ');
-        }
 
-        void insert(String word){
-            int i = 0; char c = ' ';
-            TrieNode cur = root;
-            while(i < word.length()){
-                c = word.charAt(i);
-                if(cur.children[c - 'a'] == null){
-                    cur.children[c - 'a'] = new TrieNode(c);
-                }
-                cur = cur.children[c - 'a'];
-                if(i == word.length() - 1){
-                    cur.end = true;
-                }
-                i ++;
-            }
-        }
-
-        boolean search(String word, int start, TrieNode node){
-
-            if(node == null) return false;
-
-            if(start == word.length()) return node.end;
-
-            char c = word.charAt(start);
-
-            if(c == '.'){
-                for(TrieNode child: node.children){
-                    if(search(word, start + 1, child))
-                        return true;
-                }
-                return false;
-            } else {
-                return search(word, start + 1, node.children[c - 'a']);
-            }
-        }
-    }
-
-    private Trie trie;
     /** Initialize your data structure here. */
     public WordDictionary() {
-        trie = new Trie();
+        map = new HashMap<>();
     }
 
     /** Adds a word into the data structure. */
     public void addWord(String word) {
-        trie.insert(word);
+        int len = word.length();
+        map.putIfAbsent(len, new ArrayList<>());
+        map.get(len).add(word);
+
     }
 
     /** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
     public boolean search(String word) {
-        return trie.search(word, 0, trie.root);
+        int len = word.length();
+
+        List<String> ws = map.get(len);
+        if(ws == null) return false;
+
+        for(String w: ws){
+            if(isSame(w, word)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //  match ..a with aba
+    private boolean isSame(String word, String pattern){
+        for(int i = 0; i < word.length(); i ++){
+            if(word.charAt(i) != pattern.charAt(i) && pattern.charAt(i) != '.')
+                return false;
+        }
+        return true;
     }
 }
 

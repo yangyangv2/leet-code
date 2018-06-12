@@ -4,6 +4,7 @@ import static java.lang.Math.*;
 /**
  * Created by yanya04 on 2/3/2018.
  * Modified by yanya04 on 5/24/2018.
+ * Modified by yanya04 on 6/12/2018.
  */
 public class Solution {
 
@@ -45,15 +46,21 @@ public class Solution {
         }
     }
 
+
+    private int[][] dirs = new int[][]{
+
+            {1, 0}, {-1, 0}, {1, 1}, {-1, 1},
+            {0, 1}, {0, -1}, {-1, -1}, {1, -1}
+    };
+
     private int countNeighbours(int[][] board, int i, int j){
         int live = 0;
-        int m = board.length;
-        int n = board[0].length;
-        for(int r = max(0, i - 1); r <= min(m - 1, i + 1); r ++)
-            for(int c = max(0, j - 1); c <= min(n - 1, j + 1); c ++){
-                if(r == i && c == j) continue;
-                live += board[r][c] & 1;
-            }
+        int m = board.length, n = board[0].length;
+        for(int k = 0; k < dirs.length; k ++){
+            int x = i + dirs[k][0], y = j + dirs[k][1];
+            if(x < 0 || y < 0 || x == m || y == n) continue;
+            live += board[x][y] & 1;
+        }
         return live;
     }
 
