@@ -6,8 +6,17 @@ import java.util.Map;
 /**
  * Created by yanya04 on 9/10/2017.
  * Modified by yanya04 on 5/20/2018.
+ * Modified by yanya04 on 6/12/2018.
  */
 public class Solution {
+
+    /*
+        S[i] - S[j] = k * n     i - j > 0, n = 0,1,2,3,4,5...
+        (S[i] - S[j]) % k = 0 ===> S[i] % k - S[j] % k = 0;
+
+        (14 - 5) % 3 = 0 ===> 14 % 3 - 5 % 3
+
+    */
     public boolean checkSubarraySum(int[] nums, int k) {
 
         if(nums == null || nums.length == 0) return false;
@@ -19,28 +28,21 @@ public class Solution {
 
         if(k == 0) return false;
 
-        Map<Integer, Integer> map = new HashMap<>();
-
-        // when sum == k, sum % k == 0, then the other index is - 1;
-        map.put(0, - 1);
-
-        // s[j] - s[i] = k * n
-        // (s[j] - s[i]) % k == 0
-        // s[j] % k == s[i] % k
-
         int presum = 0;
-        for(int i = 0; i < nums.length; i ++) {
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0, -1);
+
+        for(int i = 0; i < n; i ++){
             presum += nums[i];
-            int value = presum % k;
-            Integer index = map.get(value);
-            if(index != null){
-                if(i - index > 1)
-                    return true;
+            int key = presum % k;
+            Integer index = map.get(key);
+            if(index == null){
+                map.put(key, i);
             } else {
-                map.put(value, i);
+                if(i - index > 1) return true;
             }
         }
-
         return false;
+
     }
 }
